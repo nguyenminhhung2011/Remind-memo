@@ -69,7 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
         builder: (context) {
           return ChangeNotifierProvider<PayDetailNotifier>.value(
             value: PayDetailNotifier(),
-            child: const PayDetailScreen(),
+            child: const   PayDetailScreen(),
           );
         });
   }

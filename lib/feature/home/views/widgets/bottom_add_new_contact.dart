@@ -40,17 +40,13 @@ class _BottomAddNewContactState extends State<BottomAddNewContact> {
     var headerTextStyle = context.titleMedium
         .copyWith(fontWeight: FontWeight.w400, color: Colors.grey);
     return Container(
-      height: context.heightDevice * 0.8,
+      height: context.heightDevice * 0.7,
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.vertical(
           top: Radius.circular(20.0),
         ),
         color: Theme.of(context).cardColor,
       ),
-      // Scaffold(
-      //   extendBody: true,
-      //   backgroundColor: Colors.transparent,
-      //   bottomNavigationBar:
 
       child: Column(
         children: [

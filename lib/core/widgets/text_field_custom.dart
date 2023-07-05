@@ -213,6 +213,16 @@ class _TextFieldCustomState extends State<TextFieldCustom> {
                   horizontal: widget.hPaddingField ?? 10.0,
                   vertical: widget.vPaddingField ?? 8.0,
                 ),
+                enabledBorder: widget.isShowBorderRadius
+                    ? OutlineInputBorder(
+                        borderRadius:
+                            BorderRadius.circular(widget.radius ?? 10),
+                        borderSide: BorderSide(
+                          color: widget.borderColor ?? Colors.grey[300]!,
+                          width: widget.widthBorder ?? 1,
+                        ),
+                      )
+                    : null,
                 border: widget.isShowBorderRadius
                     ? OutlineInputBorder(
                         borderRadius:
