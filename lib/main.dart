@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:project/core/dependency_injection/di.dart';
 import 'package:project/core/extensions/color_extensions.dart';
 import 'package:project/feature/auth/notifier/auth_notifier.dart';
 import 'package:project/routes/main_routes.dart';
@@ -16,38 +17,37 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  configureDependencies();
   runApp(const MyApp());
 }
+
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => AuthNotifier())
-      ],
-      child: MaterialApp(
+        providers: [ChangeNotifierProvider<AuthNotifier>(create: (_) => injector.get())],
+        child: MaterialApp(
           localizationsDelegates: const [
-        S.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-        debugShowCheckedModeBanner: false,
-        title: 'Remind Memo',
-        theme: ThemeData(
-          primaryColor: '#07AEAF'.toColor(),
-          primaryColorDark: '#07AEAF'.toColor(),
-        ),
-        darkTheme: ThemeData.dark().copyWith(
-          primaryColor: '#07AEAF'.toColor(),
-        ),
-      supportedLocales: S.delegate.supportedLocales,
-      initialRoute: Routes.splash,
-      onGenerateRoute: MainRoutes.getRoute,
-    )
-    );
+            S.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          debugShowCheckedModeBanner: false,
+          title: 'Remind Memo',
+          theme: ThemeData(
+            primaryColor: '#07AEAF'.toColor(),
+            primaryColorDark: '#07AEAF'.toColor(),
+          ),
+          darkTheme: ThemeData.dark().copyWith(
+            primaryColor: '#07AEAF'.toColor(),
+          ),
+          supportedLocales: S.delegate.supportedLocales,
+          initialRoute: Routes.splash,
+          onGenerateRoute: MainRoutes.getRoute,
+        ));
   }
 } 
 

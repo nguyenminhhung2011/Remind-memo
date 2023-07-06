@@ -121,6 +121,9 @@ dependencies:
   fast_contacts: ^3.0.3
   firebase_core: ^2.14.0
   math_expressions: ^2.4.0
+  cloud_firestore: ^4.8.2
+  google_sign_in: ^6.1.4
+  firebase_auth: ^4.6.3
   # table_calendar: ^3.0.8
   # readmore: ^2.2.0
 

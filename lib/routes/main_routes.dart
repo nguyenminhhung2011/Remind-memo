@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:project/core/dependency_injection/di.dart';
 import 'package:project/feature/add_pay/notifier/add_pay_notifier.dart';
 import 'package:project/feature/add_pay/views/add_pay_screen.dart';
+import 'package:project/feature/auth/notifier/login_notifier.dart';
 import 'package:project/feature/auth/views/login_screen.dart';
 import 'package:project/feature/contact_detail/notifier/contact_detail_notifier.dart';
 import 'package:project/feature/contact_detail/view/contact_detail_screen.dart';
@@ -42,7 +44,10 @@ class MainRoutes {
       case Routes.login:
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => const SignInScreen(),
+          builder: (_) => ChangeNotifierProvider<LoginNotifier>.value(
+            value: injector.get(),
+            child: const SignInScreen(),
+          ),
         );
 
       case Routes.onboard:
