@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project/feature/chart/views/chart_screen.dart';
 import 'package:project/feature/home/views/home_screen.dart';
+import 'package:project/feature/list_contact/views/list_contact_screen.dart';
 import 'package:project/feature/profile/view/profile_screen.dart';
 
 import 'image_const.dart';
@@ -16,15 +17,21 @@ class Constant {
       'screen': const HomeScreen(),
     },
     {
-      'icon': ImageConst.chartIcon,
+      'icon': ImageConst.personIcon,
       'tit': 'Search',
       'index': 1,
+      'screen': const ContactScreen()
+    },
+    {
+      'icon': ImageConst.chartIcon,
+      'tit': 'Search',
+      'index': 2,
       'screen': const ChartScreen()
     },
     {
-      'icon': ImageConst.personIcon,
+      'icon': ImageConst.settingIcon,
       'tit': 'Profile',
-      'index': 2,
+      'index': 3,
       'screen': const ProfileScreen()
     },
   ];

@@ -6,7 +6,6 @@ import 'package:project/core/extensions/context_exntions.dart';
 import 'package:project/core/extensions/handle_time.dart';
 import 'package:project/core/widgets/header_text_custom.dart';
 import 'package:project/core/widgets/sort_button.dart';
-import 'package:project/feature/home/views/widgets/bottom_add_new_contact.dart';
 import 'package:project/feature/home/views/widgets/item_view.dart';
 import 'package:project/feature/pay_detail/notifier/pay_detail_notifier.dart';
 import 'package:project/feature/pay_detail/views/pay_detail_screen.dart';
@@ -45,19 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _typeView.value = view;
   }
 
-  void _onShowBottomAddNewContact() async {
-    final add = await showModalBottomSheet(
-      isDismissible: false,
-      enableDrag: false,
-      // backgroundColor: Theme.of(context).cardColor,
-      backgroundColor: Colors.transparent,
-      context: context,
-      isScrollControlled: true,
-      builder: (context) {
-        return const BottomAddNewContact();
-      },
-    );
-  }
+
 
   void _onShowPayDetail() async {
     final show = await showModalBottomSheet(
@@ -69,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
         builder: (context) {
           return ChangeNotifierProvider<PayDetailNotifier>.value(
             value: PayDetailNotifier(),
-            child: const   PayDetailScreen(),
+            child: const PayDetailScreen(),
           );
         });
   }
@@ -81,14 +68,14 @@ class _HomeScreenState extends State<HomeScreen> {
         padding: const EdgeInsets.only(bottom: 50),
         child: ButtonCustom(
           radius: 5.0,
-          width: context.widthDevice * 0.45,
-          onPress: _onShowBottomAddNewContact,
+          width: context.widthDevice * 0.4,
+          onPress: (){},
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
                 child: Text(
-                  S.of(context).addNewContact,
+                  S.of(context).addNewPay,
                   style: context.titleSmall.copyWith(
                     fontWeight: FontWeight.bold,
                     color: Colors.white,

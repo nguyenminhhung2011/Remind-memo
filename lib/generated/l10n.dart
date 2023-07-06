@@ -480,6 +480,56 @@ class S {
     );
   }
 
+  /// `Contact`
+  String get contact {
+    return Intl.message(
+      'Contact',
+      name: 'contact',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add lend`
+  String get lendAdd {
+    return Intl.message(
+      'Add lend',
+      name: 'lendAdd',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add loan`
+  String get loanAdd {
+    return Intl.message(
+      'Add loan',
+      name: 'loanAdd',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add new pay`
+  String get addNewPay {
+    return Intl.message(
+      'Add new pay',
+      name: 'addNewPay',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select icon`
+  String get selectedIcon {
+    return Intl.message(
+      'Select icon',
+      name: 'selectedIcon',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Loan Amount`
   String get loanAmount {
     return Intl.message(

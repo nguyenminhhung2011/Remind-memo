@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:project/app_coordinator.dart';
@@ -12,16 +11,6 @@ import 'package:project/generated/l10n.dart';
 import '../../../core/constant/constant.dart';
 import '../../../core/widgets/header_text_custom.dart';
 
-class Step {
-  Step(this.name, this.id, this.price, this.isPay, this.count,
-      [this.isExpanded = false]);
-  String name;
-  int id;
-  double price;
-  bool isPay;
-  int count;
-  bool isExpanded;
-}
 
 class Data {
   final String name;
@@ -44,13 +33,7 @@ class ChartScreen extends StatefulWidget {
 
 class _ChartScreenState extends State<ChartScreen> {
   final _rangeDateController = RangeDateController();
-  List<Step> listStep = [
-    Step('Nguyen Minh Hung', 0, 100.0, false, 3),
-    Step('Truong Huynh Duc Hoang', 1, 59.1, true, 2),
-    Step('Nguyen Thanh Tung', 2, 200.0, false, 4),
-    Step('Hahahahaha', 3, 101.0, true, 2),
-  ];
-
+ 
   void _onSelectRangeDate() async {
     final show = await context.pickWeekRange(_rangeDateController);
   }
@@ -166,136 +149,7 @@ class _ChartScreenState extends State<ChartScreen> {
     );
   }
 
-  ExpansionPanelList _expansionView(BuildContext context) {
-    return ExpansionPanelList(
-      expandedHeaderPadding: const EdgeInsets.symmetric(vertical: 10.0),
-      elevation: 0,
-      animationDuration: const Duration(milliseconds: 300),
-      expansionCallback: (index, isExpanded) {
-        setState(() {
-          listStep[index].isExpanded = !isExpanded;
-        });
-      },
-      children: listStep
-          .map((e) => ExpansionPanel(
-                headerBuilder: (context, isExpanded) => Row(
-                  children: [
-                    Container(
-                      width: 45,
-                      height: 45,
-                      margin: const EdgeInsets.symmetric(
-                        horizontal: Constant.kHMarginCard,
-                        vertical: 10.0,
-                      ),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Theme.of(context).primaryColor,
-                      ),
-                      child: Text(
-                        e.name[0].toUpperCase(),
-                        style: context.titleLarge.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 10.0),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            e.name,
-                            style: context.titleMedium.copyWith(
-                              fontWeight: FontWeight.bold,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          Text(
-                            '${e.count} ${S.of(context).transaction}',
-                            style: context.titleSmall.copyWith(
-                              fontWeight: FontWeight.w400,
-                              color: Theme.of(context).hintColor,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    Text(
-                      e.price.toString(),
-                      style: context.titleMedium.copyWith(
-                        color: e.isPay ? Colors.green : Colors.red,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    )
-                  ],
-                ),
-                body: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    for (int i = 0; i < e.count; i++)
-                      Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: Constant.kHMarginCard * 1.5,
-                          vertical: Constant.kHMarginCard,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor.withOpacity(
-                                i % 2 == 0 ? 0.2 : 0.1,
-                              ),
-                        ),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              (i + 1).toString(),
-                              style: context.titleMedium.copyWith(
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            const SizedBox(width: 20.0),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  ...getMMMMEEEd(DateTime.now())
-                                      .split(',')
-                                      .mapIndexed(
-                                        (index, e) => Text(
-                                          index == 0
-                                              ? e.trim()
-                                              : '${e.trim()} ${DateTime.now().year}',
-                                          style: context.titleSmall.copyWith(
-                                            color: Theme.of(context).hintColor,
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ),
-                                      )
-                                ],
-                              ),
-                            ),
-                            Text(
-                              123.12.toString(),
-                              style: context.titleSmall.copyWith(
-                                color: i % 2 == 0 ? Colors.green : Colors.red,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    const SizedBox(height: 3.0),
-                  ],
-                ),
-                isExpanded: e.isExpanded,
-              ))
-          .toList(),
-    );
-  }
-
+  
   BarChartGroupData makeGroupData(int x, double y1, double y2) {
     return BarChartGroupData(barsSpace: 4, x: x, barRods: [
       BarChartRodData(
@@ -368,7 +222,7 @@ class _PieChartVIewState extends State<PieChartVIew> {
                 ),
               ),
               Text(
-                '120.201',
+                sum.toString(),
                 style: context.titleMedium.copyWith(
                   fontWeight: FontWeight.bold,
                   color: widget.isPay ? Colors.green : Colors.red,
@@ -419,9 +273,6 @@ class _PieChartVIewState extends State<PieChartVIew> {
                           PieChartSectionData(
                             color: data.color,
                             value: data.percents,
-                            // title: (data.name == 'now')
-                            //     ? '${homeScreenController.kCalBurn.value}kCal Burn'
-                            //     : '${homeScreenController.kCalConsume.value}kCal \nConsume',
                             radius: isTouched ? 110 : 90,
                             titleStyle: const TextStyle(
                               fontSize: 11,

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 class ButtonCustom extends StatelessWidget {
@@ -9,6 +11,7 @@ class ButtonCustom extends StatelessWidget {
   final Function() onPress;
   final bool enableWidth;
   final bool loading;
+  final bool enableClick;
   final Color? borderColor;
   const ButtonCustom({
     super.key,
@@ -18,6 +21,7 @@ class ButtonCustom extends StatelessWidget {
     this.height,
     this.enableWidth = true,
     this.loading = false,
+    this.enableClick = true,
     this.borderColor,
     required this.child,
     required this.onPress,
@@ -29,7 +33,7 @@ class ButtonCustom extends StatelessWidget {
       width: enableWidth ? width ?? double.infinity : null,
       height: height,
       child: ElevatedButton(
-        onPressed: loading ? null : onPress,
+        onPressed: loading || !enableClick ? null : onPress,
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all<Color>(
             color ?? Theme.of(context).primaryColor,

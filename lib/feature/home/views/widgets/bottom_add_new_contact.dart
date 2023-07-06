@@ -1,5 +1,4 @@
-import 'dart:ui';
-
+import 'package:collection/collection.dart';
 import 'package:fast_contacts/fast_contacts.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -24,6 +23,7 @@ class _BottomAddNewContactState extends State<BottomAddNewContact> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _noteController = TextEditingController();
+  final ValueNotifier<int> _iconIndex = ValueNotifier<int>(0);
   Future<List<Contact>> getContacts() async {
     bool isGranted = await Permission.contacts.status.isGranted;
     if (!isGranted) {
@@ -35,75 +35,113 @@ class _BottomAddNewContactState extends State<BottomAddNewContact> {
     return [];
   }
 
+  void _onSelectIcon() async {
+    final pic = await showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(10.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10.0),
+              color: Theme.of(context).cardColor,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  S.of(context).selectedIcon,
+                  style: context.titleMedium.copyWith(
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: 10.0),
+                Wrap(
+                  children: [
+                    ...Constant.icons.mapIndexed(
+                      (index, e) => GestureDetector(
+                        onTap: ()=> context.popArgs(index),
+                        child: Container(
+                          width: 50.0,
+                          height: 50.0,
+                          margin: const EdgeInsets.all(5.0),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: (e['color'] as Color).withOpacity(0.5),
+                          ),
+                          child: Center(
+                            child: Text(
+                              e['icon'].toString(),
+                              style: context.titleMedium,
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+    if(pic != null && pic is int){
+      _iconIndex.value = pic;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var headerTextStyle = context.titleMedium
         .copyWith(fontWeight: FontWeight.w400, color: Colors.grey);
-    return Container(
-      height: context.heightDevice * 0.7,
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.vertical(
-          top: Radius.circular(20.0),
-        ),
-        color: Theme.of(context).cardColor,
-      ),
-
-      child: Column(
+    return Scaffold(
+      resizeToAvoidBottomInset: true,
+      backgroundColor: Colors.transparent,
+      body: ListView(
         children: [
-          const SizedBox(height: 5.0),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              IconButton(
-                onPressed: () => context.pop(),
-                icon: const Icon(Icons.close),
+          SizedBox(height: context.heightDevice * 0.3),
+          Container(
+            height: context.heightDevice * 0.7,
+            alignment: Alignment.bottomCenter,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Theme.of(context).scaffoldBackgroundColor,
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(20.0),
               ),
-              Text(
-                S.of(context).addNewContact,
-                style: context.titleLarge.copyWith(
-                  fontWeight: FontWeight.w500,
-                ),
-              )
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: Constant.kHMarginCard),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    S.of(context).addFromAddressBook,
-                    style: context.titleMedium.copyWith(
-                      fontWeight: FontWeight.bold,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ),
-                TextButton(
-                    onPressed: () {},
-                    child: Text(
-                      S.of(context).choose,
-                      style: context.titleSmall.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).primaryColor,
-                      ),
-                    ))
-              ],
             ),
-          ),
-          const Divider(),
-          Expanded(
-            child: ListView(
-              physics: const BouncingScrollPhysics(
-                parent: AlwaysScrollableScrollPhysics(),
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const SizedBox(height: 5.0),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      onPressed: () => context.pop(),
+                      icon: const Icon(Icons.close),
+                    ),
+                    Text(
+                      S.of(context).addNewContact,
+                      style: context.titleLarge.copyWith(
+                        fontWeight: FontWeight.w500,
+                      ),
+                    )
+                  ],
+                ),
+                const Divider(),
                 TextFieldCustom(
                   paddingLeft: Constant.kHMarginCard,
                   paddingRight: Constant.kHMarginCard,
                   headerText: S.of(context).name,
                   hintText: S.of(context).enterName,
-                  headerTextStyle: headerTextStyle,
+                  headerTextStyle: headerTextStyle.copyWith(
+                    color: context.titleLarge.color,
+                  ),
                   hintStyle: headerTextStyle,
                   controller: _nameController,
                   textStyle: headerTextStyle.copyWith(
@@ -117,7 +155,9 @@ class _BottomAddNewContactState extends State<BottomAddNewContact> {
                   headerText: S.of(context).phoneNumber,
                   hintText: S.of(context).enterPhoneNumber,
                   isPhoneNumberField: true,
-                  headerTextStyle: headerTextStyle,
+                  headerTextStyle: headerTextStyle.copyWith(
+                    color: context.titleLarge.color,
+                  ),
                   isNumberInputType: true,
                   hintStyle: headerTextStyle,
                   controller: _phoneController,
@@ -130,7 +170,9 @@ class _BottomAddNewContactState extends State<BottomAddNewContact> {
                   paddingLeft: Constant.kHMarginCard,
                   paddingRight: Constant.kHMarginCard,
                   headerText: S.of(context).note,
-                  headerTextStyle: headerTextStyle,
+                  headerTextStyle: headerTextStyle.copyWith(
+                    color: context.titleLarge.color,
+                  ),
                   hintStyle: headerTextStyle,
                   hintText: S.of(context).enterNote,
                   controller: _noteController,
@@ -138,18 +180,77 @@ class _BottomAddNewContactState extends State<BottomAddNewContact> {
                     color: context.titleLarge.color,
                   ),
                 ),
-              ],
+                const SizedBox(height: 6.0),
+                Padding(
+                  padding: const EdgeInsets.only(left: Constant.kHMarginCard),
+                  child: Text(
+                    S.of(context).selectedIcon,
+                    style: headerTextStyle.copyWith(
+                      color: context.titleLarge.color,
+                    ),
+                  ),
+                ),
+                ValueListenableBuilder(
+                  valueListenable: _iconIndex,
+                  builder: (context, iconIndex, child) {
+                    return InkWell(
+                      onTap: _onSelectIcon,
+                      child: Container(
+                          margin: const EdgeInsets.symmetric(
+                            horizontal: Constant.kHMarginCard,
+                            vertical: 5.0,
+                          ),
+                          padding: const EdgeInsets.all(10.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0),
+                            border: Border.all(
+                              width: 1.5,
+                              color: Theme.of(context).hintColor,
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 80.0,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10.0,
+                                  vertical: 5.0,
+                                ),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  color:( Constant.icons[iconIndex]['color'] as Color).withOpacity(0.5),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      Constant.icons[iconIndex]['icon']
+                                          .toString(),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ],
+                          )),
+                    );
+                  },
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(Constant.kHMarginCard),
+                  child: ButtonCustom(
+                    height: 45.0,
+                    enableClick: _nameController.text.isNotEmpty,
+                    child: Text(S.of(context).addNewContact),
+                    onPress: () => context.pop(),
+                  ),
+                ),
+              ]
+                  .expand((element) => [element, const SizedBox(height: 6.0)])
+                  .toList(),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(Constant.kHMarginCard),
-            child: ButtonCustom(
-              height: 45.0,
-              child: Text(S.of(context).addNewContact),
-              onPress: () {},
-            ),
-          ),
-        ].expand((element) => [element, const SizedBox(height: 6.0)]).toList(),
+        ],
       ),
     );
   }

@@ -30,6 +30,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Add from address book"),
         "addNewContact":
             MessageLookupByLibrary.simpleMessage("Add new contact"),
+        "addNewPay": MessageLookupByLibrary.simpleMessage("Add new pay"),
         "all": MessageLookupByLibrary.simpleMessage("all"),
         "alreadyHaveAccount":
             MessageLookupByLibrary.simpleMessage("Already have account?"),
@@ -39,6 +40,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Apply New Password"),
         "chartView": MessageLookupByLibrary.simpleMessage("Chart view"),
         "choose": MessageLookupByLibrary.simpleMessage("Choose"),
+        "contact": MessageLookupByLibrary.simpleMessage("Contact"),
         "continueText": MessageLookupByLibrary.simpleMessage("Continue"),
         "createYourNewPassword":
             MessageLookupByLibrary.simpleMessage("Create Your New Password"),
@@ -66,7 +68,9 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Enter your phone number"),
         "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
         "google": MessageLookupByLibrary.simpleMessage("Google"),
+        "lendAdd": MessageLookupByLibrary.simpleMessage("Add lend"),
         "lendAmount": MessageLookupByLibrary.simpleMessage("Lend Amount"),
+        "loanAdd": MessageLookupByLibrary.simpleMessage("Add loan"),
         "loanAmount": MessageLookupByLibrary.simpleMessage("Loan Amount"),
         "logIn": MessageLookupByLibrary.simpleMessage("Log In"),
         "name": MessageLookupByLibrary.simpleMessage("Name"),
@@ -90,6 +94,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "registerNewAccount":
             MessageLookupByLibrary.simpleMessage("Register New Account"),
         "save": MessageLookupByLibrary.simpleMessage("Save"),
+        "selectedIcon": MessageLookupByLibrary.simpleMessage("Select icon"),
         "share": MessageLookupByLibrary.simpleMessage("Share"),
         "signIn": MessageLookupByLibrary.simpleMessage("Sign In"),
         "signOut": MessageLookupByLibrary.simpleMessage("Sign Out"),

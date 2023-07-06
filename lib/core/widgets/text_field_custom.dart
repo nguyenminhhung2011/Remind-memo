@@ -140,6 +140,7 @@ class _TextFieldCustomState extends State<TextFieldCustom> {
                     ],
                     Expanded(
                       child: TextFormField(
+                        autofocus: false,
                         enabled: widget.enable,
                         onTap: widget.onTap,
                         onChanged: widget.onChange,
@@ -196,6 +197,7 @@ class _TextFieldCustomState extends State<TextFieldCustom> {
           SizedBox(
             width: double.infinity,
             child: TextFormField(
+              autofocus: false,
               enabled: widget.enable,
               onTap: widget.onTap,
               onChanged: widget.onChange,
