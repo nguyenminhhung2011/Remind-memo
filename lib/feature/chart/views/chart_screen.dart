@@ -23,6 +23,18 @@ class Step {
   bool isExpanded;
 }
 
+class Data {
+  final String name;
+  final double percents;
+  final Color color;
+  final String imagePath;
+  Data(
+      {required this.imagePath,
+      required this.name,
+      required this.percents,
+      required this.color});
+}
+
 class ChartScreen extends StatefulWidget {
   const ChartScreen({super.key});
 
@@ -123,140 +135,164 @@ class _ChartScreenState extends State<ChartScreen> {
           ),
           const Divider(),
           const SizedBox(height: 10.0),
-          ExpansionPanelList(
-            expandedHeaderPadding: const EdgeInsets.symmetric(vertical: 10.0),
-            elevation: 0,
-            animationDuration: const Duration(milliseconds: 300),
-            expansionCallback: (index, isExpanded) {
-              setState(() {
-                listStep[index].isExpanded = !isExpanded;
-              });
-            },
-            children: listStep
-                .map((e) => ExpansionPanel(
-                      headerBuilder: (context, isExpanded) => Row(
-                        children: [
-                          Container(
-                            width: 45,
-                            height: 45,
-                            margin: const EdgeInsets.symmetric(
-                              horizontal: Constant.kHMarginCard,
-                              vertical: 10.0,
-                            ),
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                            child: Text(
-                              e.name[0].toUpperCase(),
-                              style: context.titleLarge.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 10.0),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  e.name,
-                                  style: context.titleMedium.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                                Text(
-                                  '${e.count} ${S.of(context).transaction}',
-                                  style: context.titleSmall.copyWith(
-                                    fontWeight: FontWeight.w400,
-                                    color: Theme.of(context).hintColor,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                          Text(
-                            e.price.toString(),
-                            style: context.titleMedium.copyWith(
-                              color: e.isPay ? Colors.green : Colors.red,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          )
-                        ],
-                      ),
-                      body: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          for (int i = 0; i < e.count; i++)
-                            Container(
-                              width: double.infinity,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: Constant.kHMarginCard * 1.5,
-                                vertical: Constant.kHMarginCard,
-                              ),
-                              decoration: BoxDecoration(
-                                color:
-                                    Theme.of(context).primaryColor.withOpacity(
-                                          i % 2 == 0 ? 0.2 : 0.1,
-                                        ),
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    (i + 1).toString(),
-                                    style: context.titleMedium.copyWith(
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 20.0),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        ...getMMMMEEEd(DateTime.now())
-                                            .split(',')
-                                            .mapIndexed(
-                                              (index, e) => Text(
-                                                index == 0
-                                                    ? e.trim()
-                                                    : '${e.trim()} ${DateTime.now().year}',
-                                                style:
-                                                    context.titleSmall.copyWith(
-                                                  color: Theme.of(context)
-                                                      .hintColor,
-                                                  fontWeight: FontWeight.w400,
-                                                ),
-                                              ),
-                                            )
-                                      ],
-                                    ),
-                                  ),
-                                  Text(
-                                    123.12.toString(),
-                                    style: context.titleSmall.copyWith(
-                                      color: i % 2== 0?  Colors.green:Colors.red,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          const SizedBox(height: 3.0),
-                        ],
-                      ),
-                      isExpanded: e.isExpanded,
-                    ))
-                .toList(),
+          PieChartVIew(
+            header: S.of(context).lendAmount,
+            isPay: true,
+            data: [
+              for (int i = 0; i < 6; i++)
+                {
+                  'data': ((i + 1) * (i % 2 == 0 ? 80 : 100)).toInt(),
+                  'icon': i,
+                  'title': 'Person $i'
+                }
+            ],
+          ),
+          const SizedBox(height: 10.0),
+          PieChartVIew(
+            header: S.of(context).loanAmount,
+            isPay: false,
+            data: [
+              for (int i = 0; i < 4; i++)
+                {
+                  'data': ((i + 1) * (i % 2 == 0 ? 80 : 100)).toInt(),
+                  'icon': i,
+                  'title': 'Person $i'
+                }
+            ],
           ),
           const SizedBox(height: 40.0),
         ].expand((element) => [element, const SizedBox(height: 5.0)]).toList(),
       ),
+    );
+  }
+
+  ExpansionPanelList _expansionView(BuildContext context) {
+    return ExpansionPanelList(
+      expandedHeaderPadding: const EdgeInsets.symmetric(vertical: 10.0),
+      elevation: 0,
+      animationDuration: const Duration(milliseconds: 300),
+      expansionCallback: (index, isExpanded) {
+        setState(() {
+          listStep[index].isExpanded = !isExpanded;
+        });
+      },
+      children: listStep
+          .map((e) => ExpansionPanel(
+                headerBuilder: (context, isExpanded) => Row(
+                  children: [
+                    Container(
+                      width: 45,
+                      height: 45,
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: Constant.kHMarginCard,
+                        vertical: 10.0,
+                      ),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                      child: Text(
+                        e.name[0].toUpperCase(),
+                        style: context.titleLarge.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10.0),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            e.name,
+                            style: context.titleMedium.copyWith(
+                              fontWeight: FontWeight.bold,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          Text(
+                            '${e.count} ${S.of(context).transaction}',
+                            style: context.titleSmall.copyWith(
+                              fontWeight: FontWeight.w400,
+                              color: Theme.of(context).hintColor,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    Text(
+                      e.price.toString(),
+                      style: context.titleMedium.copyWith(
+                        color: e.isPay ? Colors.green : Colors.red,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    )
+                  ],
+                ),
+                body: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    for (int i = 0; i < e.count; i++)
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: Constant.kHMarginCard * 1.5,
+                          vertical: Constant.kHMarginCard,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).primaryColor.withOpacity(
+                                i % 2 == 0 ? 0.2 : 0.1,
+                              ),
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              (i + 1).toString(),
+                              style: context.titleMedium.copyWith(
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            const SizedBox(width: 20.0),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ...getMMMMEEEd(DateTime.now())
+                                      .split(',')
+                                      .mapIndexed(
+                                        (index, e) => Text(
+                                          index == 0
+                                              ? e.trim()
+                                              : '${e.trim()} ${DateTime.now().year}',
+                                          style: context.titleSmall.copyWith(
+                                            color: Theme.of(context).hintColor,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                      )
+                                ],
+                              ),
+                            ),
+                            Text(
+                              123.12.toString(),
+                              style: context.titleSmall.copyWith(
+                                color: i % 2 == 0 ? Colors.green : Colors.red,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    const SizedBox(height: 3.0),
+                  ],
+                ),
+                isExpanded: e.isExpanded,
+              ))
+          .toList(),
     );
   }
 
@@ -273,5 +309,193 @@ class _ChartScreenState extends State<ChartScreen> {
         width: 7,
       ),
     ]);
+  }
+}
+
+class PieChartVIew extends StatefulWidget {
+  final String header;
+  final bool isPay;
+  final List<Map<String, dynamic>> data;
+  const PieChartVIew({
+    super.key,
+    required this.header,
+    required this.isPay,
+    required this.data,
+  });
+
+  @override
+  State<PieChartVIew> createState() => _PieChartVIewState();
+}
+
+class _PieChartVIewState extends State<PieChartVIew> {
+  final ValueNotifier<int> _touchIndex = ValueNotifier<int>(-1);
+  int sum = 0;
+  @override
+  void initState() {
+    for (var element in widget.data) {
+      sum += element['data'] as int;
+    }
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(Constant.kHMarginCard),
+      margin: const EdgeInsets.symmetric(horizontal: Constant.kHMarginCard),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15),
+        color: Theme.of(context).cardColor,
+        // border: Border.all(width: 1, color: Theme.of(context).primaryColor),
+        boxShadow: [
+          BoxShadow(
+            color: Theme.of(context).shadowColor.withOpacity(0.05),
+            blurRadius: 10.0,
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                widget.header,
+                style: context.titleMedium.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                '120.201',
+                style: context.titleMedium.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: widget.isPay ? Colors.green : Colors.red,
+                ),
+              )
+            ],
+          ),
+          SizedBox(
+            height: 250,
+            width: double.infinity,
+            child: ValueListenableBuilder<int>(
+              valueListenable: _touchIndex,
+              builder: (context, touchIndex, chi) => PieChart(
+                PieChartData(
+                  pieTouchData: PieTouchData(
+                    touchCallback: (FlTouchEvent event, pieTouchResponse) {
+                      if (!event.isInterestedForInteractions ||
+                          pieTouchResponse == null ||
+                          pieTouchResponse.touchedSection == null) {
+                        _touchIndex.value = -1;
+                        return;
+                      }
+                      _touchIndex.value =
+                          pieTouchResponse.touchedSection!.touchedSectionIndex;
+                    },
+                  ),
+                  startDegreeOffset: 180,
+                  borderData: FlBorderData(show: false),
+                  sectionsSpace: 1,
+                  centerSpaceRadius: 0,
+                  sections: [
+                    ...widget.data.map((e) => Data(
+                          imagePath:
+                              Constant.icons[e['icon']]['icon'].toString(),
+                          name: '',
+                          percents: ((e['data'] as int) / sum * 100)
+                              .round()
+                              .toDouble(),
+                          color: Constant.icons[e['icon']]['color'],
+                        ))
+                  ]
+                      .asMap()
+                      .map<int, PieChartSectionData>((index, data) {
+                        final isTouched = index == touchIndex;
+
+                        return MapEntry(
+                          index,
+                          PieChartSectionData(
+                            color: data.color,
+                            value: data.percents,
+                            // title: (data.name == 'now')
+                            //     ? '${homeScreenController.kCalBurn.value}kCal Burn'
+                            //     : '${homeScreenController.kCalConsume.value}kCal \nConsume',
+                            radius: isTouched ? 110 : 90,
+                            titleStyle: const TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                            titlePositionPercentageOffset: 0.55,
+                            badgeWidget: Badge(
+                              data.imagePath,
+                              size: isTouched ? 40.0 : 30.0,
+                              borderColor: data.color,
+                            ),
+                            badgePositionPercentageOffset: .98,
+                          ),
+                        );
+                      })
+                      .values
+                      .toList(),
+                ),
+              ),
+            ),
+          ),
+          Wrap(
+            crossAxisAlignment: WrapCrossAlignment.center,
+            runAlignment: WrapAlignment.center,
+            children: [
+              ...widget.data.map(
+                (e) => Text(
+                  '${Constant.icons[e['icon']]['icon'].toString()} ${e['title']} - ${e['data'].toString()}  ',
+                  style: context.titleSmall.copyWith(
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              )
+            ],
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class Badge extends StatelessWidget {
+  final String svgAsset;
+  final double size;
+  final Color borderColor;
+
+  const Badge(
+    this.svgAsset, {
+    Key? key,
+    required this.size,
+    required this.borderColor,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedContainer(
+      duration: PieChart.defaultDuration,
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        shape: BoxShape.circle,
+        border: Border.all(color: borderColor, width: 2),
+        boxShadow: <BoxShadow>[
+          BoxShadow(
+            color: Colors.black.withOpacity(.5),
+            offset: const Offset(3, 3),
+            blurRadius: 3,
+          ),
+        ],
+      ),
+      // padding: EdgeInsets.all(size * .15),
+      child: Center(child: Text(svgAsset, style: context.titleMedium)),
+    );
   }
 }

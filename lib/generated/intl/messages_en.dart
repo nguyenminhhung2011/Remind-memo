@@ -66,6 +66,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Enter your phone number"),
         "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
         "google": MessageLookupByLibrary.simpleMessage("Google"),
+        "lendAmount": MessageLookupByLibrary.simpleMessage("Lend Amount"),
+        "loanAmount": MessageLookupByLibrary.simpleMessage("Loan Amount"),
         "logIn": MessageLookupByLibrary.simpleMessage("Log In"),
         "name": MessageLookupByLibrary.simpleMessage("Name"),
         "note": MessageLookupByLibrary.simpleMessage("Note"),

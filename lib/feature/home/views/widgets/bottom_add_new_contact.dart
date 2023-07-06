@@ -107,7 +107,7 @@ class _BottomAddNewContactState extends State<BottomAddNewContact> {
                   hintStyle: headerTextStyle,
                   controller: _nameController,
                   textStyle: headerTextStyle.copyWith(
-                    fontWeight: FontWeight.w600,
+                    color: context.titleLarge.color,
                   ),
                 ),
                 const SizedBox(height: 6.0),
@@ -122,7 +122,7 @@ class _BottomAddNewContactState extends State<BottomAddNewContact> {
                   hintStyle: headerTextStyle,
                   controller: _phoneController,
                   textStyle: headerTextStyle.copyWith(
-                    fontWeight: FontWeight.w600,
+                    color: context.titleLarge.color,
                   ),
                 ),
                 const SizedBox(height: 6.0),
@@ -135,7 +135,7 @@ class _BottomAddNewContactState extends State<BottomAddNewContact> {
                   hintText: S.of(context).enterNote,
                   controller: _noteController,
                   textStyle: headerTextStyle.copyWith(
-                    fontWeight: FontWeight.w600,
+                    color: context.titleLarge.color,
                   ),
                 ),
               ],

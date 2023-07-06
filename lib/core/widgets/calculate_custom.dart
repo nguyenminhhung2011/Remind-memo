@@ -63,14 +63,11 @@ class _CalculatorCustomState extends State<CalculatorCustom> {
       return;
     }
     if (index == 18) {
-      if (!isOut) {
-        setState(() {
-          isOut = true;
-        });
-      } else {
-        print(1);
-        context.popArgs(double.parse(_stringDisplay.value));
-      }
+      isOut
+          ? context.popArgs(double.parse(_stringDisplay.value))
+          : setState(() {
+              isOut = true;
+            });
       equalPressed();
       return;
     }

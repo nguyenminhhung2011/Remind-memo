@@ -43,7 +43,7 @@ class ChartViewState extends State<ChartView> {
       aspectRatio: 1,
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(25),
+          borderRadius: BorderRadius.circular(15),
           color: Theme.of(context).cardColor,
           // border: Border.all(width: 1, color: Theme.of(context).primaryColor),
           boxShadow: [

@@ -480,6 +480,26 @@ class S {
     );
   }
 
+  /// `Loan Amount`
+  String get loanAmount {
+    return Intl.message(
+      'Loan Amount',
+      name: 'loanAmount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lend Amount`
+  String get lendAmount {
+    return Intl.message(
+      'Lend Amount',
+      name: 'lendAmount',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Enter your name`
   String get enterYourName {
     return Intl.message(

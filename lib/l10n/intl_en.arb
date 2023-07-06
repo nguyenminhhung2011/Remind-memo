@@ -42,6 +42,8 @@
     "transaction": "Transaction",
     "chartView": "Chart view",
     "name": "Name",
+    "loanAmount": "Loan Amount",
+    "lendAmount": "Lend Amount",
     "enterYourName": "Enter your name",
     "enterYourPhoneNumber": "Enter your phone number",
     "phoneNumber": "Phone Number",
