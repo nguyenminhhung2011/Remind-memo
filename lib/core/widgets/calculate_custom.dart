@@ -128,7 +128,7 @@ class _CalculatorCustomState extends State<CalculatorCustom> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       height: context.heightDevice * 0.71,
       child: Column(

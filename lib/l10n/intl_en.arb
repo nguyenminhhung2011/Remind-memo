@@ -17,6 +17,8 @@
     "facebook": "Facebook",
     "alreadyHaveAccount": "Already have account?",
     "save": "Save",
+    "payType": "Pay type",
+    "searchAnyThing": "Search anyThings",
     "logIn": "Log In",
     "donHaveAnAccount": "Don't have an account ?",
     "pleaseContact": "Please ! Contact Administrator to be provided Account!",
@@ -58,5 +60,6 @@
     "enterName": "Enter name",
     "payDetails": "Pay Detail",
     "amountOfMoney": "Amount of money",
-    "enterNote": "Enter note"
+    "enterNote": "Enter note",
+    "settings": "Settings"
 }

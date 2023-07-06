@@ -230,6 +230,26 @@ class S {
     );
   }
 
+  /// `Pay type`
+  String get payType {
+    return Intl.message(
+      'Pay type',
+      name: 'payType',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search anyThings`
+  String get searchAnyThing {
+    return Intl.message(
+      'Search anyThings',
+      name: 'searchAnyThing',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Log In`
   String get logIn {
     return Intl.message(
@@ -645,6 +665,16 @@ class S {
     return Intl.message(
       'Enter note',
       name: 'enterNote',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Settings`
+  String get settings {
+    return Intl.message(
+      'Settings',
+      name: 'settings',
       desc: '',
       args: [],
     );

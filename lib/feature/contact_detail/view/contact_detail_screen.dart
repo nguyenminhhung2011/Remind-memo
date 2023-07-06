@@ -6,7 +6,9 @@ import 'package:project/core/constant/image_const.dart';
 import 'package:project/core/extensions/context_exntions.dart';
 import 'package:project/core/extensions/handle_time.dart';
 import 'package:project/core/widgets/button_custom.dart';
+import 'package:project/feature/add_pay/notifier/add_pay_notifier.dart';
 import 'package:project/generated/l10n.dart';
+import 'package:project/routes/routes.dart';
 
 class ContactDetailScreen extends StatefulWidget {
   const ContactDetailScreen({super.key});
@@ -36,59 +38,25 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
                 color: Colors.red,
                 height: 45.0,
                 child: Text(S.of(context).loanAdd),
-                onPress: () {},
+                onPress: () => context.openPageWithRouteAndParams(
+                  Routes.addPay,
+                  AddPayArguments(contactId: 0, loan: true),
+                ),
               )),
               const SizedBox(width: Constant.kHMarginCard),
               Expanded(
                   child: ButtonCustom(
                 height: 45.0,
                 child: Text(S.of(context).lendAdd),
-                onPress: () {},
+                onPress: () => context.openPageWithRouteAndParams(
+                  Routes.addPay,
+                  AddPayArguments(contactId: 0, loan: false),
+                ),
               )),
             ],
           ),
         ),
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          elevation: 0,
-          leading: IconButton(
-            onPressed: () => context.pop(),
-            icon: const Icon(
-              Icons.arrow_back,
-              color: Colors.white,
-            ),
-          ),
-          title: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                Constant.icons[0]['icon'].toString(),
-              ),
-              const SizedBox(width: 10.0),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Nguyen Minh Hung',
-                      style: context.titleMedium.copyWith(
-                        fontWeight: FontWeight.bold,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    Text(
-                      '(0935703991)',
-                      style: context.titleSmall.copyWith(
-                        color: Theme.of(context).hintColor,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
+        appBar: _appBar(context),
         body: Column(
           children: [
             Container(
@@ -134,50 +102,108 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
             const SizedBox(height: 5.0),
             const Divider(),
             const SizedBox(height: 5.0),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(Constant.kHMarginCard),
-              decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor.withOpacity(0.2),
-              ),
-              child: Row(
-                children: [
-                  ...[4, 3, 3].mapIndexed(
-                    (index, e) => Expanded(
-                      flex: e,
-                      child: Text(
-                        headers[index],
-                        textAlign: TextAlign.start,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: ListView(
-                children: [
-                  for (int i = 0; i < 7; i++)
-                    ItemPayView(
-                      createTime: DateTime.now(),
-                      dueTime: DateTime.now(),
-                      isLoan: i % 3 == 0,
-                      price: (i + 1) * 100000,
-                    )
-                ]
-                    .expand((element) => [
-                          element,
-                          Container(
-                            width: double.infinity,
-                            height: 0.5,
-                            color: Theme.of(context).primaryColor.withOpacity(0.3),
-                          ),
-                        ])
-                    .toList(),
-              ),
-            )
+            _header(context),
+            _body(context)
           ],
         ));
+  }
+
+  Expanded _body(BuildContext context) {
+    return Expanded(
+      child: ListView(
+        children: [
+          for (int i = 0; i < 7; i++)
+            ItemPayView(
+              createTime: DateTime.now(),
+              dueTime: DateTime.now(),
+              isLoan: i % 3 == 0,
+              price: (i + 1) * 100000,
+            )
+        ]
+            .expand((element) => [
+                  element,
+                  Container(
+                    width: double.infinity,
+                    height: 0.5,
+                    color: Theme.of(context).primaryColor.withOpacity(0.3),
+                  ),
+                ])
+            .toList(),
+      ),
+    );
+  }
+
+  Container _header(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(Constant.kHMarginCard),
+      decoration: BoxDecoration(
+        color: Theme.of(context).primaryColor.withOpacity(0.2),
+      ),
+      child: Row(
+        children: [
+          ...[4, 3, 3].mapIndexed(
+            (index, e) => Expanded(
+              flex: e,
+              child: Text(
+                headers[index],
+                textAlign: TextAlign.start,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  AppBar _appBar(BuildContext context) {
+    return AppBar(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      elevation: 0,
+      leading: IconButton(
+        onPressed: () => context.pop(),
+        icon: Icon(Icons.arrow_back, color: context.titleLarge.color),
+      ),
+      title: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            Constant.icons[0]['icon'].toString(),
+          ),
+          const SizedBox(width: 10.0),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Nguyen Minh Hung',
+                  style: context.titleMedium.copyWith(
+                    fontWeight: FontWeight.bold,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                Text(
+                  '(0935703991)',
+                  style: context.titleSmall.copyWith(
+                    color: Theme.of(context).hintColor,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+      actions: <Widget>[
+        IconButton(
+          onPressed: () {},
+          icon: Icon(
+            Icons.edit,
+            color: Theme.of(context).primaryColor,
+          ),
+        )
+      ],
+    );
   }
 }
 

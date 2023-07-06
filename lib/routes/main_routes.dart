@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:project/feature/add_pay/notifier/add_pay_notifier.dart';
+import 'package:project/feature/add_pay/views/add_pay_screen.dart';
 import 'package:project/feature/auth/views/login_screen.dart';
 import 'package:project/feature/contact_detail/notifier/contact_detail_notifier.dart';
 import 'package:project/feature/contact_detail/view/contact_detail_screen.dart';
@@ -65,6 +67,18 @@ class MainRoutes {
             child: const PayDetailScreen(),
           ),
         );
+      case Routes.addPay:
+        return MaterialPageRoute(
+            settings: settings,
+            builder: (_) {
+              if (settings.arguments is AddPayArguments) {
+                return ChangeNotifierProvider<AddPayNotifier>.value(
+                  value: AddPayNotifier(settings.arguments as AddPayArguments),
+                  child: const AddPayScreen(),
+                );
+              }
+              return const SizedBox();
+            });
 
       default:
         return unDefinedRoute();

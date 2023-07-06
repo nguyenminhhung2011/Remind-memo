@@ -81,6 +81,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "overview": MessageLookupByLibrary.simpleMessage("Overview"),
         "password": MessageLookupByLibrary.simpleMessage("Password"),
         "payDetails": MessageLookupByLibrary.simpleMessage("Pay Detail"),
+        "payType": MessageLookupByLibrary.simpleMessage("Pay type"),
         "phoneNumber": MessageLookupByLibrary.simpleMessage("Phone Number"),
         "pleaseContact": MessageLookupByLibrary.simpleMessage(
             "Please ! Contact Administrator to be provided Account!"),
@@ -94,7 +95,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "registerNewAccount":
             MessageLookupByLibrary.simpleMessage("Register New Account"),
         "save": MessageLookupByLibrary.simpleMessage("Save"),
+        "searchAnyThing":
+            MessageLookupByLibrary.simpleMessage("Search anyThings"),
         "selectedIcon": MessageLookupByLibrary.simpleMessage("Select icon"),
+        "settings": MessageLookupByLibrary.simpleMessage("Settings"),
         "share": MessageLookupByLibrary.simpleMessage("Share"),
         "signIn": MessageLookupByLibrary.simpleMessage("Sign In"),
         "signOut": MessageLookupByLibrary.simpleMessage("Sign Out"),
