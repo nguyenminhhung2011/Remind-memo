@@ -1,14 +1,35 @@
 import 'package:injectable/injectable.dart';
 import 'package:project/data/repository/firebase_repository.dart';
+import 'package:project/domain/enitites/user_entity.dart';
 
 import '../data_source/firebase_datasource.dart';
 
 @Injectable(as: FirebaseRepository)
-class FirebaseRepositoryImpl implements FirebaseRepository{
+class FirebaseRepositoryImpl implements FirebaseRepository {
   final FirebaseDataSource firebaseDataSource;
   FirebaseRepositoryImpl(this.firebaseDataSource);
 
   @override
   Future<void> googleAuth() => firebaseDataSource.googleAuth();
 
+  @override
+  Future<void> signUp(UserEntity userEntity) =>
+      firebaseDataSource.signUp(userEntity);
+
+  @override
+  Future<UserEntity?> getCurrentUser(UserEntity userEntity) =>
+      firebaseDataSource.getCreateCurrentUser(userEntity);
+
+  @override
+  Future<bool> isSignIn() => firebaseDataSource.isSignIn();
+
+  @override
+  Future<void> signIn(UserEntity userEntity) =>
+      firebaseDataSource.signIn(userEntity);
+
+  @override
+  Future<String> getCurrentUUid()=> firebaseDataSource.getCurrentUId();
+  
+  @override
+  Future<UserEntity?> getUserByUuid() => firebaseDataSource.getUserByUuid();
 }

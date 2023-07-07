@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:project/app_coordinator.dart';
 import 'package:project/core/extensions/context_exntions.dart';
@@ -17,10 +19,22 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-Future<void> checkingAuthentication(BuildContext context) async {
-    Future.delayed(const Duration(seconds: 3)).whenComplete(() async{
-      final isShow =  await context.read<AuthNotifier>().checkingAuthentication();
-      if(isShow){
+  Future<void> checkingAuthentication(BuildContext context) async {
+    Future.delayed(const Duration(seconds: 3)).whenComplete(() async {
+      final isShow =
+          await context.read<AuthNotifier>().checkingAuthentication();
+      log('Show');
+      if (isShow) {
+        log('getUser');
+        // ignore: use_build_context_synchronously
+        await context.read<AuthNotifier>().getAndSetUser().then((value) {
+          print(value);
+          if (value) {
+            // ignore: use_build_context_synchronously
+            context.pushAndRemoveAll(Routes.dashboard);
+          }
+        });
+      } else {
         // ignore: use_build_context_synchronously
         context.pushAndRemoveAll(Routes.onboard);
       }
@@ -30,46 +44,47 @@ Future<void> checkingAuthentication(BuildContext context) async {
   @override
   void initState() {
     super.initState();
-  }             
+  }
+
   @override
   Widget build(BuildContext context) {
     checkingAuthentication(context);
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: context.widthDevice * 0.3,
-                height: context.widthDevice * 0.3,
-                decoration:const   BoxDecoration(
-                  shape: BoxShape.circle,
-                  image:  DecorationImage(
-                    image: AssetImage(ImageConst.gif),
-                    fit: BoxFit.cover,
-                    filterQuality: FilterQuality.high,
-                  ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: context.widthDevice * 0.3,
+              height: context.widthDevice * 0.3,
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                image: DecorationImage(
+                  image: AssetImage(ImageConst.gif),
+                  fit: BoxFit.cover,
+                  filterQuality: FilterQuality.high,
                 ),
               ),
-              const SizedBox(height: 10.0),
-              const AppName(),
-              Text(
-                S.of(context).slogan,
-                textAlign: TextAlign.center,
-                style: context.titleSmall.copyWith(
-                  fontWeight: FontWeight.w400,
-                  color: Colors.grey,
-                ),
+            ),
+            const SizedBox(height: 10.0),
+            const AppName(),
+            Text(
+              S.of(context).slogan,
+              textAlign: TextAlign.center,
+              style: context.titleSmall.copyWith(
+                fontWeight: FontWeight.w400,
+                color: Colors.grey,
               ),
-              const SizedBox(height: 10.0),
-              CircularProgressIndicator(
-                color: Theme.of(context).primaryColor.withOpacity(0.5), 
-                strokeWidth: 5.0,
-              ), 
-            ],
-          ),
+            ),
+            const SizedBox(height: 10.0),
+            CircularProgressIndicator(
+              color: Theme.of(context).primaryColor.withOpacity(0.5),
+              strokeWidth: 5.0,
+            ),
+          ],
         ),
+      ),
     );
   }
 }

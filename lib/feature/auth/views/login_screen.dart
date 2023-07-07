@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:project/app_coordinator.dart';
 import 'package:project/core/extensions/context_exntions.dart';
+import 'package:project/feature/auth/notifier/auth_notifier.dart';
 import 'package:project/feature/auth/notifier/login_notifier.dart';
 import 'package:provider/provider.dart';
 
@@ -9,6 +12,7 @@ import '../../../core/constant/image_const.dart';
 import '../../../core/widgets/app_name.dart';
 import '../../../core/widgets/button_custom.dart';
 import '../../../core/widgets/text_field_custom.dart';
+import '../../../domain/enitites/user_entity.dart';
 import '../../../generated/l10n.dart';
 import '../../../routes/routes.dart';
 
@@ -20,8 +24,9 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController =
+      TextEditingController(text: 'hungnguyen.201102ak@gmail.com');
+  final TextEditingController _passwordController = TextEditingController(text: '1234567');
   final ValueNotifier<bool> _loading = ValueNotifier<bool>(false);
   @override
   void initState() {
@@ -33,6 +38,36 @@ class _SignInScreenState extends State<SignInScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  void _submitSignIn(LoginNotifier modal) async {
+    if (_emailController.text.isEmpty) {
+      log("email is null");
+      return;
+    }
+    if (_passwordController.text.isEmpty) {
+      log("password is null");
+      return;
+    }
+    
+    final user = UserEntity(
+      email: _emailController.text,
+      password: _passwordController.text,
+    );
+    final signIn = await modal.onSignIn(user);
+    if (!signIn) {
+      log('Error');
+      return;
+    }
+    final userGet = await modal.getCurrentUser();
+    if(userGet == null){
+      log('Error');
+      return;
+    }
+    // ignore: use_build_context_synchronously
+    context.read<AuthNotifier>().setUser(userGet);
+    // ignore: use_build_context_synchronously
+    context.pushAndRemoveAll(Routes.dashboard);
   }
 
   @override
@@ -109,7 +144,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 child: SizedBox(
                   height: 50.0,
                   child: ButtonCustom(
-                      loading: _loading.value,
+                      loading: modal.loadingSignUp,
                       child: Text(
                         S.of(context).signIn,
                         style: context.titleMedium.copyWith(
@@ -117,8 +152,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           color: Colors.white,
                         ),
                       ),
-                      onPress: () =>
-                          context.pushAndRemoveAll(Routes.dashboard)),
+                      onPress: () => _submitSignIn(modal)),
                 ),
               ),
               Row(
@@ -128,7 +162,8 @@ class _SignInScreenState extends State<SignInScreen> {
                   Text(S.of(context).donHaveAnAccount,
                       style: context.titleSmall.copyWith(color: Colors.grey)),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () =>
+                        context.openListPageWithRoute(Routes.register),
                     child: Text(
                       S.of(context).signUp,
                       style: context.titleSmall.copyWith(

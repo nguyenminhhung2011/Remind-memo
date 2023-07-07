@@ -41,15 +41,29 @@ class UserModel extends UserEntity {
 
   factory UserModel.fromSnapshot(DocumentSnapshot snapshot) {
     return UserModel(
-      name: snapshot.get('name'),
-      email: snapshot.get('email'),
-      phoneNumber: snapshot.get('phoneNumber'),
-      isOnline: snapshot.get('isOnline'),
-      uid: snapshot.get('uid'),
-      status: snapshot.get('status'),
-      profileUrl: snapshot.get('profileUrl'),
-      dob: snapshot.get('dob'),
-      gender: snapshot.get('gender'),
+      name: snapshot.get('name') ?? "",
+      email: snapshot.get('email')?? "",
+      phoneNumber: snapshot.get('phoneNumber')?? "",
+      isOnline: snapshot.get('isOnline')?? true,
+      uid: snapshot.get('uid')?? "",
+      status: snapshot.get('status')?? "",
+      profileUrl: snapshot.get('profileUrl')?? "",
+      dob: snapshot.get('dob')?? "",
+      gender: snapshot.get('gender')?? "",
+    );
+  }
+
+  UserEntity toEntity() {
+    return UserEntity(
+      name: name,
+      email: email,
+      dob: dob,
+      phoneNumber: phoneNumber,
+      uid: uid,
+      status: status,
+      gender: gender,
+      isOnline: isOnline,
+      profileUrl: profileUrl,
     );
   }
 

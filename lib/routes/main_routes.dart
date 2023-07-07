@@ -4,7 +4,9 @@ import 'package:project/core/dependency_injection/di.dart';
 import 'package:project/feature/add_pay/notifier/add_pay_notifier.dart';
 import 'package:project/feature/add_pay/views/add_pay_screen.dart';
 import 'package:project/feature/auth/notifier/login_notifier.dart';
+import 'package:project/feature/auth/notifier/register_notifier.dart';
 import 'package:project/feature/auth/views/login_screen.dart';
+import 'package:project/feature/auth/views/register_screen.dart';
 import 'package:project/feature/contact_detail/notifier/contact_detail_notifier.dart';
 import 'package:project/feature/contact_detail/view/contact_detail_screen.dart';
 import 'package:project/feature/dashboard/bloc/dashboard_bloc.dart';
@@ -36,6 +38,7 @@ class MainRoutes {
             return const SizedBox();
           },
         );
+
       case Routes.splash:
         return MaterialPageRoute(
           settings: settings,
@@ -47,6 +50,14 @@ class MainRoutes {
           builder: (_) => ChangeNotifierProvider<LoginNotifier>.value(
             value: injector.get(),
             child: const SignInScreen(),
+          ),
+        );
+      case Routes.register:
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => ChangeNotifierProvider<RegisterNotifier>.value(
+            value: injector.get(),
+            child: const RegisterScreen(),
           ),
         );
 

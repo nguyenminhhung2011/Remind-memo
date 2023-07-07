@@ -1,4 +1,3 @@
-
 import 'dart:developer';
 import 'package:injectable/injectable.dart';
 import 'package:project/domain/enitites/user_entity.dart';
@@ -48,33 +47,54 @@ class FirebaseDataSourceImpl implements FirebaseDataSource {
   }
 
   @override
-  Future<void> getCreateCurrentUser(UserEntity user) async {
+  Future<UserEntity?> getCreateCurrentUser(UserEntity user) async {
     final userCollection = fireStore.collection('users');
     final uid = await getCurrentUId();
-    userCollection.doc(uid).get().then((userDoc) {
-      final newUser = UserModel(
-        name: user.name,
-        uid: uid,
-        phoneNumber: user.phoneNumber,
-        email: user.email,
-        profileUrl: user.profileUrl,
-        isOnline: user.isOnline,
-        status: user.status,
-        dob: user.dob,
-        gender: user.gender,
-      ).toDocument();
+    final newUser = UserModel(
+      name: user.name.isEmpty ? user.email.split('@')[0].toString() : user.name,
+      uid: uid,
+      phoneNumber: user.phoneNumber,
+      email: user.email,
+      profileUrl: user.profileUrl,
+      isOnline: user.isOnline,
+      status: user.status,
+      dob: user.dob,
+      gender: user.gender,
+    ).toDocument();
+
+    try {
+      final userDoc = await userCollection.doc(uid).get();
       if (!userDoc.exists) {
-        userCollection.doc(uid).set(newUser);
-        return;
+        await userCollection.doc(uid).set(newUser);
+        return UserModel.fromJson(newUser).toEntity();
       } else {
-        userCollection.doc(uid).update(newUser);
-        // ignore: avoid_log
+        await userCollection.doc(uid).update(newUser);
         log("user already exist");
-        return;
+        return null;
       }
-    }).catchError((error) {
-      log(error);
-    });
+    } catch (e) {
+      log(e.toString());
+    }
+    return null;
+  }
+
+  @override
+  Future<UserEntity?> getUserByUuid() async {
+    String uid = auth.currentUser?.uid ?? "";
+    if (uid.isEmpty) {
+      return null;
+    }
+    final userCollection = fireStore.collection('users');
+    try {
+      final userDoc = await userCollection.doc(uid).get();
+      if (!userDoc.exists) {
+        return null;
+      }
+      return UserModel.fromSnapshot(userDoc).toEntity();
+    } catch (e) {
+      log(e.toString());
+    }
+    return null;
   }
 
   @override
@@ -147,7 +167,9 @@ class FirebaseDataSourceImpl implements FirebaseDataSource {
   @override
   Future<void> signIn(UserEntity user) async {
     await auth.signInWithEmailAndPassword(
-        email: user.email, password: user.password);
+      email: user.email,
+      password: user.password,
+    );
   }
 
   @override
@@ -157,8 +179,14 @@ class FirebaseDataSourceImpl implements FirebaseDataSource {
 
   @override
   Future<void> signUp(UserEntity user) async {
-    await auth.createUserWithEmailAndPassword(
-        email: user.email, password: user.password);
+    try {
+      await auth.createUserWithEmailAndPassword(
+        email: user.email,
+        password: user.password,
+      );
+    } catch (e) {
+      throw Exception(e);
+    }
   }
 
   @override

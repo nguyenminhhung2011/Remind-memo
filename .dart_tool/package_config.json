@@ -458,6 +458,12 @@
       "languageVersion": "3.0"
     },
     {
+      "name": "fluttertoast",
+      "rootUri": "file:///C:/Users/ASUS/AppData/Local/Pub/Cache/hosted/pub.dev/fluttertoast-8.2.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "freezed",
       "rootUri": "file:///C:/Users/ASUS/AppData/Local/Pub/Cache/hosted/pub.dev/freezed-2.3.5",
       "packageUri": "lib/",
@@ -1178,7 +1184,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2023-07-06T15:42:10.392655Z",
+  "generated": "2023-07-07T07:49:19.185488Z",
   "generator": "pub",
   "generatorVersion": "3.0.3"
 }

@@ -6,6 +6,7 @@ import 'package:project/core/extensions/context_exntions.dart';
 import 'package:project/core/extensions/handle_time.dart';
 import 'package:project/core/widgets/header_text_custom.dart';
 import 'package:project/core/widgets/sort_button.dart';
+import 'package:project/feature/auth/notifier/auth_notifier.dart';
 import 'package:project/feature/home/views/widgets/item_view.dart';
 import 'package:project/feature/pay_detail/notifier/pay_detail_notifier.dart';
 import 'package:project/feature/pay_detail/views/pay_detail_screen.dart';
@@ -36,6 +37,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final ValueNotifier<TypeView> _typeView =
       ValueNotifier<TypeView>(TypeView.all);
+  
+  AuthNotifier get  _auth => context.read<AuthNotifier>();
 
   final ValueNotifier<DateTime> _currentTime =
       ValueNotifier<DateTime>(DateTime.now());
@@ -323,7 +326,7 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Nguyen Minh Hung',
+                _auth.user.name ,
                 style: context.titleLarge.copyWith(
                   fontWeight: FontWeight.w600,
                   overflow: TextOverflow.ellipsis,

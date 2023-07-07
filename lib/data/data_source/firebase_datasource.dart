@@ -1,7 +1,8 @@
 import '../../domain/enitites/user_entity.dart';
 
 abstract class FirebaseDataSource {
-  Future<void> getCreateCurrentUser(UserEntity user);
+  Future<UserEntity?> getCreateCurrentUser(UserEntity user);
+  Future<UserEntity?> getUserByUuid();
   Future<void> googleAuth();
   Future<void> forgotPassword(String email);
 
@@ -17,4 +18,5 @@ abstract class FirebaseDataSource {
   Future<void> getUpdateUser(UserEntity user);
   Future<String> getCurrentUId();
   Future<void> signUpWithPhoneNumber(String phoneNumber);
+
 }

@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:injectable/injectable.dart';
 
 class UserEntity extends Equatable {
   final String name;
@@ -39,4 +40,6 @@ class UserEntity extends Equatable {
         dob,
         gender,
       ];
+
+
 }

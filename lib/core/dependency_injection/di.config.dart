@@ -19,8 +19,9 @@ import '../../data/data_source/firebase_datasource.dart' as _i3;
 import '../../data/data_source/firebase_datasource_impl.dart' as _i4;
 import '../../data/repository/firebase_repository.dart' as _i8;
 import '../../data/repository/firebase_repository_impl.dart' as _i9;
-import '../../feature/auth/notifier/auth_notifier.dart' as _i11;
+import '../../feature/auth/notifier/auth_notifier.dart' as _i12;
 import '../../feature/auth/notifier/login_notifier.dart' as _i10;
+import '../../feature/auth/notifier/register_notifier.dart' as _i11;
 
 // ignore_for_file: unnecessary_lambdas
 // ignore_for_file: lines_longer_than_80_chars
@@ -44,7 +45,9 @@ _i1.GetIt init(
       () => _i9.FirebaseRepositoryImpl(gh<_i3.FirebaseDataSource>()));
   gh.factory<_i10.LoginNotifier>(
       () => _i10.LoginNotifier(gh<_i8.FirebaseRepository>()));
-  gh.factory<_i11.AuthNotifier>(
-      () => _i11.AuthNotifier(gh<_i8.FirebaseRepository>()));
+  gh.factory<_i11.RegisterNotifier>(
+      () => _i11.RegisterNotifier(gh<_i8.FirebaseRepository>()));
+  gh.factory<_i12.AuthNotifier>(
+      () => _i12.AuthNotifier(gh<_i8.FirebaseRepository>()));
   return getIt;
 }
