@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:project/core/dependency_injection/di.dart';
 import 'package:project/core/extensions/color_extensions.dart';
 import 'package:project/feature/auth/notifier/auth_notifier.dart';
+import 'package:project/feature/paid/notifier/paid_notifier.dart';
 import 'package:project/routes/main_routes.dart';
 import 'package:project/routes/routes.dart';
 
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
+import 'data/data_source/preferences.dart';
 import 'generated/l10n.dart';
 import 'firebase_options.dart';
 
@@ -17,6 +19,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await Preferences.ensureInitedPreferences();
   configureDependencies();
   runApp(const MyApp());
 }
@@ -27,7 +30,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-        providers: [ChangeNotifierProvider<AuthNotifier>(create: (_) => injector.get())],
+        providers: [
+          ChangeNotifierProvider<AuthNotifier>(create: (_) => injector.get()),
+          ChangeNotifierProvider<PaidNotifier>(create: (_) => injector.get())
+        ],
         child: MaterialApp(
           localizationsDelegates: const [
             S.delegate,

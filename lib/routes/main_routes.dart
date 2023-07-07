@@ -16,6 +16,8 @@ import 'package:project/feature/splash/views/onboarding_screen.dart';
 import 'package:project/routes/routes.dart';
 import 'package:provider/provider.dart';
 
+import '../feature/paid/notifier/paid_notifier.dart';
+import '../feature/paid/views/paid_screen.dart';
 import '../feature/pay_detail/notifier/pay_detail_notifier.dart';
 import '../feature/pay_detail/views/pay_detail_screen.dart';
 import '../feature/splash/views/splash_screen.dart';
@@ -59,6 +61,11 @@ class MainRoutes {
             value: injector.get(),
             child: const RegisterScreen(),
           ),
+        );
+      case Routes.paid:
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => const PaidScreen(),
         );
 
       case Routes.onboard:

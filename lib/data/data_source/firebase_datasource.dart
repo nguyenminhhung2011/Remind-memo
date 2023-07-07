@@ -1,3 +1,4 @@
+import '../../domain/enitites/pay/pay.dart';
 import '../../domain/enitites/user_entity.dart';
 
 abstract class FirebaseDataSource {
@@ -15,8 +16,10 @@ abstract class FirebaseDataSource {
   Future<void> signIn(UserEntity user);
   Future<void> signUp(UserEntity user);
   Future<void> signOut();
+  Future<Pay> addPays(Pay pay);
   Future<void> getUpdateUser(UserEntity user);
   Future<String> getCurrentUId();
   Future<void> signUpWithPhoneNumber(String phoneNumber);
+  Stream<List<Pay>> getPays();
 
 }

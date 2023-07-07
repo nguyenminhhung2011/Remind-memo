@@ -1,5 +1,6 @@
 import 'package:injectable/injectable.dart';
 import 'package:project/data/repository/firebase_repository.dart';
+import 'package:project/domain/enitites/pay/pay.dart';
 import 'package:project/domain/enitites/user_entity.dart';
 
 import '../data_source/firebase_datasource.dart';
@@ -32,4 +33,10 @@ class FirebaseRepositoryImpl implements FirebaseRepository {
   
   @override
   Future<UserEntity?> getUserByUuid() => firebaseDataSource.getUserByUuid();
+
+  @override
+  Stream<List<Pay>> getPays() => firebaseDataSource.getPays();
+  
+  @override
+  Future<Pay> addPay(Pay pay) => firebaseDataSource.addPays(pay);
 }

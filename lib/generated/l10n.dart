@@ -679,6 +679,16 @@ class S {
       args: [],
     );
   }
+
+  /// `Select pay`
+  String get selectedPay {
+    return Intl.message(
+      'Select pay',
+      name: 'selectedPay',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

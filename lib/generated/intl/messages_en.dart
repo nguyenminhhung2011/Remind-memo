@@ -98,6 +98,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "searchAnyThing":
             MessageLookupByLibrary.simpleMessage("Search anyThings"),
         "selectedIcon": MessageLookupByLibrary.simpleMessage("Select icon"),
+        "selectedPay": MessageLookupByLibrary.simpleMessage("Select pay"),
         "settings": MessageLookupByLibrary.simpleMessage("Settings"),
         "share": MessageLookupByLibrary.simpleMessage("Share"),
         "signIn": MessageLookupByLibrary.simpleMessage("Sign In"),

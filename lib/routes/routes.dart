@@ -16,4 +16,5 @@ class Routes {
   static const String contactDetail =  "/contact_detail";
   static const String payDetail =  "/pay_detail";
   static const String addPay =  "/add_pay";
+  static const String paid =  "/paid";
 }

@@ -61,5 +61,6 @@
     "payDetails": "Pay Detail",
     "amountOfMoney": "Amount of money",
     "enterNote": "Enter note",
-    "settings": "Settings"
+    "settings": "Settings",
+    "selectedPay": "Select pay"
 }

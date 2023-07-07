@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:project/app_coordinator.dart';
 import 'package:project/core/extensions/context_exntions.dart';
+import 'package:project/data/data_source/preferences.dart';
 import 'package:project/feature/auth/notifier/auth_notifier.dart';
 import 'package:project/routes/routes.dart';
 import 'package:provider/provider.dart';
@@ -31,7 +32,12 @@ class _SplashScreenState extends State<SplashScreen> {
           print(value);
           if (value) {
             // ignore: use_build_context_synchronously
-            context.pushAndRemoveAll(Routes.dashboard);
+            final paidGet = CommonAppSettingPref.getPayId();
+            if (paidGet.isEmpty) {
+              context.pushAndRemoveAll(Routes.paid);
+            } else {
+              context.pushAndRemoveAll(Routes.dashboard);
+            }
           }
         });
       } else {

@@ -1,5 +1,7 @@
 import 'dart:developer';
 import 'package:injectable/injectable.dart';
+import 'package:project/data/model/pay/pay_model.dart';
+import 'package:project/domain/enitites/pay/pay.dart';
 import 'package:project/domain/enitites/user_entity.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -16,6 +18,7 @@ class FirebaseDataSourceImpl implements FirebaseDataSource {
 
   FirebaseDataSourceImpl(this.fireStore, this.auth,
       {required this.googleSignIn});
+
   @override
   Future<void> forgotPassword(String email) async {
     await auth.sendPasswordResetEmail(email: email);
@@ -197,6 +200,34 @@ class FirebaseDataSourceImpl implements FirebaseDataSource {
       verificationFailed: (FirebaseAuthException e) {},
       codeSent: (String verficationId, int? resendToken) {},
       codeAutoRetrievalTimeout: (String verificationId) {},
+    );
+  }
+
+  @override
+  Stream<List<Pay>> getPays() {
+    final payCollection = fireStore.collection("pays");
+    return payCollection.snapshots().map((querySnapshot) => querySnapshot.docs
+        .map((e) => PayModel.fromJson(e.data()).toEntity)
+        .toList());
+  }
+
+  @override
+  Future<Pay> addPays(Pay pay) async {
+    final payCollection = fireStore.collection("pays");
+    final payId = payCollection.doc().id;
+    await payCollection.doc(payId).set(PayModel(
+          payId,
+          pay.name,
+          pay.uuid,
+          0,
+          0,
+        ).toJson());
+    return Pay(
+      id: payId,
+      uuid: pay.uuid,
+      name: pay.name,
+      lendAmount: 0,
+      loanAmount: 0,
     );
   }
 }
