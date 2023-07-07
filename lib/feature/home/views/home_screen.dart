@@ -17,13 +17,13 @@ import '../../../core/widgets/drop_down_button_custom.dart';
 
 enum TypeView {
   all,
-  payable,
-  receivable;
+  lend,
+  loan;
 
   String get displayValue => switch (this) {
         TypeView.all => "all view",
-        TypeView.payable => "payable",
-        _ => "receivable",
+        TypeView.lend => "lend",
+        _ => "loan",
       };
 }
 
@@ -138,7 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       value: typeView,
                       onChange: (value) => _onChangeTab(value!),
                       items:
-                          [TypeView.all, TypeView.payable, TypeView.receivable]
+                          [TypeView.all, TypeView.lend, TypeView.loan]
                               .map<DropdownMenuItem<TypeView>>(
                                 (TypeView value) => DropdownMenuItem<TypeView>(
                                   value: value,

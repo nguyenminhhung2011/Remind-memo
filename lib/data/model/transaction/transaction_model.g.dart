@@ -1,0 +1,27 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'transaction_model.dart';
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+TransactionModel _$TransactionModelFromJson(Map<String, dynamic> json) =>
+    TransactionModel(
+      json['id'] as String,
+      json['note'] as String,
+      json['type'] as int,
+      json['price'] as int,
+      json['createTime'] as int,
+      json['notificationTime'] as int,
+    );
+
+Map<String, dynamic> _$TransactionModelToJson(TransactionModel instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'price': instance.price,
+      'createTime': instance.createTime,
+      'note': instance.note,
+      'notificationTime': instance.notificationTime,
+      'type': instance.type,
+    };

@@ -1,0 +1,23 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'pay_model.dart';
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+PayModel _$PayModelFromJson(Map<String, dynamic> json) => PayModel(
+      json['id'] as String,
+      json['name'] as String,
+      json['uuid'] as String,
+      json['lendAmount'] as int,
+      json['loanAmount'] as int,
+    );
+
+Map<String, dynamic> _$PayModelToJson(PayModel instance) => <String, dynamic>{
+      'id': instance.id,
+      'name': instance.name,
+      'uuid': instance.uuid,
+      'lendAmount': instance.lendAmount,
+      'loanAmount': instance.loanAmount,
+    };
