@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:project/app_coordinator.dart';
 import 'package:project/core/constant/constant.dart';
 import 'package:project/core/constant/image_const.dart';
 import 'package:project/core/extensions/context_exntions.dart';
@@ -8,6 +9,7 @@ import 'package:project/core/widgets/header_text_custom.dart';
 import 'package:project/core/widgets/sort_button.dart';
 import 'package:project/feature/auth/notifier/auth_notifier.dart';
 import 'package:project/feature/home/views/widgets/item_view.dart';
+import 'package:project/feature/list_contact/notifier/contact_notifier.dart';
 import 'package:project/feature/paid/notifier/paid_notifier.dart';
 import 'package:project/feature/pay_detail/notifier/pay_detail_notifier.dart';
 import 'package:project/feature/pay_detail/views/pay_detail_screen.dart';
@@ -15,6 +17,7 @@ import 'package:project/generated/l10n.dart';
 import 'package:provider/provider.dart';
 import '../../../core/widgets/button_custom.dart';
 import '../../../core/widgets/drop_down_button_custom.dart';
+import '../../../data/data_source/preferences.dart';
 
 enum TypeView {
   all,
@@ -64,10 +67,30 @@ class _HomeScreenState extends State<HomeScreen> {
         });
   }
 
+  void _onShowSelectedPaid() async {
+    final show = await showModalBottomSheet(
+        isDismissible: false,
+        enableDrag: false,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
+        ),
+        context: context,
+        builder: (context) {
+          return const SelectPaid();
+        });
+        if(show is bool && show){
+          // ignore: use_build_context_synchronously
+          context.read<ContactNotifier>().getContacts(_paid.pay?.id ?? '');
+        }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer2<PaidNotifier, AuthNotifier>(
-      builder: (context, paidModal, authModal,  child) {
+      builder: (context, paidModal, authModal, child) {
         return Scaffold(
           floatingActionButton: Padding(
             padding: const EdgeInsets.only(bottom: 50),
@@ -349,10 +372,104 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
-        Text(
-          _paid.pay?.name ?? '',
+        ButtonCustom(
+          enableWidth: false,
+          borderColor: Theme.of(context).primaryColor,
+          color: Theme.of(context).scaffoldBackgroundColor,
+          onPress: _onShowSelectedPaid,
+          child: Text(
+            _paid.pay?.name ?? '',
+          ),
         )
       ],
     );
+  }
+}
+
+class SelectPaid extends StatelessWidget {
+  const SelectPaid({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<PaidNotifier>(builder: (context, modal, child) {
+      return Scaffold(
+        backgroundColor: Colors.transparent,
+        resizeToAvoidBottomInset: true,
+        extendBody: true,
+        // bottomSheet: Padding(
+        //   padding: const EdgeInsets.all(Constant.kHMarginCard),
+        //   child: ButtonCustom(
+        //     height: 45.0,
+        //     onPress: () {},
+        //     child: Text(S.of(context).update),
+        //   ),
+        // ),
+        body: Column(
+          children: [
+            const SizedBox(height: 5.0),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                IconButton(
+                  onPressed: () => context.pop(),
+                  icon: const Icon(Icons.close),
+                ),
+                Text(
+                  S.of(context).selectedPay,
+                  style: context.titleLarge.copyWith(
+                    fontWeight: FontWeight.w500,
+                  ),
+                )
+              ],
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: Constant.kHMarginCard),
+                child: ListView(
+                  children: [
+                     ...modal.listPay
+                        .map((e) => ButtonCustom(
+                              borderColor: Theme.of(context).primaryColor,
+                              color: Theme.of(context).scaffoldBackgroundColor,
+                              onPress: () async {
+                                modal.setPaid(e);
+                                if (modal.pay != null) {
+                                  final save =
+                                      await CommonAppSettingPref.setPayId(
+                                          modal.pay?.id ?? '');
+                                  if (save) {
+                                    // ignore: use_build_context_synchronously
+                                    context.popArgs(true);
+                                  }
+                                }
+                              },
+                              height: 45.0,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    e.name,
+                                    textAlign: TextAlign.start,
+                                  ),
+                                ],
+                              ),
+                            ))
+                        .expand((element) => [
+                              element,
+                              const SizedBox(
+                                height: 10.0,
+                              )
+                            ])
+                        .toList(),
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
+      );
+    });
   }
 }

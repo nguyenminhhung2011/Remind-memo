@@ -75,82 +75,42 @@ class _PaidScreenState extends State<PaidScreen> {
               ],
             ),
           ),
-          body: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              ...modal.listPay.map(
-                (e) => GestureDetector(
-                  onTap: () async {
-                    modal.setPaid(e);
-                    if (modal.pay != null) {
-                      final save = await CommonAppSettingPref.setPayId(
-                          modal.pay?.id ?? '');
-                      if (save) {
-                        // ignore: use_build_context_synchronously
-                        context.pushAndRemoveAll(Routes.dashboard);
-                      }
-                    }
-                  },
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(Constant.kHMarginCard),
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: Constant.kHMarginCard,
-                      vertical: 5.0,
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      border: Border.all(
-                          width: 1.5, color: Theme.of(context).primaryColor),
-                    ),
-                    child: Text(
-                      e.name,
-                      style: context.titleMedium.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              )
-              // Padding(
-              //   padding: const EdgeInsets.symmetric(
-              //     horizontal: Constant.kHMarginCard,
-              //   ),
-              //   child: Row(
-              //     mainAxisAlignment: MainAxisAlignment.center,
-              //     children: [
-              //       if (modal.listPay.isNotEmpty && (modal.pay != null) && !modal.loadingButton && !modal.loadingButton)
-              //         Expanded(
-              //             child: DropdownButtonCustom<Pay?>(
-              //           width: 120.0,
-              //           radius: 10.0,
-              //           value: modal.pay,
-              //           onChange: (value) {},
-              //           items: modal.listPay
-              //               .map<DropdownMenuItem<Pay>>(
-              //                 (Pay value) => DropdownMenuItem<Pay>(
-              //                   value: value,
-              //                   child: Text(
-              //                     value.name,
-              //                     style: context.titleSmall.copyWith(
-              //                         fontWeight: FontWeight.w400,
-              //                         overflow: TextOverflow.ellipsis),
-              //                   ),
-              //                 ),
-              //               )
-              //               .toList(),
-              //         )),
-              //       const SizedBox(width: 10.0),
-              //       ButtonCustom(
-
-              //         enableWidth: false,
-              //         height: 45.0,
-              //         child: Text(S.of(context).choose),
-              //       ),
-              //     ],
-              //   ),
-              // ),
-            ],
+          body: Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: Constant.kHMarginCard),
+            child:
+                Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+              ...modal.listPay
+                  .map((e) => ButtonCustom(
+                        borderColor: Theme.of(context).primaryColor,
+                        color: Theme.of(context).scaffoldBackgroundColor,
+                        onPress: () async {
+                          modal.setPaid(e);
+                          if (modal.pay != null) {
+                            final save = await CommonAppSettingPref.setPayId(
+                                modal.pay?.id ?? '');
+                            if (save) {
+                              // ignore: use_build_context_synchronously
+                              context.pushAndRemoveAll(Routes.dashboard);
+                            }
+                          }
+                        },
+                        height: 45.0,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(e.name, textAlign: TextAlign.start),
+                          ],
+                        ),
+                      ))
+                  .expand((element) => [
+                        element,
+                        const SizedBox(
+                          height: 10.0,
+                        )
+                      ])
+                  .toList(),
+            ]),
           ),
         );
       },
