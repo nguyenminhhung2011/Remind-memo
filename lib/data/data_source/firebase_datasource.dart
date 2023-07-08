@@ -7,6 +7,7 @@ abstract class FirebaseDataSource {
   Future<UserEntity?> getCreateCurrentUser(UserEntity user);
   Future<UserEntity?> getUserByUuid();
   Future<Pay?> getPayById(String id);
+  Future<Contact?> getContactById(String cId, String paidId);
   Future<void> googleAuth();
   Future<void> forgotPassword(String email);
 

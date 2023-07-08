@@ -79,10 +79,15 @@ class MainRoutes {
       case Routes.contactDetail:
         return MaterialPageRoute(
             settings: settings,
-            builder: (_) => ChangeNotifierProvider<ContactDetailNotifier>.value(
-                  value: ContactDetailNotifier(),
+            builder: (_) {
+              if (settings.arguments is String) {
+                return ChangeNotifierProvider<ContactDetailNotifier>.value(
+                  value: injector.get(param1: settings.arguments),
                   child: const ContactDetailScreen(),
-                ));
+                );
+              }
+              return const SizedBox();
+            });
       case Routes.payDetail:
         return MaterialPageRoute(
           settings: settings,

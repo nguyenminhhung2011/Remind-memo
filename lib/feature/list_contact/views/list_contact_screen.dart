@@ -114,7 +114,7 @@ class _ContactScreenState extends State<ContactScreen> {
           .map((e) => ExpansionPanel(
                 headerBuilder: (context, isExpanded) => GestureDetector(
                   onTap: () =>
-                      context.openListPageWithRoute(Routes.contactDetail),
+                      context.openPageWithRouteAndParams(Routes.contactDetail, e.id),
                   child: Row(
                     children: [
                       Container(

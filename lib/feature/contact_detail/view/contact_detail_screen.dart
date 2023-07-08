@@ -7,8 +7,11 @@ import 'package:project/core/extensions/context_exntions.dart';
 import 'package:project/core/extensions/handle_time.dart';
 import 'package:project/core/widgets/button_custom.dart';
 import 'package:project/feature/add_pay/notifier/add_pay_notifier.dart';
+import 'package:project/feature/contact_detail/notifier/contact_detail_notifier.dart';
+import 'package:project/feature/paid/notifier/paid_notifier.dart';
 import 'package:project/generated/l10n.dart';
 import 'package:project/routes/routes.dart';
+import 'package:provider/provider.dart';
 
 class ContactDetailScreen extends StatefulWidget {
   const ContactDetailScreen({super.key});
@@ -18,94 +21,115 @@ class ContactDetailScreen extends StatefulWidget {
 }
 
 class _ContactDetailScreenState extends State<ContactDetailScreen> {
+  ContactDetailNotifier get _notifier => context.read<ContactDetailNotifier>();
   List<String> headers = [
     'Title',
     'Loan amount',
     'Lend amount',
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _notifier.getContactAndSetPay(context.read<PaidNotifier>().pay?.id ?? '');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        bottomNavigationBar: Padding(
-          padding: const EdgeInsets.all(Constant.kHMarginCard),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Expanded(
-                  child: ButtonCustom(
-                color: Colors.red,
-                height: 45.0,
-                child: Text(S.of(context).loanAdd),
-                onPress: () => context.openPageWithRouteAndParams(
-                  Routes.addPay,
-                  AddPayArguments(contactId: 0, loan: true),
-                ),
-              )),
-              const SizedBox(width: Constant.kHMarginCard),
-              Expanded(
-                  child: ButtonCustom(
-                height: 45.0,
-                child: Text(S.of(context).lendAdd),
-                onPress: () => context.openPageWithRouteAndParams(
-                  Routes.addPay,
-                  AddPayArguments(contactId: 0, loan: false),
-                ),
-              )),
-            ],
-          ),
-        ),
-        appBar: _appBar(context),
-        body: Column(
-          children: [
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(10.0),
-              margin: const EdgeInsets.all(Constant.kHMarginCard),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10.0),
-                color: Theme.of(context).cardColor,
-                boxShadow: [
-                  BoxShadow(
-                    color: Theme.of(context).shadowColor.withOpacity(0.1),
-                    blurRadius: 10.0,
-                  ),
-                ],
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
+    return Consumer<ContactDetailNotifier>(
+      builder: (context, modal, child) {
+        if (modal.loadingGet) {
+          return Center(
+            child: CircularProgressIndicator(
+              color: Theme.of(context).primaryColor,
+            ),
+          );
+        }
+        return Scaffold(
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            bottomNavigationBar: Padding(
+              padding: const EdgeInsets.all(Constant.kHMarginCard),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Row(
-                    children: [
-                      Image.asset(
-                        ImageConst.dollar,
-                        width: 35.0,
-                        height: 35.0,
-                      ),
-                      Expanded(
-                        child: Text(
-                          '3.123.012.213',
-                          textAlign: TextAlign.end,
-                          style: context.titleLarge.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.green,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
+                  Expanded(
+                      child: ButtonCustom(
+                    color: Colors.red,
+                    height: 45.0,
+                    child: Text(S.of(context).loanAdd),
+                    onPress: () => context.openPageWithRouteAndParams(
+                      Routes.addPay,
+                      AddPayArguments(contactId: 0, loan: true),
+                    ),
+                  )),
+                  const SizedBox(width: Constant.kHMarginCard),
+                  Expanded(
+                      child: ButtonCustom(
+                    height: 45.0,
+                    child: Text(S.of(context).lendAdd),
+                    onPress: () => context.openPageWithRouteAndParams(
+                      Routes.addPay,
+                      AddPayArguments(contactId: 0, loan: false),
+                    ),
+                  )),
                 ],
               ),
             ),
-            const SizedBox(height: 5.0),
-            const Divider(),
-            const SizedBox(height: 5.0),
-            _header(context),
-            _body(context)
-          ],
-        ));
+            appBar: _appBar(context),
+            body: Column(
+              children: [
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(10.0),
+                  margin: const EdgeInsets.all(Constant.kHMarginCard),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10.0),
+                    color: Theme.of(context).cardColor,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Theme.of(context).shadowColor.withOpacity(0.1),
+                        blurRadius: 10.0,
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Image.asset(
+                            ImageConst.dollar,
+                            width: 35.0,
+                            height: 35.0,
+                          ),
+                          Expanded(
+                            child: Text(
+                              modal.contact?.price.toString() ?? '0',
+                              textAlign: TextAlign.end,
+                              style: context.titleLarge.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.green,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 5.0),
+                const Divider(),
+                const SizedBox(height: 5.0),
+                _header(context),
+                _body(context)
+              ],
+            ));
+      },
+    );
   }
 
   Expanded _body(BuildContext context) {
@@ -168,7 +192,7 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            Constant.icons[0]['icon'].toString(),
+            Constant.icons[_notifier.contact?.type ?? 0]['icon'].toString(),
           ),
           const SizedBox(width: 10.0),
           Expanded(
@@ -176,14 +200,14 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Nguyen Minh Hung',
+                  _notifier.contact?.name ?? '',
                   style: context.titleMedium.copyWith(
                     fontWeight: FontWeight.bold,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 Text(
-                  '(0935703991)',
+                  '(${_notifier.contact?.phoneNumber ?? ''})',
                   style: context.titleSmall.copyWith(
                     color: Theme.of(context).hintColor,
                     overflow: TextOverflow.ellipsis,

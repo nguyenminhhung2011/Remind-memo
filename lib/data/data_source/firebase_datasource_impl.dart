@@ -269,4 +269,20 @@ class FirebaseDataSourceImpl implements FirebaseDataSource {
               .toJson(),
         );
   }
+
+  @override
+  Future<Contact?> getContactById(String cId, String paidId) async {
+    final contactCollection =
+        fireStore.collection('pays').doc(paidId).collection('contacts');
+    try {
+      final contactDoc = await contactCollection.doc(cId).get();
+      if (!contactDoc.exists) {
+        return null;
+      }
+      return ContactModel.fromJson(contactDoc.data()!).toEntity;
+    } catch (e) {
+      log(e.toString());
+    }
+    return null;
+  }
 }

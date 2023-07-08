@@ -53,4 +53,7 @@ class FirebaseRepositoryImpl implements FirebaseRepository {
 
   @override
   Future<void> addContact(Contact contact, String paidId) => firebaseDataSource.addContacts(contact, paidId);
+  
+  @override
+  Future<Contact?> getContactById(String cId, String paidId) => firebaseDataSource.getContactById(cId, paidId);
 }
