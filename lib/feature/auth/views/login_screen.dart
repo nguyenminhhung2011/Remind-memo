@@ -12,6 +12,7 @@ import '../../../core/constant/image_const.dart';
 import '../../../core/widgets/app_name.dart';
 import '../../../core/widgets/button_custom.dart';
 import '../../../core/widgets/text_field_custom.dart';
+import '../../../data/data_source/preferences.dart';
 import '../../../domain/enitites/user_entity.dart';
 import '../../../generated/l10n.dart';
 import '../../../routes/routes.dart';
@@ -26,7 +27,8 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen> {
   final TextEditingController _emailController =
       TextEditingController(text: 'hungnguyen.201102ak@gmail.com');
-  final TextEditingController _passwordController = TextEditingController(text: '1234567');
+  final TextEditingController _passwordController =
+      TextEditingController(text: '1234567');
   final ValueNotifier<bool> _loading = ValueNotifier<bool>(false);
   @override
   void initState() {
@@ -49,7 +51,7 @@ class _SignInScreenState extends State<SignInScreen> {
       log("password is null");
       return;
     }
-    
+
     final user = UserEntity(
       email: _emailController.text,
       password: _passwordController.text,
@@ -60,14 +62,21 @@ class _SignInScreenState extends State<SignInScreen> {
       return;
     }
     final userGet = await modal.getCurrentUser();
-    if(userGet == null){
+    if (userGet == null) {
       log('Error');
       return;
     }
     // ignore: use_build_context_synchronously
     context.read<AuthNotifier>().setUser(userGet);
-    // ignore: use_build_context_synchronously
-    context.pushAndRemoveAll(Routes.dashboard);
+    final paidGet = CommonAppSettingPref.getPayId();
+    if (paidGet.isEmpty) {
+      // ignore: use_build_context_synchronously
+      context.pushAndRemoveAll(Routes.paid);
+    } else {
+      // ignore: use_build_context_synchronously
+      context.pushAndRemoveAll(Routes.dashboard);
+    }
+
   }
 
   @override

@@ -19,10 +19,12 @@ import '../../data/data_source/firebase_datasource.dart' as _i3;
 import '../../data/data_source/firebase_datasource_impl.dart' as _i4;
 import '../../data/repository/firebase_repository.dart' as _i8;
 import '../../data/repository/firebase_repository_impl.dart' as _i9;
-import '../../feature/auth/notifier/auth_notifier.dart' as _i13;
-import '../../feature/auth/notifier/login_notifier.dart' as _i10;
-import '../../feature/auth/notifier/register_notifier.dart' as _i12;
-import '../../feature/paid/notifier/paid_notifier.dart' as _i11;
+import '../../feature/auth/notifier/auth_notifier.dart' as _i14;
+import '../../feature/auth/notifier/login_notifier.dart' as _i11;
+import '../../feature/auth/notifier/register_notifier.dart' as _i13;
+import '../../feature/home/notifier/home_notifier.dart' as _i10;
+import '../../feature/list_contact/notifier/contact_notifier.dart' as _i15;
+import '../../feature/paid/notifier/paid_notifier.dart' as _i12;
 
 // ignore_for_file: unnecessary_lambdas
 // ignore_for_file: lines_longer_than_80_chars
@@ -44,13 +46,17 @@ _i1.GetIt init(
       ));
   gh.factory<_i8.FirebaseRepository>(
       () => _i9.FirebaseRepositoryImpl(gh<_i3.FirebaseDataSource>()));
-  gh.factory<_i10.LoginNotifier>(
-      () => _i10.LoginNotifier(gh<_i8.FirebaseRepository>()));
-  gh.factory<_i11.PaidNotifier>(
-      () => _i11.PaidNotifier(gh<_i8.FirebaseRepository>()));
-  gh.factory<_i12.RegisterNotifier>(
-      () => _i12.RegisterNotifier(gh<_i8.FirebaseRepository>()));
-  gh.factory<_i13.AuthNotifier>(
-      () => _i13.AuthNotifier(gh<_i8.FirebaseRepository>()));
+  gh.factory<_i10.HomeNotifier>(
+      () => _i10.HomeNotifier(gh<_i8.FirebaseRepository>()));
+  gh.factory<_i11.LoginNotifier>(
+      () => _i11.LoginNotifier(gh<_i8.FirebaseRepository>()));
+  gh.factory<_i12.PaidNotifier>(
+      () => _i12.PaidNotifier(gh<_i8.FirebaseRepository>()));
+  gh.factory<_i13.RegisterNotifier>(
+      () => _i13.RegisterNotifier(gh<_i8.FirebaseRepository>()));
+  gh.factory<_i14.AuthNotifier>(
+      () => _i14.AuthNotifier(gh<_i8.FirebaseRepository>()));
+  gh.factory<_i15.ContactNotifier>(
+      () => _i15.ContactNotifier(gh<_i8.FirebaseRepository>()));
   return getIt;
 }

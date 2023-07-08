@@ -3,23 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:project/app_coordinator.dart';
 import 'package:project/core/extensions/context_exntions.dart';
 import 'package:project/core/extensions/handle_time.dart';
+import 'package:project/feature/list_contact/notifier/contact_notifier.dart';
+import 'package:project/feature/paid/notifier/paid_notifier.dart';
 import 'package:project/routes/routes.dart';
+import 'package:provider/provider.dart';
 
 import '../../../core/constant/constant.dart';
 import '../../../core/widgets/button_custom.dart';
 import '../../../generated/l10n.dart';
 import '../../home/views/widgets/bottom_add_new_contact.dart';
-
-class Step {
-  Step(this.name, this.id, this.price, this.isPay, this.count,
-      [this.isExpanded = false]);
-  String name;
-  int id;
-  double price;
-  bool isPay;
-  int count;
-  bool isExpanded;
-}
 
 class ContactScreen extends StatefulWidget {
   const ContactScreen({super.key});
@@ -29,12 +21,9 @@ class ContactScreen extends StatefulWidget {
 }
 
 class _ContactScreenState extends State<ContactScreen> {
-  List<Step> listStep = [
-    Step('Nguyen Minh Hung', 0, 100.0, false, 3),
-    Step('Truong Huynh Duc Hoang', 1, 59.1, true, 2),
-    Step('Nguyen Thanh Tung', 2, 200.0, false, 4),
-    Step('Hahahahaha', 3, 101.0, true, 2),
-  ];
+  ContactNotifier get _contact => context.read<ContactNotifier>();
+  PaidNotifier get _paid => context.read<PaidNotifier>();
+
   void _onShowBottomAddNewContact() async {
     final add = await showModalBottomSheet(
       isDismissible: false,
@@ -50,55 +39,68 @@ class _ContactScreenState extends State<ContactScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _contact.getContacts(_paid.pay?.id ?? '');
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 50),
-        child: ButtonCustom(
-          radius: 5.0,
-          width: context.widthDevice * 0.45,
-          onPress: _onShowBottomAddNewContact,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Text(
-                  S.of(context).addNewContact,
-                  style: context.titleSmall.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    overflow: TextOverflow.ellipsis,
+    return Consumer<ContactNotifier>(
+      builder: (context, modal, child) {
+        return Scaffold(
+          floatingActionButton: Padding(
+            padding: const EdgeInsets.only(bottom: 50),
+            child: ButtonCustom(
+              radius: 5.0,
+              width: context.widthDevice * 0.45,
+              onPress: _onShowBottomAddNewContact,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Text(
+                      S.of(context).addNewContact,
+                      style: context.titleSmall.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
                   ),
-                ),
+                  const SizedBox(width: 4),
+                  const Icon(Icons.add),
+                ],
               ),
-              const SizedBox(width: 4),
-              const Icon(Icons.add),
+            ),
+          ),
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          appBar: AppBar(
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            toolbarHeight: 80,
+            elevation: 0,
+            title: Row(
+              children: [
+                Icon(Icons.people, color: context.titleLarge.color),
+                const SizedBox(width: 10.0),
+                Text(
+                  S.of(context).contact,
+                  style:
+                      context.titleLarge.copyWith(fontWeight: FontWeight.bold),
+                )
+              ],
+            ),
+          ),
+          body: ListView(
+            physics: const BouncingScrollPhysics(),
+            children: [
+              _expansionView(context),
             ],
           ),
-        ),
-      ),
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        toolbarHeight: 80,
-        elevation: 0,
-        title: Row(
-          children: [
-            Icon(Icons.people, color: context.titleLarge.color),
-            const SizedBox(width: 10.0),
-            Text(
-              S.of(context).contact,
-              style: context.titleLarge.copyWith(fontWeight: FontWeight.bold),
-            )
-          ],
-        ),
-      ),
-      body: ListView(
-        physics: const BouncingScrollPhysics(),
-        children: [
-          _expansionView(context),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -107,15 +109,12 @@ class _ContactScreenState extends State<ContactScreen> {
       expandedHeaderPadding: const EdgeInsets.symmetric(vertical: 10.0),
       elevation: 0,
       animationDuration: const Duration(milliseconds: 300),
-      expansionCallback: (index, isExpanded) {
-        setState(() {
-          listStep[index].isExpanded = !isExpanded;
-        });
-      },
-      children: listStep
+      expansionCallback: _contact.onSelectStep,
+      children: _contact.listStep
           .map((e) => ExpansionPanel(
                 headerBuilder: (context, isExpanded) => GestureDetector(
-                  onTap: () => context.openListPageWithRoute(Routes.contactDetail),
+                  onTap: () =>
+                      context.openListPageWithRoute(Routes.contactDetail),
                   child: Row(
                     children: [
                       Container(

@@ -22,6 +22,7 @@ mixin _$Contact {
   String get note => throw _privateConstructorUsedError;
   int get type => throw _privateConstructorUsedError;
   int get count => throw _privateConstructorUsedError;
+  int get price => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $ContactCopyWith<Contact> get copyWith => throw _privateConstructorUsedError;
@@ -38,7 +39,8 @@ abstract class $ContactCopyWith<$Res> {
       String phoneNumber,
       String note,
       int type,
-      int count});
+      int count,
+      int price});
 }
 
 /// @nodoc
@@ -60,6 +62,7 @@ class _$ContactCopyWithImpl<$Res, $Val extends Contact>
     Object? note = null,
     Object? type = null,
     Object? count = null,
+    Object? price = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -86,6 +89,10 @@ class _$ContactCopyWithImpl<$Res, $Val extends Contact>
           ? _value.count
           : count // ignore: cast_nullable_to_non_nullable
               as int,
+      price: null == price
+          ? _value.price
+          : price // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 }
@@ -103,7 +110,8 @@ abstract class _$$_ContactCopyWith<$Res> implements $ContactCopyWith<$Res> {
       String phoneNumber,
       String note,
       int type,
-      int count});
+      int count,
+      int price});
 }
 
 /// @nodoc
@@ -122,6 +130,7 @@ class __$$_ContactCopyWithImpl<$Res>
     Object? note = null,
     Object? type = null,
     Object? count = null,
+    Object? price = null,
   }) {
     return _then(_$_Contact(
       id: null == id
@@ -148,6 +157,10 @@ class __$$_ContactCopyWithImpl<$Res>
           ? _value.count
           : count // ignore: cast_nullable_to_non_nullable
               as int,
+      price: null == price
+          ? _value.price
+          : price // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -161,7 +174,8 @@ class _$_Contact implements _Contact {
       required this.phoneNumber,
       required this.note,
       required this.type,
-      required this.count});
+      required this.count,
+      required this.price});
 
   @override
   final String id;
@@ -175,10 +189,12 @@ class _$_Contact implements _Contact {
   final int type;
   @override
   final int count;
+  @override
+  final int price;
 
   @override
   String toString() {
-    return 'Contact(id: $id, name: $name, phoneNumber: $phoneNumber, note: $note, type: $type, count: $count)';
+    return 'Contact(id: $id, name: $name, phoneNumber: $phoneNumber, note: $note, type: $type, count: $count, price: $price)';
   }
 
   @override
@@ -192,12 +208,13 @@ class _$_Contact implements _Contact {
                 other.phoneNumber == phoneNumber) &&
             (identical(other.note, note) || other.note == note) &&
             (identical(other.type, type) || other.type == type) &&
-            (identical(other.count, count) || other.count == count));
+            (identical(other.count, count) || other.count == count) &&
+            (identical(other.price, price) || other.price == price));
   }
 
   @override
   int get hashCode =>
-      Object.hash(runtimeType, id, name, phoneNumber, note, type, count);
+      Object.hash(runtimeType, id, name, phoneNumber, note, type, count, price);
 
   @JsonKey(ignore: true)
   @override
@@ -213,7 +230,8 @@ abstract class _Contact implements Contact {
       required final String phoneNumber,
       required final String note,
       required final int type,
-      required final int count}) = _$_Contact;
+      required final int count,
+      required final int price}) = _$_Contact;
 
   @override
   String get id;
@@ -227,6 +245,8 @@ abstract class _Contact implements Contact {
   int get type;
   @override
   int get count;
+  @override
+  int get price;
   @override
   @JsonKey(ignore: true)
   _$$_ContactCopyWith<_$_Contact> get copyWith =>

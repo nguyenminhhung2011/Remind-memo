@@ -1,7 +1,11 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:project/app_coordinator.dart';
 import 'package:project/core/constant/constant.dart';
 import 'package:project/core/extensions/context_exntions.dart';
+import 'package:project/feature/auth/notifier/auth_notifier.dart';
+import 'package:project/routes/routes.dart';
+import 'package:provider/provider.dart';
 
 import '../../../generated/l10n.dart';
 
@@ -13,6 +17,14 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  void _onTap(int index){
+    switch(index){
+      case 2:
+        context.read<AuthNotifier>().onSignOut();
+        context.pushAndRemoveAll(Routes.login); 
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,7 +103,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   },
                 ].mapIndexed(
                   (index, e) => GestureDetector(
-                    onTap: () {},
+                    onTap: () => _onTap(index),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10.0),
                       child: Row(

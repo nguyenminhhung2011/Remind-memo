@@ -1,9 +1,12 @@
 import 'package:collection/collection.dart';
-import 'package:fast_contacts/fast_contacts.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:project/app_coordinator.dart';
 import 'package:project/core/extensions/context_exntions.dart';
+import 'package:project/domain/enitites/contact/contact.dart';
+import 'package:project/feature/list_contact/notifier/contact_notifier.dart';
+import 'package:project/feature/paid/notifier/paid_notifier.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../core/constant/constant.dart';
 import '../../../../core/widgets/button_custom.dart';
@@ -24,15 +27,35 @@ class _BottomAddNewContactState extends State<BottomAddNewContact> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _noteController = TextEditingController();
   final ValueNotifier<int> _iconIndex = ValueNotifier<int>(0);
+  ContactNotifier get _contactNotifier => context.read<ContactNotifier>();
   Future<List<Contact>> getContacts() async {
     bool isGranted = await Permission.contacts.status.isGranted;
     if (!isGranted) {
       isGranted = await Permission.contacts.request().isGranted;
     }
     if (isGranted) {
-      return await FastContacts.getAllContacts();
+      // return await FastContacts.getAllContacts();
     }
     return [];
+  }
+
+  void addContact() async {
+    final add = await _contactNotifier.addContact(
+      Contact(
+        id: '',
+        name: _nameController.text,
+        phoneNumber: _phoneController.text,
+        note: _noteController.text,
+        type: _iconIndex.value,
+        count: 0,
+        price: 0,
+      ),
+      context.read<PaidNotifier>().pay?.id ?? '',
+    );
+    if (add) {
+      // ignore: use_build_context_synchronously
+      context.pop();
+    }
   }
 
   void _onSelectIcon() async {
@@ -63,7 +86,7 @@ class _BottomAddNewContactState extends State<BottomAddNewContact> {
                   children: [
                     ...Constant.icons.mapIndexed(
                       (index, e) => GestureDetector(
-                        onTap: ()=> context.popArgs(index),
+                        onTap: () => context.popArgs(index),
                         child: Container(
                           width: 50.0,
                           height: 50.0,
@@ -89,7 +112,7 @@ class _BottomAddNewContactState extends State<BottomAddNewContact> {
         );
       },
     );
-    if(pic != null && pic is int){
+    if (pic != null && pic is int) {
       _iconIndex.value = pic;
     }
   }
@@ -218,7 +241,9 @@ class _BottomAddNewContactState extends State<BottomAddNewContact> {
                                 ),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(20.0),
-                                  color:( Constant.icons[iconIndex]['color'] as Color).withOpacity(0.5),
+                                  color: (Constant.icons[iconIndex]['color']
+                                          as Color)
+                                      .withOpacity(0.5),
                                 ),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
@@ -236,15 +261,18 @@ class _BottomAddNewContactState extends State<BottomAddNewContact> {
                     );
                   },
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(Constant.kHMarginCard),
-                  child: ButtonCustom(
-                    height: 45.0,
-                    enableClick: _nameController.text.isNotEmpty,
-                    child: Text(S.of(context).addNewContact),
-                    onPress: () => context.pop(),
-                  ),
-                ),
+                Consumer<ContactNotifier>(builder: (context, modal, child) {
+                  return Padding(
+                    padding: const EdgeInsets.all(Constant.kHMarginCard),
+                    child: ButtonCustom(
+                      height: 45.0,
+                      loading: modal.loadingButton,
+                      enableClick: _nameController.text.isNotEmpty,
+                      child: Text(S.of(context).addNewContact),
+                      onPress: () => addContact(),
+                    ),
+                  );
+                })
               ]
                   .expand((element) => [element, const SizedBox(height: 6.0)])
                   .toList(),

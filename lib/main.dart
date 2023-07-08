@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:project/core/dependency_injection/di.dart';
 import 'package:project/core/extensions/color_extensions.dart';
 import 'package:project/feature/auth/notifier/auth_notifier.dart';
+import 'package:project/feature/list_contact/notifier/contact_notifier.dart';
 import 'package:project/feature/paid/notifier/paid_notifier.dart';
 import 'package:project/routes/main_routes.dart';
 import 'package:project/routes/routes.dart';
@@ -32,7 +33,8 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
         providers: [
           ChangeNotifierProvider<AuthNotifier>(create: (_) => injector.get()),
-          ChangeNotifierProvider<PaidNotifier>(create: (_) => injector.get())
+          ChangeNotifierProvider<PaidNotifier>(create: (_) => injector.get()),
+          ChangeNotifierProvider<ContactNotifier>(create: (_) => injector.get())
         ],
         child: MaterialApp(
           localizationsDelegates: const [

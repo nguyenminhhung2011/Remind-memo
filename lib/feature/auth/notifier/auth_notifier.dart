@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
+import 'package:project/data/data_source/preferences.dart';
 import 'package:project/data/repository/firebase_repository.dart';
 import 'package:project/domain/enitites/user_entity.dart';
 
@@ -10,7 +11,6 @@ class AuthNotifier extends ChangeNotifier {
   final FirebaseRepository _firebaseRepository;
 
   AuthNotifier(this._firebaseRepository);
-
 
   UserEntity _user = UserEntity();
   UserEntity get user => _user;
@@ -29,7 +29,7 @@ class AuthNotifier extends ChangeNotifier {
   Future<bool> getAndSetUser() async {
     try {
       final newUser = await _firebaseRepository.getUserByUuid();
-      if(newUser == null){
+      if (newUser == null) {
         return false;
       }
       setUser(newUser);
@@ -41,4 +41,9 @@ class AuthNotifier extends ChangeNotifier {
   }
 
   Future<void> onGoogleAuth() async => await _firebaseRepository.googleAuth();
+
+  Future<void> onSignOut() async {
+    await _firebaseRepository.signOut();
+    CommonAppSettingPref.removePayId();
+  }
 }

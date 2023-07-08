@@ -17,6 +17,8 @@ class ContactModel {
   final int type;
   @JsonKey(name: 'count')
   final int count;
+  @JsonKey(name: 'price')
+  final int price;
 
   ContactModel(
     this.id,
@@ -25,6 +27,7 @@ class ContactModel {
     this.note,
     this.type,
     this.count,
+    this.price,
   );
 
   Map<String, dynamic> toJson() => _$ContactModelToJson(this);
@@ -38,5 +41,6 @@ class ContactModel {
         note: note,
         type: type,
         count: count,
+        price: price,
       );
 }

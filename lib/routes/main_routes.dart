@@ -11,12 +11,12 @@ import 'package:project/feature/contact_detail/notifier/contact_detail_notifier.
 import 'package:project/feature/contact_detail/view/contact_detail_screen.dart';
 import 'package:project/feature/dashboard/bloc/dashboard_bloc.dart';
 import 'package:project/feature/dashboard/views/dashboard_screen.dart';
+import 'package:project/feature/home/notifier/home_notifier.dart';
+import 'package:project/feature/home/views/home_screen.dart';
 import 'package:project/feature/splash/notifier/splash_notifier.dart';
 import 'package:project/feature/splash/views/onboarding_screen.dart';
 import 'package:project/routes/routes.dart';
 import 'package:provider/provider.dart';
-
-import '../feature/paid/notifier/paid_notifier.dart';
 import '../feature/paid/views/paid_screen.dart';
 import '../feature/pay_detail/notifier/pay_detail_notifier.dart';
 import '../feature/pay_detail/views/pay_detail_screen.dart';
@@ -36,9 +36,10 @@ class MainRoutes {
       case Routes.home:
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) {
-            return const SizedBox();
-          },
+          builder: (_) => ChangeNotifierProvider<HomeNotifier>.value(
+            value: injector.get(),
+            child: const HomeScreen(),
+          ),
         );
 
       case Routes.splash:

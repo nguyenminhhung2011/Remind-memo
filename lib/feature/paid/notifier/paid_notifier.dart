@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -11,7 +12,7 @@ class PaidNotifier extends ChangeNotifier {
   final FirebaseRepository _firebaseRepository;
   PaidNotifier(this._firebaseRepository) {}
 
-  final List<Pay> _listPay = <Pay>[];
+  List<Pay> _listPay = <Pay>[];
   List<Pay> get listPay => _listPay;
 
   Pay? _pay;
@@ -31,7 +32,7 @@ class PaidNotifier extends ChangeNotifier {
         if (event.isNotEmpty) {
           _pay = event.first;
         }
-        _listPay.addAll(event);
+        _listPay = event;
         notifyListeners();
       });
       notifyListeners();
@@ -61,4 +62,19 @@ class PaidNotifier extends ChangeNotifier {
     notifyListeners();
     return true;
   }
+
+  FutureOr<void> setPaid(Pay pay) {
+    _pay = pay;
+    notifyListeners();
+  }
+
+  FutureOr<void> getPayAndSetPay(String id) async {
+    final get = await _firebaseRepository.getPayById(id);
+    if (get != null) {
+      log(get.name);
+      _pay = get;
+      notifyListeners();
+    }
+  }
+  
 }

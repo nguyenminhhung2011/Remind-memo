@@ -10,5 +10,6 @@ class Contact with _$Contact {
     required String note,
     required int type,
     required int count,
+    required int price,
   }) = _Contact;
 }

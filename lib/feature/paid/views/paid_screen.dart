@@ -4,13 +4,13 @@ import 'package:project/core/constant/constant.dart';
 import 'package:project/core/extensions/context_exntions.dart';
 import 'package:project/core/widgets/button_custom.dart';
 import 'package:project/data/data_source/preferences.dart';
-import 'package:project/domain/enitites/pay/pay.dart';
+// import 'package:project/domain/enitites/pay/pay.dart';
 import 'package:project/feature/auth/notifier/auth_notifier.dart';
 import 'package:project/feature/paid/notifier/paid_notifier.dart';
 import 'package:project/routes/routes.dart';
 import 'package:provider/provider.dart';
 
-import '../../../core/widgets/drop_down_button_custom.dart';
+// import '../../../core/widgets/drop_down_button_custom.dart';
 import '../../../core/widgets/text_field_custom.dart';
 import '../../../generated/l10n.dart';
 
@@ -76,55 +76,80 @@ class _PaidScreenState extends State<PaidScreen> {
             ),
           ),
           body: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: Constant.kHMarginCard,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    if (modal.listPay.isNotEmpty && (modal.pay != null) && !modal.loadingButton && !modal.loadingButton)
-                      Expanded(
-                          child: DropdownButtonCustom<Pay?>(
-                        width: 120.0,
-                        radius: 10.0,
-                        value: modal.pay,
-                        onChange: (value) {},
-                        items: modal.listPay
-                            .map<DropdownMenuItem<Pay>>(
-                              (Pay value) => DropdownMenuItem<Pay>(
-                                value: value,
-                                child: Text(
-                                  value.name,
-                                  style: context.titleSmall.copyWith(
-                                      fontWeight: FontWeight.w400,
-                                      overflow: TextOverflow.ellipsis),
-                                ),
-                              ),
-                            )
-                            .toList(),
-                      )),
-                    const SizedBox(width: 10.0),
-                    ButtonCustom(
-                      onPress: () async {
-                        if (modal.pay != null) {
-                          final save = await CommonAppSettingPref.setPayId(
-                              modal.pay?.id ?? '');
-                          if (save) {
-                            // ignore: use_build_context_synchronously
-                            context.pushAndRemoveAll(Routes.dashboard);
-                          }
-                        }
-                      },
-                      enableWidth: false,
-                      height: 45.0,
-                      child: Text(S.of(context).choose),
+              ...modal.listPay.map(
+                (e) => GestureDetector(
+                  onTap: () async {
+                    modal.setPaid(e);
+                    if (modal.pay != null) {
+                      final save = await CommonAppSettingPref.setPayId(
+                          modal.pay?.id ?? '');
+                      if (save) {
+                        // ignore: use_build_context_synchronously
+                        context.pushAndRemoveAll(Routes.dashboard);
+                      }
+                    }
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(Constant.kHMarginCard),
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: Constant.kHMarginCard,
+                      vertical: 5.0,
                     ),
-                  ],
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.0),
+                      border: Border.all(
+                          width: 1.5, color: Theme.of(context).primaryColor),
+                    ),
+                    child: Text(
+                      e.name,
+                      style: context.titleMedium.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+              )
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(
+              //     horizontal: Constant.kHMarginCard,
+              //   ),
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.center,
+              //     children: [
+              //       if (modal.listPay.isNotEmpty && (modal.pay != null) && !modal.loadingButton && !modal.loadingButton)
+              //         Expanded(
+              //             child: DropdownButtonCustom<Pay?>(
+              //           width: 120.0,
+              //           radius: 10.0,
+              //           value: modal.pay,
+              //           onChange: (value) {},
+              //           items: modal.listPay
+              //               .map<DropdownMenuItem<Pay>>(
+              //                 (Pay value) => DropdownMenuItem<Pay>(
+              //                   value: value,
+              //                   child: Text(
+              //                     value.name,
+              //                     style: context.titleSmall.copyWith(
+              //                         fontWeight: FontWeight.w400,
+              //                         overflow: TextOverflow.ellipsis),
+              //                   ),
+              //                 ),
+              //               )
+              //               .toList(),
+              //         )),
+              //       const SizedBox(width: 10.0),
+              //       ButtonCustom(
+
+              //         enableWidth: false,
+              //         height: 45.0,
+              //         child: Text(S.of(context).choose),
+              //       ),
+              //     ],
+              //   ),
+              // ),
             ],
           ),
         );
@@ -170,7 +195,9 @@ class _BottomAddPaidState extends State<BottomAddPaid> {
         child: ButtonCustom(
           loading: context.read<PaidNotifier>().loadingButton,
           onPress: () async {
-            final add = await context.read<PaidNotifier>().addNewPaid(_name.text, context.read<AuthNotifier>().user.uid);
+            final add = await context
+                .read<PaidNotifier>()
+                .addNewPaid(_name.text, context.read<AuthNotifier>().user.uid);
             if (add) {
               // ignore: use_build_context_synchronously
               context.pop();

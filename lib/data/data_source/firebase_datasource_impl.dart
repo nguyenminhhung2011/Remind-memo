@@ -1,6 +1,8 @@
 import 'dart:developer';
 import 'package:injectable/injectable.dart';
+import 'package:project/data/model/contact/contact_model.dart';
 import 'package:project/data/model/pay/pay_model.dart';
+import 'package:project/domain/enitites/contact/contact.dart';
 import 'package:project/domain/enitites/pay/pay.dart';
 import 'package:project/domain/enitites/user_entity.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -94,6 +96,21 @@ class FirebaseDataSourceImpl implements FirebaseDataSource {
         return null;
       }
       return UserModel.fromSnapshot(userDoc).toEntity();
+    } catch (e) {
+      log(e.toString());
+    }
+    return null;
+  }
+
+  @override
+  Future<Pay?> getPayById(String id) async {
+    final payCollection = fireStore.collection('pays');
+    try {
+      final payDoc = await payCollection.doc(id).get();
+      if (!payDoc.exists) {
+        return null;
+      }
+      return PayModel.fromJson(payDoc.data()!).toEntity;
     } catch (e) {
       log(e.toString());
     }
@@ -229,5 +246,27 @@ class FirebaseDataSourceImpl implements FirebaseDataSource {
       lendAmount: 0,
       loanAmount: 0,
     );
+  }
+
+  @override
+  Stream<List<Contact>> getContacts(String paidId) {
+    final contactCollection =
+        fireStore.collection("pays").doc(paidId).collection("contacts");
+    return contactCollection.snapshots().map((querySnapshot) => querySnapshot
+        .docs
+        .map((e) => ContactModel.fromJson(e.data()).toEntity)
+        .toList());
+  }
+
+  @override
+  Future<void> addContacts(Contact contact, String paidId) async {
+    final contactCollection =
+        fireStore.collection("pays").doc(paidId).collection("contacts");
+    final contactId = contactCollection.doc().id;
+    await contactCollection.doc(contactId).set(
+          ContactModel(contactId, contact.name, contact.phoneNumber,
+                  contact.note, contact.type, 0, 0)
+              .toJson(),
+        );
   }
 }

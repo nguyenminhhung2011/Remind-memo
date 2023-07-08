@@ -13,6 +13,7 @@ ContactModel _$ContactModelFromJson(Map<String, dynamic> json) => ContactModel(
       json['note'] as String,
       json['type'] as int,
       json['count'] as int,
+      json['price'] as int,
     );
 
 Map<String, dynamic> _$ContactModelToJson(ContactModel instance) =>
@@ -23,4 +24,5 @@ Map<String, dynamic> _$ContactModelToJson(ContactModel instance) =>
       'note': instance.note,
       'type': instance.type,
       'count': instance.count,
+      'price': instance.price,
     };

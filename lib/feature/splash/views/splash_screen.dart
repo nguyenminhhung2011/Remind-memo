@@ -1,10 +1,9 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:project/app_coordinator.dart';
 import 'package:project/core/extensions/context_exntions.dart';
 import 'package:project/data/data_source/preferences.dart';
 import 'package:project/feature/auth/notifier/auth_notifier.dart';
+import 'package:project/feature/paid/notifier/paid_notifier.dart';
 import 'package:project/routes/routes.dart';
 import 'package:provider/provider.dart';
 
@@ -24,18 +23,17 @@ class _SplashScreenState extends State<SplashScreen> {
     Future.delayed(const Duration(seconds: 3)).whenComplete(() async {
       final isShow =
           await context.read<AuthNotifier>().checkingAuthentication();
-      log('Show');
       if (isShow) {
-        log('getUser');
         // ignore: use_build_context_synchronously
-        await context.read<AuthNotifier>().getAndSetUser().then((value) {
-          print(value);
+        await context.read<AuthNotifier>().getAndSetUser().then((value) async{
           if (value) {
             // ignore: use_build_context_synchronously
             final paidGet = CommonAppSettingPref.getPayId();
             if (paidGet.isEmpty) {
               context.pushAndRemoveAll(Routes.paid);
             } else {
+              await context.read<PaidNotifier>().getPayAndSetPay(paidGet);
+              // ignore: use_build_context_synchronously
               context.pushAndRemoveAll(Routes.dashboard);
             }
           }
