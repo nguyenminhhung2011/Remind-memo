@@ -99,7 +99,11 @@ class _PaidScreenState extends State<PaidScreen> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Text(e.name, textAlign: TextAlign.start),
+                            Text(e.name, textAlign: TextAlign.start,
+                              style: context.titleMedium.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ],
                         ),
                       ))

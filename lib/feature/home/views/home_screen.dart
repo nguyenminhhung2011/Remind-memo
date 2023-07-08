@@ -379,6 +379,9 @@ class _HomeScreenState extends State<HomeScreen> {
           onPress: _onShowSelectedPaid,
           child: Text(
             _paid.pay?.name ?? '',
+            style: context.titleMedium.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
           ),
         )
       ],
@@ -386,10 +389,23 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-class SelectPaid extends StatelessWidget {
+class SelectPaid extends StatefulWidget {
   const SelectPaid({
     super.key,
   });
+
+  @override
+  State<SelectPaid> createState() => _SelectPaidState();
+}
+
+class _SelectPaidState extends State<SelectPaid> {
+  @override
+  void initState(){
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) { 
+      context.read<PaidNotifier>().getPays();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -452,6 +468,9 @@ class SelectPaid extends StatelessWidget {
                                   Text(
                                     e.name,
                                     textAlign: TextAlign.start,
+                                    style: context.titleMedium.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ],
                               ),
