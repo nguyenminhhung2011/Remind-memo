@@ -6,6 +6,7 @@ import 'package:project/core/constant/image_const.dart';
 import 'package:project/core/extensions/context_exntions.dart';
 import 'package:project/core/extensions/handle_time.dart';
 import 'package:project/core/widgets/button_custom.dart';
+import 'package:project/domain/enitites/contact/contact.dart';
 import 'package:project/feature/add_pay/notifier/add_pay_notifier.dart';
 import 'package:project/feature/contact_detail/notifier/contact_detail_notifier.dart';
 import 'package:project/feature/paid/notifier/paid_notifier.dart';
@@ -32,8 +33,22 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _notifier.getContactAndSetPay(context.read<PaidNotifier>().pay?.id ?? '');
+      String paidId = context.read<PaidNotifier>().pay?.id ?? '';
+      if (paidId.isNotEmpty) {
+        _notifier.getContactAndSetPay(paidId);
+        _notifier.getTransactions(paidId);
+      }
     });
+  }
+
+  void _openAddTransaction(bool loan) async {
+    final open = await context.openPageWithRouteAndParams(
+      Routes.addPay,
+      AddPayArguments(contactId: _notifier.contactId, loan: loan),
+    );
+    if(open != null && open is Contact){
+      _notifier.setContact(open);
+    }
   }
 
   @override
@@ -57,24 +72,16 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
                 children: [
                   Expanded(
                       child: ButtonCustom(
-                    color: Colors.red,
-                    height: 45.0,
-                    child: Text(S.of(context).loanAdd),
-                    onPress: () => context.openPageWithRouteAndParams(
-                      Routes.addPay,
-                      AddPayArguments(contactId: 0, loan: true),
-                    ),
-                  )),
+                          color: Colors.red,
+                          height: 45.0,
+                          child: Text(S.of(context).loanAdd),
+                          onPress: () => _openAddTransaction(true))),
                   const SizedBox(width: Constant.kHMarginCard),
                   Expanded(
                       child: ButtonCustom(
-                    height: 45.0,
-                    child: Text(S.of(context).lendAdd),
-                    onPress: () => context.openPageWithRouteAndParams(
-                      Routes.addPay,
-                      AddPayArguments(contactId: 0, loan: false),
-                    ),
-                  )),
+                          height: 45.0,
+                          child: Text(S.of(context).lendAdd),
+                          onPress: () => _openAddTransaction(false))),
                 ],
               ),
             ),
@@ -136,13 +143,12 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
     return Expanded(
       child: ListView(
         children: [
-          for (int i = 0; i < 7; i++)
-            ItemPayView(
-              createTime: DateTime.now(),
-              dueTime: DateTime.now(),
-              isLoan: i % 3 == 0,
-              price: (i + 1) * 100000,
-            )
+          ..._notifier.listTransaction.map((e) => ItemPayView(
+                createTime: e.createTime,
+                dueTime: e.notificationTIme,
+                isLoan: !e.type.isLend,
+                price: e.price,
+              ))
         ]
             .expand((element) => [
                   element,

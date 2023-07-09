@@ -13,6 +13,7 @@ TransactionModel _$TransactionModelFromJson(Map<String, dynamic> json) =>
       json['type'] as int,
       json['price'] as int,
       json['createTime'] as int,
+      json['contactId'] as String,
       json['notificationTime'] as int,
     );
 
@@ -22,6 +23,7 @@ Map<String, dynamic> _$TransactionModelToJson(TransactionModel instance) =>
       'price': instance.price,
       'createTime': instance.createTime,
       'note': instance.note,
+      'contactId': instance.contactId,
       'notificationTime': instance.notificationTime,
       'type': instance.type,
     };

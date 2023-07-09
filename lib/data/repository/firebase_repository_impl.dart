@@ -2,6 +2,7 @@ import 'package:injectable/injectable.dart';
 import 'package:project/data/repository/firebase_repository.dart';
 import 'package:project/domain/enitites/contact/contact.dart';
 import 'package:project/domain/enitites/pay/pay.dart';
+import 'package:project/domain/enitites/transaction/transaction.dart';
 import 'package:project/domain/enitites/user_entity.dart';
 
 import '../data_source/firebase_datasource.dart';
@@ -52,8 +53,27 @@ class FirebaseRepositoryImpl implements FirebaseRepository {
       firebaseDataSource.getContacts(paidId);
 
   @override
-  Future<void> addContact(Contact contact, String paidId) => firebaseDataSource.addContacts(contact, paidId);
-  
+  Future<void> addContact(Contact contact, String paidId) =>
+      firebaseDataSource.addContacts(contact, paidId);
+
   @override
-  Future<Contact?> getContactById(String cId, String paidId) => firebaseDataSource.getContactById(cId, paidId);
+  Future<Contact?> getContactById(String cId, String paidId) =>
+      firebaseDataSource.getContactById(cId, paidId);
+
+  @override
+  Future<void> addTransaction(TransactionEntity transaction, String paidId) =>
+      firebaseDataSource.addContactTransaction(transaction, paidId);
+
+  @override
+  Stream<List<TransactionEntity>> getTransactions(
+          String paidId, String contactId) =>
+      firebaseDataSource.getTransactions(paidId, contactId);
+
+  @override
+  Future<Contact?> updateContact(Contact newContact, String paidId) =>
+      firebaseDataSource.updateContact(newContact, paidId);
+
+  @override
+  Future<Pay?> updatePaid(Pay newPaid) =>
+      firebaseDataSource.updatePaid(newPaid);
 }

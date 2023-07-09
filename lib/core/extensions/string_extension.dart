@@ -1,3 +1,5 @@
+import 'package:project/core/enum/type.dart';
+
 extension StringExtension on String {
   String get subPlaceAndUpcase =>
       length > 3 ? substring(0, 3).toUpperCase() : toUpperCase();
@@ -14,5 +16,11 @@ extension StringExtension on String {
 
   String get subString => substring(0, contains(',') ? indexOf(',') : length);
 
-  List<String> get splitString => split(',').expand((element) => [element.trim()]).toList(); 
+  List<String> get splitString =>
+      split(',').expand((element) => [element.trim()]).toList();
+
+  TypeTransaction get toTransaction => switch (this) {
+        'loan' => TypeTransaction.loan,
+        _ => TypeTransaction.lend,
+      };
 }

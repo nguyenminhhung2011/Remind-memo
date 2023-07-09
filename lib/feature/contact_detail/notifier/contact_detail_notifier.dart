@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 import 'package:project/data/repository/firebase_repository.dart';
+import 'package:project/domain/enitites/transaction/transaction.dart';
 
 import '../../../domain/enitites/contact/contact.dart';
 
@@ -20,6 +21,9 @@ class ContactDetailNotifier extends ChangeNotifier {
   Contact? _contact;
   Contact? get contact => _contact;
 
+  List<TransactionEntity> _listTransaction = <TransactionEntity>[];
+  List<TransactionEntity> get listTransaction => _listTransaction;
+
   bool _loadingGet = false;
   bool get loadingGet => _loadingGet;
 
@@ -33,6 +37,29 @@ class ContactDetailNotifier extends ChangeNotifier {
       notifyListeners();
     }
     _loadingGet = false;
+    notifyListeners();
+  }
+
+  FutureOr<void> getTransactions(String paidId) async {
+    _loadingGet = true;
+    notifyListeners();
+    try {
+      final streamTransactions =
+          _firebaseRepository.getTransactions(paidId, _contactId);
+      streamTransactions.listen((event) {
+        _listTransaction = event;
+        notifyListeners();
+      });
+      notifyListeners();
+    } catch (e) {
+      log(e.toString());
+    }
+    _loadingGet = false;
+    notifyListeners();
+  }
+
+  void setContact(Contact newContact){
+    _contact = newContact;
     notifyListeners();
   }
 }

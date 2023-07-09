@@ -17,7 +17,7 @@ class CalculatorCustom extends StatefulWidget {
 
 class _CalculatorCustomState extends State<CalculatorCustom> {
   final ValueNotifier<String> _stringDisplay = ValueNotifier<String>('');
-  double currentData = 0;
+  int currentData = 0;
   final List<String> buttons = [
     'C',
     '+/2',
@@ -64,7 +64,7 @@ class _CalculatorCustomState extends State<CalculatorCustom> {
     }
     if (index == 18) {
       isOut
-          ? context.popArgs(double.parse(_stringDisplay.value))
+          ? context.popArgs(int.parse(_stringDisplay.value))
           : setState(() {
               isOut = true;
             });
@@ -123,7 +123,7 @@ class _CalculatorCustomState extends State<CalculatorCustom> {
   void initState() {
     super.initState();
     _stringDisplay.value = widget.inputPrice.toString();
-    currentData = widget.inputPrice.toDouble();
+    currentData = widget.inputPrice.toInt();
   }
 
   @override

@@ -76,5 +76,19 @@ class PaidNotifier extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  FutureOr<void> updatePaid(Pay newPaid) async{
+    try{
+      final result = await _firebaseRepository.updatePaid(newPaid);
+      if(result == null){
+        log("Error");
+        return;
+      }
+      _pay = result;
+      notifyListeners();
+    } catch(e){
+      log(e.toString());
+    }
+  }
   
 }

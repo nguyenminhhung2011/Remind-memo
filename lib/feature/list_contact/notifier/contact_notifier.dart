@@ -27,7 +27,7 @@ class ContactNotifier extends ChangeNotifier {
   bool _loadingGet = false;
   bool get loadingGet => _loadingGet;
   bool _loadingButton = false;
-  bool get loadingButton => _loadingGet;
+  bool get loadingButton => _loadingButton;
   List<Step> _listStep = [];
   List<Step> get listStep => _listStep;
 
@@ -71,4 +71,17 @@ class ContactNotifier extends ChangeNotifier {
     notifyListeners();
     return true;
   }
+
+  Future<void> updateContact(Contact newContact , String paidId) async{
+    try{
+      final add = await _firebaseRepository.updateContact(newContact, paidId);
+      if(add == null){
+        log("Error");
+        return;
+      }
+      notifyListeners();
+    } catch(e) {
+      log(e.toString());
+    }
+  } 
 }

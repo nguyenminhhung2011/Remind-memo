@@ -15,6 +15,8 @@ class TransactionModel {
   final int createTime;
   @JsonKey(name: 'note')
   final String note;
+  @JsonKey(name: 'contactId')
+  final String contactId;
   @JsonKey(name: 'notificationTime')
   final int notificationTime;
   @JsonKey(name: 'type')
@@ -26,6 +28,7 @@ class TransactionModel {
     this.type,
     this.price,
     this.createTime,
+    this.contactId,
     this.notificationTime,
   );
 
@@ -33,12 +36,13 @@ class TransactionModel {
   factory TransactionModel.fromJson(Map<String, dynamic> json) =>
       _$TransactionModelFromJson(json);
 
-  Transaction get toEntity => Transaction(
+  TransactionEntity get toEntity => TransactionEntity(
         id: id,
         price: price,
         note: note,
         createTime: DateTime.fromMillisecondsSinceEpoch(createTime),
         notificationTIme: DateTime.fromMillisecondsSinceEpoch(notificationTime),
         type: type.toTransactionType,
+        contactId: contactId,
       );
 }

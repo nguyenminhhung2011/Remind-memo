@@ -2,11 +2,14 @@ import 'dart:developer';
 import 'package:injectable/injectable.dart';
 import 'package:project/data/model/contact/contact_model.dart';
 import 'package:project/data/model/pay/pay_model.dart';
+import 'package:project/data/model/transaction/transaction_model.dart';
 import 'package:project/domain/enitites/contact/contact.dart';
 import 'package:project/domain/enitites/pay/pay.dart';
+import 'package:project/domain/enitites/transaction/transaction.dart';
 import 'package:project/domain/enitites/user_entity.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:project/domain/enitites/transaction/transaction.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import '../model/user_model.dart';
@@ -259,6 +262,19 @@ class FirebaseDataSourceImpl implements FirebaseDataSource {
   }
 
   @override
+  Stream<List<TransactionEntity>> getTransactions(
+      String paidId, String contactId) {
+    final transactionCollection =
+        fireStore.collection("pays").doc(paidId).collection("transactions");
+    return transactionCollection.snapshots().map(
+          (querySnapshot) => querySnapshot.docs
+              .where((element) => element.data()['contactId'] == contactId)
+              .map((e) => TransactionModel.fromJson(e.data()).toEntity)
+              .toList(),
+        );
+  }
+
+  @override
   Future<void> addContacts(Contact contact, String paidId) async {
     final contactCollection =
         fireStore.collection("pays").doc(paidId).collection("contacts");
@@ -284,5 +300,68 @@ class FirebaseDataSourceImpl implements FirebaseDataSource {
       log(e.toString());
     }
     return null;
+  }
+
+  @override
+  Future<void> addContactTransaction(
+      TransactionEntity transaction, String paidId) async {
+    final transactionCollection =
+        fireStore.collection("pays").doc(paidId).collection("transactions");
+    final transactionId = transactionCollection.doc().id;
+    await transactionCollection.doc(transactionId).set(
+          TransactionModel(
+            transactionId,
+            transaction.note,
+            transaction.type.toInt,
+            transaction.price,
+            transaction.createTime.millisecondsSinceEpoch,
+            transaction.contactId,
+            transaction.notificationTIme.millisecondsSinceEpoch,
+          ).toJson(),
+        );
+  }
+
+  @override
+  Future<Contact?> updateContact(Contact newContact, String paidId) async {
+    final contactCollection =
+        fireStore.collection("pays").doc(paidId).collection("contacts");
+    try {
+      final contactDoc = await contactCollection.doc(newContact.id).get();
+      if (!contactDoc.exists) {
+        return null;
+      }
+      final newContactModel = ContactModel(
+        newContact.id,
+        newContact.name,
+        newContact.phoneNumber,
+        newContact.note,
+        newContact.type,
+        newContact.count,
+        newContact.price,
+      ).toJson();
+      await contactCollection.doc(newContact.id).set(newContactModel);
+      return newContact;
+    } catch (e) {
+      log(e.toString());
+      return null;
+    }
+  }
+
+  @override
+  Future<Pay?> updatePaid(Pay newPaid) async {
+    final paidCollection = fireStore.collection("pays");
+    try {
+      final payDoc = await paidCollection.doc(newPaid.id).get();
+      if (!payDoc.exists) {
+        return null;
+      }
+      final payModel = PayModel(newPaid.id, newPaid.name, newPaid.uuid,
+          newPaid.lendAmount, newPaid.loanAmount).toJson();
+      await paidCollection.doc(newPaid.id).set(payModel);
+      return newPaid;
+    } catch (e) {
+      log(e.toString());
+      return null;
+    }
   }
 }

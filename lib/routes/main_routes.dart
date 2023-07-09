@@ -102,7 +102,7 @@ class MainRoutes {
             builder: (_) {
               if (settings.arguments is AddPayArguments) {
                 return ChangeNotifierProvider<AddPayNotifier>.value(
-                  value: AddPayNotifier(settings.arguments as AddPayArguments),
+                  value: injector.get(param1: settings.arguments as AddPayArguments),
                   child: const AddPayScreen(),
                 );
               }

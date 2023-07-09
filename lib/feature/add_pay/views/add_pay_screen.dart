@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:injectable/injectable.dart';
 import 'package:project/app_coordinator.dart';
 import 'package:project/core/extensions/context_exntions.dart';
+import 'package:project/core/extensions/string_extension.dart';
 import 'package:project/core/widgets/button_custom.dart';
+import 'package:project/domain/enitites/contact/contact.dart';
+import 'package:project/domain/enitites/pay/pay.dart';
+import 'package:project/domain/enitites/transaction/transaction.dart';
 import 'package:project/feature/add_pay/notifier/add_pay_notifier.dart';
+import 'package:project/feature/auth/notifier/auth_notifier.dart';
+import 'package:project/feature/list_contact/notifier/contact_notifier.dart';
+import 'package:project/feature/paid/notifier/paid_notifier.dart';
 import 'package:project/generated/l10n.dart';
 import 'package:provider/provider.dart';
 
@@ -24,6 +32,12 @@ class _AddPayScreenState extends State<AddPayScreen> {
   final ValueNotifier<DateTime> _dueTime =
       ValueNotifier<DateTime>(DateTime.now());
   final ValueNotifier<String> _type = ValueNotifier<String>('loan');
+  final ValueNotifier<int> _price = ValueNotifier<int>(0);
+  final TextEditingController _noteController = TextEditingController();
+
+  AddPayNotifier get _notifier => context.read<AddPayNotifier>();
+  PaidNotifier get _paidNotifier => context.read<PaidNotifier>();
+  ContactNotifier get _contactNotifier => context.read<ContactNotifier>();
 
   Future<int> _onUpdatePrice() async {
     final result = await showModalBottomSheet(
@@ -64,7 +78,8 @@ class _AddPayScreenState extends State<AddPayScreen> {
   void _onTap(int index) async {
     switch (index) {
       case 0:
-        final price = await _onUpdatePrice();
+        final pri = await _onUpdatePrice();
+        _price.value = pri;
       case 1:
         _time.value = await _onPicTime();
       case 2:
@@ -78,10 +93,76 @@ class _AddPayScreenState extends State<AddPayScreen> {
     }
   }
 
+  void _onAddTransaction() async {
+    final add = await _notifier.addTransaction(
+      TransactionEntity(
+        id: '',
+        price: _price.value,
+        contactId: _notifier.contactId,
+        note: _noteController.text,
+        createTime: DateTime.now(),
+        notificationTIme: _dueTime.value,
+        type: _type.value.toTransaction,
+      ),
+      _paidNotifier.pay?.id ?? '',
+    );
+    if (add) {
+      await _paidNotifier.updatePaid(Pay(
+        id: _paidNotifier.pay?.id ?? '',
+        // ignore: use_build_context_synchronously
+        uuid: context.read<AuthNotifier>().user.uid,
+        name: _paidNotifier.pay?.name ?? '',
+        lendAmount: _notifier.loan
+            ? _paidNotifier.pay?.lendAmount ?? 0
+            : (_paidNotifier.pay!.lendAmount + _price.value),
+        loanAmount: _notifier.loan
+            ? (_paidNotifier.pay!.loanAmount + _price.value)
+            : _paidNotifier.pay?.loanAmount ?? 0,
+      ));
+      final newContact = Contact(
+        id: _notifier.contactId,
+        name: _notifier.contact?.name ?? '',
+        phoneNumber: _notifier.contact?.phoneNumber ?? '',
+        note: _notifier.contact?.note ?? '',
+        type: _notifier.contact?.type ?? 0,
+        count: _notifier.contact!.count + 1,
+        price: _notifier.contact!.price +
+            (_price.value) * (_type.value.toTransaction.isLend ? 1 : -1),
+      );
+      await _contactNotifier.updateContact(
+        newContact,
+        _paidNotifier.pay?.id ?? '',
+      );
+      // ignore: use_build_context_synchronously
+      context.popArgs(newContact);
+    }
+  }
+
+  @override
+  void dispose() {
+    _noteController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _notifier.getContact(_paidNotifier.pay?.id ?? '');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<AddPayNotifier>(
       builder: (context, modal, child) {
+        if (modal.loadGet) {
+          return Center(
+            child: CircularProgressIndicator(
+              color: Theme.of(context).primaryColor,
+            ),
+          );
+        }
         if (!modal.loan) {
           _type.value = 'lend';
         }
@@ -109,7 +190,8 @@ class _AddPayScreenState extends State<AddPayScreen> {
               Padding(
                 padding: const EdgeInsets.all(Constant.kHMarginCard),
                 child: ButtonCustom(
-                  onPress: () {},
+                  loading: modal.load,
+                  onPress: _onAddTransaction,
                   height: 45.0,
                   child: Text(S.of(context).addNewPay),
                 ),
@@ -157,12 +239,17 @@ class _AddPayScreenState extends State<AddPayScreen> {
                       children: [
                         Text(S.of(context).amountOfMoney, style: smallStyle),
                         const SizedBox(height: 7.0),
-                        Text(
-                          '123.324',
-                          style: context.headlineMedium.copyWith(
-                            fontWeight: FontWeight.w400,
-                            color: Theme.of(context).primaryColor,
-                          ),
+                        ValueListenableBuilder(
+                          valueListenable: _price,
+                          builder: (context, price, child) {
+                            return Text(
+                              price.toString(),
+                              style: context.headlineMedium.copyWith(
+                                fontWeight: FontWeight.w400,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            );
+                          },
                         ),
                         const SizedBox(height: 5.0),
                         Divider(color: Theme.of(context).hintColor),
@@ -261,7 +348,7 @@ class _AddPayScreenState extends State<AddPayScreen> {
                         children: [
                           const SizedBox(height: 15.0),
                           Text(
-                            'Nguyen Minh Hung',
+                            modal.contact?.name ?? '',
                             style: context.titleMedium.copyWith(
                               fontWeight: FontWeight.bold,
                               overflow: TextOverflow.ellipsis,
@@ -272,7 +359,7 @@ class _AddPayScreenState extends State<AddPayScreen> {
                         ],
                       ),
                     ),
-                  ), 
+                  ),
                   const SizedBox(width: 5.0),
                   Expanded(
                     child: DropdownButtonCustom<String?>(
@@ -358,7 +445,7 @@ class _AddPayScreenState extends State<AddPayScreen> {
                 hintStyle: context.titleMedium,
                 hintText: 'Write your note...',
                 textStyle: context.titleMedium,
-                controller: TextEditingController(),
+                controller: _noteController,
               ),
             ],
           ),
