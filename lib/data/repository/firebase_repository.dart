@@ -23,5 +23,7 @@ abstract class FirebaseRepository {
   Stream<List<Pay>> getPays();
   Stream<List<TransactionEntity>> getTransactions(
       String paidId, String contactId);
+  Stream<List<TransactionEntity>> getAllTransactions(
+      String paidId, int type );
   Stream<List<Contact>> getContacts(String paidId);
 }

@@ -307,6 +307,7 @@ class ItemPayView extends StatelessWidget {
                   style: context.titleMedium.copyWith(
                     color: Colors.red,
                     fontWeight: FontWeight.bold,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ),
@@ -324,6 +325,7 @@ class ItemPayView extends StatelessWidget {
                   style: context.titleMedium.copyWith(
                     color: Colors.green,
                     fontWeight: FontWeight.bold,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ),

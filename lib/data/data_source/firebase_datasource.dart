@@ -33,4 +33,5 @@ abstract class FirebaseDataSource {
   Stream<List<Pay>> getPays();
   Stream<List<Contact>> getContacts(String paidId);
   Stream<List<TransactionEntity>> getTransactions(String paidId, String contactId);
+  Stream<List<TransactionEntity>> getAllTransactions(String paidId, int type);
 }

@@ -76,4 +76,8 @@ class FirebaseRepositoryImpl implements FirebaseRepository {
   @override
   Future<Pay?> updatePaid(Pay newPaid) =>
       firebaseDataSource.updatePaid(newPaid);
+
+  @override
+  Stream<List<TransactionEntity>> getAllTransactions(String paidId, int type) =>
+      firebaseDataSource.getAllTransactions(paidId, type);
 }

@@ -24,8 +24,12 @@ class ContactNotifier extends ChangeNotifier {
 
   List<Contact> _listContact = <Contact>[];
   List<Contact> get listContact => _listContact;
+  Map<String, Contact> _mapContacts = {};
+  Map<String,Contact> get mapContacts => _mapContacts;
   bool _loadingGet = false;
   bool get loadingGet => _loadingGet;
+  bool _loadingGet1 = false;
+  bool get loadingGet1 => _loadingGet1;
   bool _loadingButton = false;
   bool get loadingButton => _loadingButton;
   List<Step> _listStep = [];
@@ -42,7 +46,6 @@ class ContactNotifier extends ChangeNotifier {
     try {
       final streamContacts = _firebaseRepository.getContacts(paidId);
       streamContacts.listen((event) {
-        print(event.length);
         _listContact = event;
         _listStep = event
             .map((e) => Step(e.name, e.id, e.price, e.price >= 0, e.count))
@@ -54,6 +57,27 @@ class ContactNotifier extends ChangeNotifier {
       log(e.toString());
     }
     _loadingGet = false;
+    notifyListeners();
+  }
+  Future<void> getMapContacts(String paidId) async {
+    _loadingGet1 = true;
+    notifyListeners();
+    try {
+      final streamContacts = _firebaseRepository.getContacts(paidId);
+      streamContacts.listen((event) {
+        _mapContacts = {};
+        for (var element in event) {
+          if(!_mapContacts.containsKey(element.id)){
+            _mapContacts.addAll({element.id: element});
+          }
+        }
+        notifyListeners();
+      });
+      notifyListeners();
+    } catch (e) {
+      log(e.toString());
+    }
+    _loadingGet1 = false;
     notifyListeners();
   }
 

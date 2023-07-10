@@ -7,7 +7,9 @@ import 'package:project/core/extensions/context_exntions.dart';
 import 'package:project/core/extensions/handle_time.dart';
 import 'package:project/core/widgets/header_text_custom.dart';
 import 'package:project/core/widgets/sort_button.dart';
+import 'package:project/data/model/contact/contact_model.dart';
 import 'package:project/feature/auth/notifier/auth_notifier.dart';
+import 'package:project/feature/home/notifier/home_notifier.dart';
 import 'package:project/feature/home/views/widgets/item_view.dart';
 import 'package:project/feature/list_contact/notifier/contact_notifier.dart';
 import 'package:project/feature/paid/notifier/paid_notifier.dart';
@@ -44,12 +46,23 @@ class _HomeScreenState extends State<HomeScreen> {
 
   AuthNotifier get _auth => context.read<AuthNotifier>();
   PaidNotifier get _paid => context.read<PaidNotifier>();
+  HomeNotifier get _home => context.read<HomeNotifier>();
+  ContactNotifier get _contact => context.read<ContactNotifier>();
 
   final ValueNotifier<DateTime> _currentTime =
       ValueNotifier<DateTime>(DateTime.now());
 
   void _onChangeTab(TypeView view) {
     _typeView.value = view;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _home.getTransactions(_paid.pay?.id ?? '', -1);
+      _contact.getMapContacts(_paid.pay?.id ?? '');
+    });
   }
 
   void _onShowPayDetail() async {
@@ -81,16 +94,25 @@ class _HomeScreenState extends State<HomeScreen> {
         builder: (context) {
           return const SelectPaid();
         });
-        if(show is bool && show){
-          // ignore: use_build_context_synchronously
-          context.read<ContactNotifier>().getContacts(_paid.pay?.id ?? '');
-        }
+    if (show is bool && show) {
+      // ignore: use_build_context_synchronously
+      _contact.getContacts(_paid.pay?.id ?? '');
+      _home.getTransactions(_paid.pay?.id ?? '', -1);
+      _contact.getMapContacts(_paid.pay?.id ?? '');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<PaidNotifier, AuthNotifier>(
-      builder: (context, paidModal, authModal, child) {
+    return Consumer4<PaidNotifier, AuthNotifier, HomeNotifier, ContactNotifier>(
+      builder: (context, paidModal, authModal, homeModal, contactModal, child) {
+        if (homeModal.loadingGet || contactModal.loadingGet1) {
+          return Center(
+            child: CircularProgressIndicator(
+              color: Theme.of(context).primaryColor,
+            ),
+          );
+        }
         return Scaffold(
           floatingActionButton: Padding(
             padding: const EdgeInsets.only(bottom: 50),
@@ -182,78 +204,73 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               const Divider(),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(Constant.kHMarginCard),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor.withOpacity(0.03),
-                ),
-                child: Column(
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          '${_currentTime.value.day < 10 ? '0' : ''}${_currentTime.value.day}',
-                          style: context.headlineLarge.copyWith(
-                            color: context.titleMedium.color,
-                            fontWeight: FontWeight.w300,
+              ...homeModal.listTransaction.entries.map<Widget>(
+                (element) => Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(Constant.kHMarginCard),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).primaryColor.withOpacity(0.03),
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            '${element.key.day < 10 ? '0' : ''}${element.key.day}',
+                            style: context.headlineLarge.copyWith(
+                              color: context.titleMedium.color,
+                              fontWeight: FontWeight.w300,
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: 10.0),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ...getMMMMEEEd(_currentTime.value)
-                                  .split(',')
-                                  .mapIndexed(
-                                    (index, e) => Text(
-                                      index == 0
-                                          ? e.trim()
-                                          : '${e.trim()} ${_currentTime.value.year}',
-                                      style: context.titleSmall.copyWith(
-                                        color: Theme.of(context).hintColor,
-                                        fontWeight: FontWeight.w400,
+                          const SizedBox(width: 10.0),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ...getMMMMEEEd(element.key)
+                                    .split(',')
+                                    .mapIndexed(
+                                      (index, e) => Text(
+                                        index == 0
+                                            ? e.trim()
+                                            : '${e.trim()} ${element.key.year}',
+                                        style: context.titleSmall.copyWith(
+                                          color: Theme.of(context).hintColor,
+                                          fontWeight: FontWeight.w400,
+                                        ),
                                       ),
-                                    ),
-                                  )
-                            ],
+                                    )
+                              ],
+                            ),
                           ),
-                        ),
-                        Icon(
-                          Icons.bar_chart_sharp,
-                          color: Theme.of(context).primaryColor,
-                        ),
-                        Text(
-                          ' ${123.013}',
-                          style: context.titleSmall.copyWith(
+                          Icon(
+                            Icons.bar_chart_sharp,
                             color: Theme.of(context).primaryColor,
                           ),
-                        )
-                      ],
-                    ),
-                    const SizedBox(height: 5.0),
-                    const Divider(),
-                    const SizedBox(height: 5.0),
-                    ...[1, 0, 1, 1, 0]
-                        .map(
-                          (e) => ItemView(
-                            onPress: _onShowPayDetail,
-                            name: 'Nguyen Minh Hung',
-                            time: DateTime.now()
-                                .subtract(const Duration(hours: 10)),
-                            price: 123.2,
-                            isPay: e == 1,
-                          ),
-                        )
-                        .expand((element) => [
-                              element,
-                              const SizedBox(height: 15.0),
-                            ])
-                  ],
+                          Text(
+                            ' ${123.013}',
+                            style: context.titleSmall.copyWith(
+                              color: Theme.of(context).primaryColor,
+                            ),
+                          )
+                        ],
+                      ),
+                      const SizedBox(height: 5.0),
+                      const Divider(),
+                      const SizedBox(height: 5.0),
+                      ...element.value.map((e) => ItemView(
+                            name: contactModal.mapContacts[e.contactId]?.name ??
+                                'Hung',
+                            time: e.createTime,
+                            price: e.price.toDouble(),
+                            isPay: e.type.isLend,
+                            onPress: () {},
+                          )).expand((element) => [element, const SizedBox(height: 8.0)])
+                    ],
+                  ),
                 ),
-              ),
+              )
             ]
                 .expand((element) => [element, const SizedBox(height: 5.0)])
                 .toList(),
@@ -400,9 +417,9 @@ class SelectPaid extends StatefulWidget {
 
 class _SelectPaidState extends State<SelectPaid> {
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) { 
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<PaidNotifier>().getPays();
     });
   }
@@ -442,10 +459,11 @@ class _SelectPaidState extends State<SelectPaid> {
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: Constant.kHMarginCard),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: Constant.kHMarginCard),
                 child: ListView(
                   children: [
-                     ...modal.listPay
+                    ...modal.listPay
                         .map((e) => ButtonCustom(
                               borderColor: Theme.of(context).primaryColor,
                               color: Theme.of(context).scaffoldBackgroundColor,

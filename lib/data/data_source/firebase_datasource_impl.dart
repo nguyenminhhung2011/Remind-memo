@@ -275,6 +275,20 @@ class FirebaseDataSourceImpl implements FirebaseDataSource {
   }
 
   @override
+  Stream<List<TransactionEntity>> getAllTransactions(String paidId, int type) {
+    final transactionCollection =
+        fireStore.collection("pays").doc(paidId).collection("transactions");
+    return transactionCollection
+        .orderBy('createTime', descending: true)
+        .snapshots()
+        .map((querySnapshot) => querySnapshot.docs
+            .where((element) =>
+                (type == -1) ? true : (element.data()['type'] as int) == type)
+            .map((e) => TransactionModel.fromJson(e.data()).toEntity)
+            .toList());
+  }
+
+  @override
   Future<void> addContacts(Contact contact, String paidId) async {
     final contactCollection =
         fireStore.collection("pays").doc(paidId).collection("contacts");
@@ -356,7 +370,8 @@ class FirebaseDataSourceImpl implements FirebaseDataSource {
         return null;
       }
       final payModel = PayModel(newPaid.id, newPaid.name, newPaid.uuid,
-          newPaid.lendAmount, newPaid.loanAmount).toJson();
+              newPaid.lendAmount, newPaid.loanAmount)
+          .toJson();
       await paidCollection.doc(newPaid.id).set(payModel);
       return newPaid;
     } catch (e) {
