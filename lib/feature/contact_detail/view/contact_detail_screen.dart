@@ -55,7 +55,7 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
   Widget build(BuildContext context) {
     return Consumer<ContactDetailNotifier>(
       builder: (context, modal, child) {
-        if (modal.loadingGet) {
+        if (modal.loadingGet || modal.loadingGet1) {
           return Center(
             child: CircularProgressIndicator(
               color: Theme.of(context).primaryColor,

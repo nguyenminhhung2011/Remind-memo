@@ -263,12 +263,19 @@ class FirebaseDataSourceImpl implements FirebaseDataSource {
 
   @override
   Stream<List<TransactionEntity>> getTransactions(
-      String paidId, String contactId) {
+      String paidId, String contactId,
+      {bool isFormatDate = false}) {
     final transactionCollection =
         fireStore.collection("pays").doc(paidId).collection("transactions");
     return transactionCollection.snapshots().map(
           (querySnapshot) => querySnapshot.docs
               .where((element) => element.data()['contactId'] == contactId)
+              .where(
+                (element) => isFormatDate
+                    ? element.data()['notificationTime'] >
+                        DateTime.now().millisecondsSinceEpoch
+                    : true,
+              )
               .map((e) => TransactionModel.fromJson(e.data()).toEntity)
               .toList(),
         );

@@ -1,8 +1,8 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 import 'package:project/data/repository/firebase_repository.dart';
+import 'package:project/domain/enitites/transaction/transaction.dart';
 
 import '../../../domain/enitites/contact/contact.dart';
 
@@ -25,18 +25,55 @@ class ContactNotifier extends ChangeNotifier {
   List<Contact> _listContact = <Contact>[];
   List<Contact> get listContact => _listContact;
   Map<String, Contact> _mapContacts = {};
-  Map<String,Contact> get mapContacts => _mapContacts;
+  Map<String, Contact> get mapContacts => _mapContacts;
+
+  Map<String, List<TransactionEntity>> _mapTransactions = {};
+  Map<String, List<TransactionEntity>> get mapTransactions => _mapTransactions;
+
   bool _loadingGet = false;
   bool get loadingGet => _loadingGet;
   bool _loadingGet1 = false;
   bool get loadingGet1 => _loadingGet1;
   bool _loadingButton = false;
   bool get loadingButton => _loadingButton;
+
+  bool _loadingTransactions = false;
+  bool get loadingTransactions => _loadingTransactions;
+  String _loadingId = '';
+  String get loadingId => _loadingId;
+
   List<Step> _listStep = [];
   List<Step> get listStep => _listStep;
 
   void onSelectStep(int index, bool isExpanded) {
     _listStep[index].isExpanded = !isExpanded;
+    if (isExpanded) {}
+    notifyListeners();
+  }
+
+  Future<void> getTransactions(String paidId, String contactId) async {
+    _loadingId = contactId;
+    _loadingTransactions = true;
+    notifyListeners();
+    await Future.delayed(const Duration(milliseconds: 300));
+    try {
+      final streamTransactions = _firebaseRepository
+          .getTransactions(paidId, contactId, isFormatDate: true);
+      streamTransactions.listen((event) {
+        if (_mapTransactions.containsKey(contactId)) {
+          _mapTransactions[contactId] = <TransactionEntity>[];
+        } else {
+          _mapTransactions.addAll({contactId: <TransactionEntity>[]});
+        }
+        _mapTransactions[contactId] =  event;
+        notifyListeners();
+      });
+      notifyListeners();
+    } catch (e) {
+      log(e.toString());
+    }
+    _loadingId = '';
+    _loadingTransactions = false;
     notifyListeners();
   }
 
@@ -59,6 +96,7 @@ class ContactNotifier extends ChangeNotifier {
     _loadingGet = false;
     notifyListeners();
   }
+
   Future<void> getMapContacts(String paidId) async {
     _loadingGet1 = true;
     notifyListeners();
@@ -67,7 +105,7 @@ class ContactNotifier extends ChangeNotifier {
       streamContacts.listen((event) {
         _mapContacts = {};
         for (var element in event) {
-          if(!_mapContacts.containsKey(element.id)){
+          if (!_mapContacts.containsKey(element.id)) {
             _mapContacts.addAll({element.id: element});
           }
         }
@@ -96,16 +134,16 @@ class ContactNotifier extends ChangeNotifier {
     return true;
   }
 
-  Future<void> updateContact(Contact newContact , String paidId) async{
-    try{
+  Future<void> updateContact(Contact newContact, String paidId) async {
+    try {
       final add = await _firebaseRepository.updateContact(newContact, paidId);
-      if(add == null){
+      if (add == null) {
         log("Error");
         return;
       }
       notifyListeners();
-    } catch(e) {
+    } catch (e) {
       log(e.toString());
     }
-  } 
+  }
 }

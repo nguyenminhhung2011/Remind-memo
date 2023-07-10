@@ -26,6 +26,8 @@ class ContactDetailNotifier extends ChangeNotifier {
 
   bool _loadingGet = false;
   bool get loadingGet => _loadingGet;
+  bool _loadingGet1 = false;
+  bool get loadingGet1 => _loadingGet;
 
   FutureOr<void> getContactAndSetPay(String pId) async {
     _loadingGet = true;
@@ -41,7 +43,7 @@ class ContactDetailNotifier extends ChangeNotifier {
   }
 
   FutureOr<void> getTransactions(String paidId) async {
-    _loadingGet = true;
+    _loadingGet1 = true;
     notifyListeners();
     try {
       final streamTransactions =
@@ -54,7 +56,7 @@ class ContactDetailNotifier extends ChangeNotifier {
     } catch (e) {
       log(e.toString());
     }
-    _loadingGet = false;
+    _loadingGet1 = false;
     notifyListeners();
   }
 

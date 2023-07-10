@@ -109,12 +109,20 @@ class _ContactScreenState extends State<ContactScreen> {
       expandedHeaderPadding: const EdgeInsets.symmetric(vertical: 10.0),
       elevation: 0,
       animationDuration: const Duration(milliseconds: 300),
-      expansionCallback: _contact.onSelectStep,
+      expansionCallback: (index, isExpanded) async {
+        _contact.onSelectStep(index, isExpanded);
+        if (!isExpanded) {
+          _contact.getTransactions(
+            context.read<PaidNotifier>().pay?.id ?? '',
+            _contact.listStep[index].id,
+          );
+        }
+      },
       children: _contact.listStep
           .map((e) => ExpansionPanel(
                 headerBuilder: (context, isExpanded) => GestureDetector(
-                  onTap: () =>
-                      context.openPageWithRouteAndParams(Routes.contactDetail, e.id),
+                  onTap: () => context.openPageWithRouteAndParams(
+                      Routes.contactDetail, e.id),
                   child: Row(
                     children: [
                       Container(
@@ -173,56 +181,68 @@ class _ContactScreenState extends State<ContactScreen> {
                 body: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    for (int i = 0; i < e.count; i++)
-                      Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: Constant.kHMarginCard * 1.5,
-                          vertical: Constant.kHMarginCard,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor.withOpacity(
-                                i % 2 == 0 ? 0.2 : 0.1,
+                    if (_contact.loadingTransactions &&
+                        _contact.loadingId == e.id)
+                      Center(
+                        child: CircularProgressIndicator(
+                            color: Theme.of(context).primaryColor),
+                      )
+                    else if (_contact.mapTransactions.containsKey(e.id) &&
+                        (_contact.mapTransactions[e.id]?.isNotEmpty ?? false))
+                      ..._contact.mapTransactions[e.id]!.mapIndexed(
+                        (index, element) => Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: Constant.kHMarginCard * 1.5,
+                            vertical: Constant.kHMarginCard,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).primaryColor.withOpacity(
+                                  index % 2 == 0 ? 0.2 : 0.1,
+                                ),
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                (index + 1).toString(),
+                                style: context.titleMedium.copyWith(
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
-                        ),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              (i + 1).toString(),
-                              style: context.titleMedium.copyWith(
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            const SizedBox(width: 20.0),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  ...getMMMMEEEd(DateTime.now())
-                                      .split(',')
-                                      .mapIndexed(
-                                        (index, e) => Text(
-                                          index == 0
-                                              ? e.trim()
-                                              : '${e.trim()} ${DateTime.now().year}',
-                                          style: context.titleSmall.copyWith(
-                                            color: Theme.of(context).hintColor,
-                                            fontWeight: FontWeight.w400,
+                              const SizedBox(width: 20.0),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    ...getMMMMEEEd(element.notificationTIme)
+                                        .split(',')
+                                        .mapIndexed(
+                                          (index, event) => Text(
+                                            index == 0
+                                                ? event.trim()
+                                                : '${event.trim()} ${element.notificationTIme.year}',
+                                            style: context.titleSmall.copyWith(
+                                              color:
+                                                  Theme.of(context).hintColor,
+                                              fontWeight: FontWeight.w400,
+                                            ),
                                           ),
-                                        ),
-                                      )
-                                ],
+                                        )
+                                  ],
+                                ),
                               ),
-                            ),
-                            Text(
-                              123.12.toString(),
-                              style: context.titleSmall.copyWith(
-                                color: i % 2 == 0 ? Colors.green : Colors.red,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            )
-                          ],
+                              Text(
+                                element.price.toString(),
+                                style: context.titleSmall.copyWith(
+                                  color: element.type.isLend
+                                      ? Colors.green
+                                      : Colors.red,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     const SizedBox(height: 3.0),

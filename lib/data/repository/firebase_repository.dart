@@ -22,7 +22,7 @@ abstract class FirebaseRepository {
   Future<UserEntity?> getUserByUuid();
   Stream<List<Pay>> getPays();
   Stream<List<TransactionEntity>> getTransactions(
-      String paidId, String contactId);
+      String paidId, String contactId, {bool isFormatDate = false});
   Stream<List<TransactionEntity>> getAllTransactions(
       String paidId, int type );
   Stream<List<Contact>> getContacts(String paidId);

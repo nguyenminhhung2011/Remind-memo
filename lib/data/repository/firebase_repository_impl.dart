@@ -66,8 +66,8 @@ class FirebaseRepositoryImpl implements FirebaseRepository {
 
   @override
   Stream<List<TransactionEntity>> getTransactions(
-          String paidId, String contactId) =>
-      firebaseDataSource.getTransactions(paidId, contactId);
+          String paidId, String contactId, {bool isFormatDate = false}) =>
+      firebaseDataSource.getTransactions(paidId, contactId, isFormatDate: isFormatDate);
 
   @override
   Future<Contact?> updateContact(Contact newContact, String paidId) =>

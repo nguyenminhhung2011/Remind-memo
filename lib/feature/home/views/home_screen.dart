@@ -7,7 +7,6 @@ import 'package:project/core/extensions/context_exntions.dart';
 import 'package:project/core/extensions/handle_time.dart';
 import 'package:project/core/widgets/header_text_custom.dart';
 import 'package:project/core/widgets/sort_button.dart';
-import 'package:project/data/model/contact/contact_model.dart';
 import 'package:project/feature/auth/notifier/auth_notifier.dart';
 import 'package:project/feature/home/notifier/home_notifier.dart';
 import 'package:project/feature/home/views/widgets/item_view.dart';
@@ -30,6 +29,11 @@ enum TypeView {
         TypeView.all => "all view",
         TypeView.lend => "lend",
         _ => "loan",
+      };
+  int get toInt => switch (this) {
+        TypeView.all => -1,
+        TypeView.lend => 0,
+        _ => 1,
       };
 }
 
@@ -54,6 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _onChangeTab(TypeView view) {
     _typeView.value = view;
+    _home.getTransactions(_paid.pay?.id ?? '', view.toInt);
   }
 
   @override
@@ -106,7 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Consumer4<PaidNotifier, AuthNotifier, HomeNotifier, ContactNotifier>(
       builder: (context, paidModal, authModal, homeModal, contactModal, child) {
-        if (homeModal.loadingGet || contactModal.loadingGet1) {
+        if (_contact.loadingGet1) {
           return Center(
             child: CircularProgressIndicator(
               color: Theme.of(context).primaryColor,
@@ -114,31 +119,6 @@ class _HomeScreenState extends State<HomeScreen> {
           );
         }
         return Scaffold(
-          floatingActionButton: Padding(
-            padding: const EdgeInsets.only(bottom: 50),
-            child: ButtonCustom(
-              radius: 5.0,
-              width: context.widthDevice * 0.4,
-              onPress: () {},
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Text(
-                      S.of(context).addNewPay,
-                      style: context.titleSmall.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 4),
-                  const Icon(Icons.add),
-                ],
-              ),
-            ),
-          ),
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           appBar: AppBar(
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -204,73 +184,84 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               const Divider(),
-              ...homeModal.listTransaction.entries.map<Widget>(
-                (element) => Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(Constant.kHMarginCard),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColor.withOpacity(0.03),
+              if (homeModal.loadingGet)
+                Center(
+                  child: CircularProgressIndicator(
+                    color: Theme.of(context).primaryColor,
                   ),
-                  child: Column(
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            '${element.key.day < 10 ? '0' : ''}${element.key.day}',
-                            style: context.headlineLarge.copyWith(
-                              color: context.titleMedium.color,
-                              fontWeight: FontWeight.w300,
+                )
+              else
+                ...homeModal.listTransaction.entries.map<Widget>(
+                  (element) => Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(Constant.kHMarginCard),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColor.withOpacity(0.03),
+                    ),
+                    child: Column(
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              '${element.key.day < 10 ? '0' : ''}${element.key.day}',
+                              style: context.headlineLarge.copyWith(
+                                color: context.titleMedium.color,
+                                fontWeight: FontWeight.w300,
+                              ),
                             ),
-                          ),
-                          const SizedBox(width: 10.0),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                ...getMMMMEEEd(element.key)
-                                    .split(',')
-                                    .mapIndexed(
-                                      (index, e) => Text(
-                                        index == 0
-                                            ? e.trim()
-                                            : '${e.trim()} ${element.key.year}',
-                                        style: context.titleSmall.copyWith(
-                                          color: Theme.of(context).hintColor,
-                                          fontWeight: FontWeight.w400,
+                            const SizedBox(width: 10.0),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ...getMMMMEEEd(element.key)
+                                      .split(',')
+                                      .mapIndexed(
+                                        (index, e) => Text(
+                                          index == 0
+                                              ? e.trim()
+                                              : '${e.trim()} ${element.key.year}',
+                                          style: context.titleSmall.copyWith(
+                                            color: Theme.of(context).hintColor,
+                                            fontWeight: FontWeight.w400,
+                                          ),
                                         ),
-                                      ),
-                                    )
-                              ],
+                                      )
+                                ],
+                              ),
                             ),
-                          ),
-                          Icon(
-                            Icons.bar_chart_sharp,
-                            color: Theme.of(context).primaryColor,
-                          ),
-                          Text(
-                            ' ${123.013}',
-                            style: context.titleSmall.copyWith(
+                            Icon(
+                              Icons.bar_chart_sharp,
                               color: Theme.of(context).primaryColor,
                             ),
-                          )
-                        ],
-                      ),
-                      const SizedBox(height: 5.0),
-                      const Divider(),
-                      const SizedBox(height: 5.0),
-                      ...element.value.map((e) => ItemView(
-                            name: contactModal.mapContacts[e.contactId]?.name ??
-                                'Hung',
-                            time: e.createTime,
-                            price: e.price.toDouble(),
-                            isPay: e.type.isLend,
-                            onPress: () {},
-                          )).expand((element) => [element, const SizedBox(height: 8.0)])
-                    ],
+                            Text(
+                              ' ${123.013}',
+                              style: context.titleSmall.copyWith(
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            )
+                          ],
+                        ),
+                        const SizedBox(height: 5.0),
+                        const Divider(),
+                        const SizedBox(height: 5.0),
+                        ...element.value
+                            .map((e) => ItemView(
+                                  name: contactModal
+                                          .mapContacts[e.contactId]?.name ??
+                                      'Hung',
+                                  time: e.createTime,
+                                  price: e.price.toDouble(),
+                                  isPay: e.type.isLend,
+                                  onPress: () {},
+                                ))
+                            .expand((element) =>
+                                [element, const SizedBox(height: 8.0)])
+                      ],
+                    ),
                   ),
-                ),
-              )
+                )
             ]
                 .expand((element) => [element, const SizedBox(height: 5.0)])
                 .toList(),
