@@ -208,7 +208,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               style: context.headlineLarge.copyWith(
                                 color: context.titleMedium.color,
                                 fontWeight: FontWeight.w300,
-                              ),
+                              ),  
                             ),
                             const SizedBox(width: 10.0),
                             Expanded(
