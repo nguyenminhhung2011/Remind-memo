@@ -700,6 +700,76 @@ class S {
     );
   }
 
+  /// `Time`
+  String get time {
+    return Intl.message(
+      'Time',
+      name: 'time',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lend`
+  String get lend {
+    return Intl.message(
+      'Lend',
+      name: 'lend',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Loan`
+  String get loan {
+    return Intl.message(
+      'Loan',
+      name: 'loan',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Language`
+  String get language {
+    return Intl.message(
+      'Language',
+      name: 'language',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Do you want to delete this transaction?`
+  String get deleteTransaction {
+    return Intl.message(
+      'Do you want to delete this transaction?',
+      name: 'deleteTransaction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete`
+  String get delete {
+    return Intl.message(
+      'Delete',
+      name: 'delete',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Do you want to sign out?`
+  String get signOutDescription {
+    return Intl.message(
+      'Do you want to sign out?',
+      name: 'signOutDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Select pay`
   String get selectedPay {
     return Intl.message(
@@ -717,6 +787,7 @@ class AppLocalizationDelegate extends LocalizationsDelegate<S> {
   List<Locale> get supportedLocales {
     return const <Locale>[
       Locale.fromSubtags(languageCode: 'en'),
+      Locale.fromSubtags(languageCode: 'vi'),
     ];
   }
 

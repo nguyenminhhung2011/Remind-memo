@@ -83,7 +83,7 @@ class _PayDetailScreenState extends State<PayDetailScreen> {
       _time.value = _payDetail.transaction?.notificationTIme ?? DateTime.now();
       _price.value = _payDetail.transaction?.price ?? 0;
     });
-  }
+  }   
 
   @override
   void dispose() {
@@ -92,7 +92,7 @@ class _PayDetailScreenState extends State<PayDetailScreen> {
 
   void _onDeletePaid() async {
     final delete = await context.showYesNoDialog(
-        350, 'Xóa', 'Ban có muốn xóa giao dich này?');
+        350, S.current.delete, S.current.deleteTransaction);
     if (delete) {
       final deleteSuccess = await _payDetail.deleteTransaction(
         _payDetail.transactionId,

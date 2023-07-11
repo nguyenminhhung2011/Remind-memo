@@ -36,5 +36,4 @@ abstract class FirebaseRepository {
   Future<TransactionEntity?> updateTransaction(
       TransactionEntity newTransaction, String paidId);
   Future<bool> deleteTransaction(String paidId, String transactionId);
-      
 }
