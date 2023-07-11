@@ -46,9 +46,7 @@ class _AddPayScreenState extends State<AddPayScreen> {
       enableDrag: true,
       isDismissible: true,
       builder: (context) {
-        return const CalculatorCustom(
-          inputPrice: 100,
-        );
+        return const CalculatorCustom(inputPrice: 0);
       },
     );
     if (result != null && result is int) {

@@ -62,5 +62,7 @@
     "amountOfMoney": "Amount of money",
     "enterNote": "Enter note",
     "settings": "Settings",
+    "yes": "Yes",
+    "no": "No",
     "selectedPay": "Select pay"
 }

@@ -296,6 +296,56 @@ class FirebaseDataSourceImpl implements FirebaseDataSource {
   }
 
   @override
+  Future<TransactionEntity?> updateTransaction(
+      TransactionEntity newTransaction, String paidId) async {
+    final transactionCollection =
+        fireStore.collection("pays").doc(paidId).collection("transactions");
+    try {
+      final transactionDoc =
+          await transactionCollection.doc(newTransaction.id).get();
+      if (!transactionDoc.exists) {
+        return null;
+      }
+      final newContactModel = TransactionModel(
+        newTransaction.id,
+        newTransaction.note,
+        newTransaction.type.toInt,
+        newTransaction.price,
+        newTransaction.createTime.millisecondsSinceEpoch,
+        newTransaction.contactId,
+        newTransaction.notificationTIme.millisecondsSinceEpoch,
+      ).toJson();
+      await transactionCollection.doc(transactionDoc.id).set(newContactModel);
+      return newTransaction;
+    } catch (e) {
+      log(e.toString());
+      return null;
+    }
+  }
+
+  @override
+  Stream<List<TransactionEntity>> getTransactionsFromRangeDates(
+    int startDate,
+    int endDate,
+    String paidId,
+  ) {
+    final transactionCollection =
+        fireStore.collection("pays").doc(paidId).collection("transactions");
+    return transactionCollection
+        .orderBy('createTime', descending: false)
+        .snapshots()
+        .map(
+          (querySnapshot) => querySnapshot.docs
+              .where((element) {
+                final createTime = element.data()['createTime'];
+                return createTime >= startDate && createTime <= endDate;
+              })
+              .map((e) => TransactionModel.fromJson(e.data()).toEntity)
+              .toList(),
+        );
+  }
+
+  @override
   Future<void> addContacts(Contact contact, String paidId) async {
     final contactCollection =
         fireStore.collection("pays").doc(paidId).collection("contacts");
@@ -321,6 +371,37 @@ class FirebaseDataSourceImpl implements FirebaseDataSource {
       log(e.toString());
     }
     return null;
+  }
+
+  @override
+  Future<TransactionEntity?> getTransactionById(
+      String transactionId, String paidId) async {
+    final transactionCollection =
+        fireStore.collection('pays').doc(paidId).collection('transactions');
+    try {
+      final transactionDoc =
+          await transactionCollection.doc(transactionId).get();
+      if (!transactionDoc.exists) {
+        return null;
+      }
+      return TransactionModel.fromJson(transactionDoc.data()!).toEntity;
+    } catch (e) {
+      log(e.toString());
+    }
+    return null;
+  }
+
+  @override
+  Future<bool> deleteTransaction(String paidId, String transactionId) async {
+    final transactionCollection =
+        fireStore.collection('pays').doc(paidId).collection('transactions');
+    try {
+      await transactionCollection.doc(transactionId).delete();
+      return true;
+    } catch (e) {
+      log(e.toString());
+      return false;
+    }
   }
 
   @override

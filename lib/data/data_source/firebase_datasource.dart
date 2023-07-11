@@ -8,6 +8,8 @@ abstract class FirebaseDataSource {
   Future<UserEntity?> getCreateCurrentUser(UserEntity user);
   Future<UserEntity?> getUserByUuid();
   Future<Pay?> getPayById(String id);
+  Future<TransactionEntity?> getTransactionById(
+      String transactionId, String paidId);
   Future<Pay?> updatePaid(Pay newPaid);
   Future<Contact?> getContactById(String cId, String paidId);
   Future<Contact?> updateContact(Contact newContact, String paidId);
@@ -15,6 +17,8 @@ abstract class FirebaseDataSource {
       TransactionEntity transaction, String paidId);
   Future<void> googleAuth();
   Future<void> forgotPassword(String email);
+  Future<bool> deleteTransaction(String paidId, String transactionId);
+  Future<TransactionEntity?> updateTransaction(TransactionEntity newTransaction, String paidId);
 
   // Future<void> getCreateGroup(GroupEntity groupEntity);
   // Stream<List<GroupEntity>> getGroups();
@@ -36,4 +40,9 @@ abstract class FirebaseDataSource {
       String paidId, String contactId,
       {bool isFormatDate = false});
   Stream<List<TransactionEntity>> getAllTransactions(String paidId, int type);
+  Stream<List<TransactionEntity>> getTransactionsFromRangeDates(
+    int startDate,
+    int endDate,
+    String paidId,
+  );
 }

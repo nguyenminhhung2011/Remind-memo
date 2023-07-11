@@ -125,6 +125,8 @@ dependencies:
   google_sign_in: ^6.1.4
   firebase_auth: ^4.6.3
   fluttertoast: ^8.2.2
+  pdf: ^3.10.4
+  open_file: ^3.3.2
   # table_calendar: ^3.0.8
   # readmore: ^2.2.0
 

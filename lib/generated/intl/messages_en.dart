@@ -74,6 +74,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "loanAmount": MessageLookupByLibrary.simpleMessage("Loan Amount"),
         "logIn": MessageLookupByLibrary.simpleMessage("Log In"),
         "name": MessageLookupByLibrary.simpleMessage("Name"),
+        "no": MessageLookupByLibrary.simpleMessage("No"),
         "note": MessageLookupByLibrary.simpleMessage("Note"),
         "or": MessageLookupByLibrary.simpleMessage("Or"),
         "orSignInWith": MessageLookupByLibrary.simpleMessage("Or sign in with"),
@@ -109,6 +110,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Manage your debts easily,\nmoney lending at your fingertips!"),
         "sortByPrice": MessageLookupByLibrary.simpleMessage("Sort By Price"),
         "transaction": MessageLookupByLibrary.simpleMessage("Transaction"),
-        "update": MessageLookupByLibrary.simpleMessage("Update")
+        "update": MessageLookupByLibrary.simpleMessage("Update"),
+        "yes": MessageLookupByLibrary.simpleMessage("Yes")
       };
 }
