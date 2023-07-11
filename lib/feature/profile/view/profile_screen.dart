@@ -8,7 +8,9 @@ import 'package:project/feature/paid/notifier/paid_notifier.dart';
 import 'package:project/routes/routes.dart';
 import 'package:provider/provider.dart';
 
+import '../../../core/widgets/drop_down_button_custom.dart';
 import '../../../generated/l10n.dart';
+import '../../../langugae_change_provider.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -18,18 +20,28 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  void logOut() async {
+    final delete = await context.showYesNoDialog(
+        350, S.current.signOut, S.current.signOutDescription);
+    if (delete) {
+      // ignore: use_build_context_synchronously
+      context.read<AuthNotifier>().onSignOut();
+      // ignore: use_build_context_synchronously
+      context.pushAndRemoveAll(Routes.login);
+    }
+  }
+
   void _onTap(int index) {
     switch (index) {
-      case 2:
-        context.read<AuthNotifier>().onSignOut();
-        context.pushAndRemoveAll(Routes.login);
+      case 3:
+        logOut();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<AuthNotifier, PaidNotifier>(
-        builder: (context, authModal, paidModal, child) {
+    return Consumer3<AuthNotifier, PaidNotifier, LanguageChangeProvider>(
+        builder: (context, authModal, paidModal, langModal, child) {
       return Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
@@ -102,6 +114,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       "icon": Icons.price_change,
                     },
                     {
+                      "title": S.of(context).language,
+                      "icon": Icons.language,
+                    },
+                    {
                       "title": S.of(context).signOut,
                       "icon": Icons.logout,
                     },
@@ -114,7 +130,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           children: [
                             Icon(
                               e['icon'] as IconData,
-                              color: index == 2
+                              color: index == 3
                                   ? Colors.red
                                   : Theme.of(context).primaryColor,
                             ),
@@ -127,17 +143,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                               ),
                             ),
-                            Text(
-                              switch (index) {
-                                0 => (paidModal.pay?.lendAmount ?? 0).toString(),
-                                1 => (paidModal.pay?.loanAmount ??0).toString(),
-                                _ => '',
-                              }
-                                  .toString(),
-                              style: context.titleSmall.copyWith(
-                                color: Theme.of(context).hintColor,
-                              ),
-                            )
+                            if (index == 2)
+                              DropdownButtonCustom<Locale?>(
+                                width: 100.0,
+                                radius: 10.0,
+                                value: langModal.currentLocale,
+                                onChange: (value) => langModal.changeLocale(
+                                  value ?? const Locale('en'),
+                                ),
+                                items: S.delegate.supportedLocales
+                                    .map<DropdownMenuItem<Locale>>(
+                                      (Locale value) =>
+                                          DropdownMenuItem<Locale>(
+                                        value: value,
+                                        child: Text(
+                                          value.languageCode,
+                                          style: context.titleSmall.copyWith(
+                                            fontWeight: FontWeight.w400,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                    .toList(),
+                              )
+                            else
+                              Text(
+                                switch (index) {
+                                  0 =>
+                                    (paidModal.pay?.lendAmount ?? 0).toString(),
+                                  1 =>
+                                    (paidModal.pay?.loanAmount ?? 0).toString(),
+                                  _ => '',
+                                }
+                                    .toString(),
+                                style: context.titleSmall.copyWith(
+                                  color: Theme.of(context).hintColor,
+                                ),
+                              )
                           ],
                         ),
                       ),

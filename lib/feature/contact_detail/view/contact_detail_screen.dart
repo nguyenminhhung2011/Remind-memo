@@ -24,9 +24,9 @@ class ContactDetailScreen extends StatefulWidget {
 class _ContactDetailScreenState extends State<ContactDetailScreen> {
   ContactDetailNotifier get _notifier => context.read<ContactDetailNotifier>();
   List<String> headers = [
-    'Title',
-    'Loan amount',
-    'Lend amount',
+    S.current.time,
+    S.current.loanAmount,
+    S.current.lendAmount,
   ];
 
   @override
@@ -46,7 +46,7 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
       Routes.addPay,
       AddPayArguments(contactId: _notifier.contactId, loan: loan),
     );
-    if(open != null && open is Contact){
+    if (open != null && open is Contact) {
       _notifier.setContact(open);
     }
   }
@@ -74,13 +74,19 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
                       child: ButtonCustom(
                           color: Colors.red,
                           height: 45.0,
-                          child: Text(S.of(context).loanAdd),
+                          child: Text(
+                            S.of(context).loanAdd,
+                            textAlign: TextAlign.center,
+                          ),
                           onPress: () => _openAddTransaction(true))),
                   const SizedBox(width: Constant.kHMarginCard),
                   Expanded(
                       child: ButtonCustom(
                           height: 45.0,
-                          child: Text(S.of(context).lendAdd),
+                          child: Text(
+                            S.of(context).lendAdd,
+                            textAlign: TextAlign.center,
+                          ),
                           onPress: () => _openAddTransaction(false))),
                 ],
               ),

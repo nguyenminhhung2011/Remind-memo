@@ -29,9 +29,9 @@ enum TypeView {
   loan;
 
   String get displayValue => switch (this) {
-        TypeView.all => "all view",
-        TypeView.lend => "lend",
-        _ => "loan",
+        TypeView.all => S.current.all,
+        TypeView.lend => S.current.lend,
+        _ => S.current.loan,
       };
   int get toInt => switch (this) {
         TypeView.all => -1,

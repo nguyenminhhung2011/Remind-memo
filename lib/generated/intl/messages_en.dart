@@ -44,6 +44,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "continueText": MessageLookupByLibrary.simpleMessage("Continue"),
         "createYourNewPassword":
             MessageLookupByLibrary.simpleMessage("Create Your New Password"),
+        "delete": MessageLookupByLibrary.simpleMessage("Delete"),
+        "deleteTransaction": MessageLookupByLibrary.simpleMessage(
+            "Do you want to delete this transaction?"),
         "donHaveAnAccount":
             MessageLookupByLibrary.simpleMessage("Don\'t have an account ?"),
         "email": MessageLookupByLibrary.simpleMessage("Email"),
@@ -68,8 +71,11 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Enter your phone number"),
         "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
         "google": MessageLookupByLibrary.simpleMessage("Google"),
+        "language": MessageLookupByLibrary.simpleMessage("Language"),
+        "lend": MessageLookupByLibrary.simpleMessage("Lend"),
         "lendAdd": MessageLookupByLibrary.simpleMessage("Add lend"),
         "lendAmount": MessageLookupByLibrary.simpleMessage("Lend Amount"),
+        "loan": MessageLookupByLibrary.simpleMessage("Loan"),
         "loanAdd": MessageLookupByLibrary.simpleMessage("Add loan"),
         "loanAmount": MessageLookupByLibrary.simpleMessage("Loan Amount"),
         "logIn": MessageLookupByLibrary.simpleMessage("Log In"),
@@ -104,11 +110,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "share": MessageLookupByLibrary.simpleMessage("Share"),
         "signIn": MessageLookupByLibrary.simpleMessage("Sign In"),
         "signOut": MessageLookupByLibrary.simpleMessage("Sign Out"),
+        "signOutDescription":
+            MessageLookupByLibrary.simpleMessage("Do you want to sign out?"),
         "signUp": MessageLookupByLibrary.simpleMessage("Sign Up"),
         "skipForNow": MessageLookupByLibrary.simpleMessage("Skip for now"),
         "slogan": MessageLookupByLibrary.simpleMessage(
             "Manage your debts easily,\nmoney lending at your fingertips!"),
         "sortByPrice": MessageLookupByLibrary.simpleMessage("Sort By Price"),
+        "time": MessageLookupByLibrary.simpleMessage("Time"),
         "transaction": MessageLookupByLibrary.simpleMessage("Transaction"),
         "update": MessageLookupByLibrary.simpleMessage("Update"),
         "yes": MessageLookupByLibrary.simpleMessage("Yes")

@@ -7,6 +7,7 @@ import 'package:project/feature/chart/notifier/chart_notifier.dart';
 import 'package:project/feature/home/notifier/home_notifier.dart';
 import 'package:project/feature/list_contact/notifier/contact_notifier.dart';
 import 'package:project/feature/paid/notifier/paid_notifier.dart';
+import 'package:project/langugae_change_provider.dart';
 import 'package:project/routes/main_routes.dart';
 import 'package:project/routes/routes.dart';
 
@@ -33,33 +34,42 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-        providers: [
-          ChangeNotifierProvider<AuthNotifier>(create: (_) => injector.get()),
-          ChangeNotifierProvider<PaidNotifier>(create: (_) => injector.get()),
-          ChangeNotifierProvider<ContactNotifier>(create: (_) => injector.get()),
-          ChangeNotifierProvider<HomeNotifier>(create: (_) => injector.get()),
-          ChangeNotifierProvider<ChartNotifier>(create: (_) => injector.get()),
-        ],
-        child: MaterialApp(
-          localizationsDelegates: const [
-            S.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          debugShowCheckedModeBanner: false,
-          title: 'Remind Memo',
-          theme: ThemeData(
-            primaryColor: '#07AEAF'.toColor(),
-            primaryColorDark: '#07AEAF'.toColor(),
-          ),
-          darkTheme: ThemeData.dark().copyWith(
-            primaryColor: '#07AEAF'.toColor(),
-          ),
-          supportedLocales: S.delegate.supportedLocales,
-          initialRoute: Routes.splash,
-          onGenerateRoute: MainRoutes.getRoute,
-        ));
+      providers: [
+        ChangeNotifierProvider<AuthNotifier>(create: (_) => injector.get()),
+        ChangeNotifierProvider<PaidNotifier>(create: (_) => injector.get()),
+        ChangeNotifierProvider<ContactNotifier>(create: (_) => injector.get()),
+        ChangeNotifierProvider<HomeNotifier>(create: (_) => injector.get()),
+        ChangeNotifierProvider<ChartNotifier>(create: (_) => injector.get()),
+        ChangeNotifierProvider<LanguageChangeProvider>(
+          create: (_) => injector.get(),
+        ),
+      ],
+      child: Consumer<LanguageChangeProvider>(
+        builder: (context, modal, child) {
+          return MaterialApp(
+            localizationsDelegates: const [
+              S.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            debugShowCheckedModeBanner: false,
+            title: 'Remind Memo',
+            theme: ThemeData(
+              primaryColor: '#07AEAF'.toColor(),
+              primaryColorDark: '#07AEAF'.toColor(),
+            ),
+            darkTheme: ThemeData.dark().copyWith(
+              primaryColor: '#07AEAF'.toColor(),
+            ),
+            supportedLocales: S.delegate.supportedLocales,
+            locale: modal.currentLocale,
+            initialRoute: Routes.splash,
+            onGenerateRoute: MainRoutes.getRoute,
+          );
+        },
+      ),
+    );
   }
 } 
 

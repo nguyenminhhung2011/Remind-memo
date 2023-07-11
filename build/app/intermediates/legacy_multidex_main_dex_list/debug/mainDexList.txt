@@ -76,6 +76,13 @@ androidx/annotation/VisibleForTesting.class
 androidx/annotation/WorkerThread.class
 androidx/annotation/XmlRes.class
 androidx/annotation/experimental/UseExperimental.class
+androidx/appcompat/app/ActionBar$DisplayOptions.class
+androidx/appcompat/app/ActionBar$NavigationMode.class
+androidx/appcompat/app/AppCompatDelegate$NightMode.class
+androidx/appcompat/graphics/drawable/DrawerArrowDrawable$ArrowDirection.class
+androidx/appcompat/view/menu/CascadingMenuPopup$HorizPosition.class
+androidx/appcompat/widget/LinearLayoutCompat$DividerMode.class
+androidx/appcompat/widget/LinearLayoutCompat$OrientationMode.class
 androidx/browser/browseractions/BrowserActionsIntent$BrowserActionsItemId.class
 androidx/browser/browseractions/BrowserActionsIntent$BrowserActionsUrlType.class
 androidx/browser/customtabs/CustomTabsIntent$ColorScheme.class
@@ -127,8 +134,13 @@ androidx/core/view/WindowInsetsAnimationCompat$Callback$DispatchMode.class
 androidx/core/view/WindowInsetsCompat$Type$InsetsType.class
 androidx/core/view/accessibility/AccessibilityEventCompat$ContentChangeType.class
 androidx/core/widget/TextViewCompat$AutoSizeTextType.class
+androidx/emoji2/text/EmojiCompat$CodepointSequenceMatchResult.class
+androidx/emoji2/text/EmojiCompat$LoadStrategy.class
+androidx/emoji2/text/EmojiCompat$ReplaceStrategy.class
+androidx/emoji2/text/EmojiMetadata$HasGlyph.class
 androidx/exifinterface/media/ExifInterface$ExifStreamType.class
 androidx/exifinterface/media/ExifInterface$IfdType.class
+androidx/fragment/app/FragmentStateManagerControl.class
 androidx/lifecycle/Lifecycle$Event.class
 androidx/lifecycle/LifecycleCoroutineScope.class
 androidx/lifecycle/LifecycleRegistry.class
@@ -154,6 +166,9 @@ androidx/multidex/ZipUtil.class
 androidx/profileinstaller/ProfileInstaller$DiagnosticCode.class
 androidx/profileinstaller/ProfileInstaller$ResultCode.class
 androidx/profileinstaller/ProfileVerifier$CompilationStatus$ResultCode.class
+androidx/resourceinspection/annotation/AppCompatShadowedAttributes.class
+androidx/resourceinspection/annotation/Attribute$IntMap.class
+androidx/resourceinspection/annotation/Attribute.class
 androidx/versionedparcelable/NonParcelField.class
 androidx/versionedparcelable/ParcelField.class
 androidx/versionedparcelable/VersionedParcelize.class
