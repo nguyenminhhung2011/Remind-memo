@@ -22,8 +22,19 @@ abstract class FirebaseRepository {
   Future<UserEntity?> getUserByUuid();
   Stream<List<Pay>> getPays();
   Stream<List<TransactionEntity>> getTransactions(
-      String paidId, String contactId, {bool isFormatDate = false});
-  Stream<List<TransactionEntity>> getAllTransactions(
-      String paidId, int type );
+      String paidId, String contactId,
+      {bool isFormatDate = false});
+  Stream<List<TransactionEntity>> getAllTransactions(String paidId, int type);
   Stream<List<Contact>> getContacts(String paidId);
+  Stream<List<TransactionEntity>> getTransactionsFromRangeDates(
+    int startDate,
+    int endDate,
+    String paidId,
+  );
+  Future<TransactionEntity?> getTransactionById(
+      String transactionId, String paidId);
+  Future<TransactionEntity?> updateTransaction(
+      TransactionEntity newTransaction, String paidId);
+  Future<bool> deleteTransaction(String paidId, String transactionId);
+      
 }

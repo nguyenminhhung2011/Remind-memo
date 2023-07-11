@@ -88,14 +88,14 @@ class MainRoutes {
               }
               return const SizedBox();
             });
-      case Routes.payDetail:
-        return MaterialPageRoute(
-          settings: settings,
-          builder: (_) => ChangeNotifierProvider<PayDetailNotifier>.value(
-            value: PayDetailNotifier(),
-            child: const PayDetailScreen(),
-          ),
-        );
+      // case Routes.payDetail:
+      //   return MaterialPageRoute(
+      //     settings: settings,
+      //     builder: (_) => ChangeNotifierProvider<PayDetailNotifier>.value(
+      //       value: PayDetailNotifier(),
+      //       child: const PayDetailScreen(),
+      //     ),
+      //   );
       case Routes.addPay:
         return MaterialPageRoute(
             settings: settings,

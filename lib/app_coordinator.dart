@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 
 import 'core/widgets/range_date_picker_custom.dart';
-
+import 'core/widgets/yes_no_dialog.dart';
 
 final _timeNow = DateTime.now();
 
-extension AppCoordinator<T> on BuildContext{
+extension AppCoordinator<T> on BuildContext {
   void pop() => Navigator.of(this).pop();
   void popUntil(String nRoute) =>
       Navigator.popUntil(this, ModalRoute.withName(nRoute));
   void popArgs(T? args) => Navigator.of(this).pop(args);
 
   void startSelectedBottomBarItem(int view) {}
-
 
   Future<DateTime?> pickDateTime() async {
     DateTime? date = (await pickDate(DatePickerMode.day));
@@ -42,8 +41,7 @@ extension AppCoordinator<T> on BuildContext{
         lastDate: DateTime(2100),
       );
 
-
-Future<List<DateTime>?> pickRangeDate(
+  Future<List<DateTime>?> pickRangeDate(
     RangeDateController rangeDateController,
   ) async {
     final dates = await showDialog(
@@ -60,6 +58,23 @@ Future<List<DateTime>?> pickRangeDate(
       return dates;
     }
     return null;
+  }
+
+  Future<bool> showYesNoDialog(
+      double width, String header, String title) async {
+    final result = await showDialog(
+      context: this,
+      builder: (_) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: YesNoDialog(header: header, title: title, width: width),
+        );
+      },
+    );
+    if (result is StatusDialog) {
+      return result.isYes;
+    }
+    return false;
   }
 
   Future<List<DateTime>?> pickWeekRange(
@@ -94,7 +109,4 @@ Future<List<DateTime>?> pickRangeDate(
   Future<T?> openPageWithRouteAndParams(String route, dynamic param) {
     return Navigator.of(this).pushNamed(route, arguments: param);
   }
-
-  
-
 }

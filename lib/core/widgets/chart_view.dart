@@ -65,7 +65,7 @@ class ChartViewState extends State<ChartView> {
               ),
               Expanded(
                 child: BarChart(
-                  swapAnimationDuration: const Duration(milliseconds: 250),
+                  swapAnimationDuration: const Duration(milliseconds: 300),
                   BarChartData(
                     maxY: 20,
                     barTouchData: BarTouchData(
@@ -184,7 +184,7 @@ class ChartViewState extends State<ChartView> {
   }
 
   Widget bottomTitles(double value, TitleMeta meta) {
-    List<String> titles = ["Mn", "Te", "Wd", "Tu", "Fr", "St", "Su"];
+    List<String> titles = ["Su", "Mn", "Te", "Wd", "Tu", "Fr", "St"];
 
     Widget text = Text(
       titles[value.toInt()],

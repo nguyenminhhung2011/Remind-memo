@@ -67,7 +67,8 @@ class FirebaseRepositoryImpl implements FirebaseRepository {
   @override
   Stream<List<TransactionEntity>> getTransactions(
           String paidId, String contactId, {bool isFormatDate = false}) =>
-      firebaseDataSource.getTransactions(paidId, contactId, isFormatDate: isFormatDate);
+      firebaseDataSource.getTransactions(paidId, contactId,
+          isFormatDate: isFormatDate);
 
   @override
   Future<Contact?> updateContact(Contact newContact, String paidId) =>
@@ -80,4 +81,24 @@ class FirebaseRepositoryImpl implements FirebaseRepository {
   @override
   Stream<List<TransactionEntity>> getAllTransactions(String paidId, int type) =>
       firebaseDataSource.getAllTransactions(paidId, type);
+
+  @override
+  Stream<List<TransactionEntity>> getTransactionsFromRangeDates(
+          int startDate, int endDate, String paidId) =>
+      firebaseDataSource.getTransactionsFromRangeDates(
+          startDate, endDate, paidId);
+
+  @override
+  Future<TransactionEntity?> getTransactionById(
+          String transactionId, String paidId) =>
+      firebaseDataSource.getTransactionById(transactionId, paidId);
+
+  @override
+  Future<TransactionEntity?> updateTransaction(
+          TransactionEntity newTransaction, String paidId) =>
+      firebaseDataSource.updateTransaction(newTransaction, paidId);
+
+  @override
+  Future<bool> deleteTransaction(String paidId, String transactionId) =>
+      firebaseDataSource.deleteTransaction(paidId, transactionId);
 }

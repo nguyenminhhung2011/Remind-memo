@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:project/core/dependency_injection/di.dart';
 import 'package:project/core/extensions/color_extensions.dart';
 import 'package:project/feature/auth/notifier/auth_notifier.dart';
+import 'package:project/feature/chart/notifier/chart_notifier.dart';
 import 'package:project/feature/home/notifier/home_notifier.dart';
 import 'package:project/feature/list_contact/notifier/contact_notifier.dart';
 import 'package:project/feature/paid/notifier/paid_notifier.dart';
@@ -37,7 +38,7 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider<PaidNotifier>(create: (_) => injector.get()),
           ChangeNotifierProvider<ContactNotifier>(create: (_) => injector.get()),
           ChangeNotifierProvider<HomeNotifier>(create: (_) => injector.get()),
-
+          ChangeNotifierProvider<ChartNotifier>(create: (_) => injector.get()),
         ],
         child: MaterialApp(
           localizationsDelegates: const [

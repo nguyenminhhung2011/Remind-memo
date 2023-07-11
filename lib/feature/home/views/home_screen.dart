@@ -3,11 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:project/app_coordinator.dart';
 import 'package:project/core/constant/constant.dart';
 import 'package:project/core/constant/image_const.dart';
+import 'package:project/core/dependency_injection/di.dart';
 import 'package:project/core/extensions/context_exntions.dart';
 import 'package:project/core/extensions/handle_time.dart';
 import 'package:project/core/widgets/header_text_custom.dart';
+import 'package:project/core/widgets/range_date_picker_custom.dart';
 import 'package:project/core/widgets/sort_button.dart';
 import 'package:project/feature/auth/notifier/auth_notifier.dart';
+import 'package:project/feature/chart/notifier/chart_notifier.dart';
 import 'package:project/feature/home/notifier/home_notifier.dart';
 import 'package:project/feature/home/views/widgets/item_view.dart';
 import 'package:project/feature/list_contact/notifier/contact_notifier.dart';
@@ -48,13 +51,13 @@ class _HomeScreenState extends State<HomeScreen> {
   final ValueNotifier<TypeView> _typeView =
       ValueNotifier<TypeView>(TypeView.all);
 
+  final _rangeDateController = RangeDateController();
+
   AuthNotifier get _auth => context.read<AuthNotifier>();
   PaidNotifier get _paid => context.read<PaidNotifier>();
   HomeNotifier get _home => context.read<HomeNotifier>();
   ContactNotifier get _contact => context.read<ContactNotifier>();
-
-  final ValueNotifier<DateTime> _currentTime =
-      ValueNotifier<DateTime>(DateTime.now());
+  ChartNotifier get _chart => context.read<ChartNotifier>();
 
   void _onChangeTab(TypeView view) {
     _typeView.value = view;
@@ -64,13 +67,13 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       _home.getTransactions(_paid.pay?.id ?? '', -1);
       _contact.getMapContacts(_paid.pay?.id ?? '');
     });
   }
 
-  void _onShowPayDetail() async {
+  void _onShowPayDetail(String transactionId, String contactId) async {
     final show = await showModalBottomSheet(
         isDismissible: false,
         enableDrag: false,
@@ -79,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
         context: context,
         builder: (context) {
           return ChangeNotifierProvider<PayDetailNotifier>.value(
-            value: PayDetailNotifier(),
+            value: injector.get(param1: transactionId, param2: contactId),
             child: const PayDetailScreen(),
           );
         });
@@ -100,11 +103,19 @@ class _HomeScreenState extends State<HomeScreen> {
           return const SelectPaid();
         });
     if (show is bool && show) {
+      String paidId =  _paid.pay?.id ?? '';
       // ignore: use_build_context_synchronously
-      _contact.getContacts(_paid.pay?.id ?? '');
-      _home.getTransactions(_paid.pay?.id ?? '', -1);
-      _contact.getMapContacts(_paid.pay?.id ?? '');
+      _contact.getContacts(paidId);
+      _home.getTransactions(paidId, -1);
+      _contact.getMapContacts(paidId);
+      _chart.getData(_rangeDateController.listDateUI, paidId);
     }
+  }
+
+  @override
+  void dispose(){
+    _rangeDateController.dispose();
+    super.dispose();
   }
 
   @override
@@ -254,7 +265,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   time: e.createTime,
                                   price: e.price.toDouble(),
                                   isPay: e.type.isLend,
-                                  onPress: () {},
+                                  onPress: () => _onShowPayDetail(e.id, e.contactId),
                                 ))
                             .expand((element) =>
                                 [element, const SizedBox(height: 8.0)])
