@@ -240,12 +240,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               Icons.bar_chart_sharp,
                               color: Theme.of(context).primaryColor,
                             ),
-                            Text(
-                              ' ${123.013}',
-                              style: context.titleSmall.copyWith(
-                                color: Theme.of(context).primaryColor,
-                              ),
-                            )
                           ],
                         ),
                         const SizedBox(height: 5.0),
