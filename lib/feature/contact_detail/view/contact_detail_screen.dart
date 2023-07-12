@@ -5,6 +5,7 @@ import 'package:project/core/constant/constant.dart';
 import 'package:project/core/constant/image_const.dart';
 import 'package:project/core/extensions/context_exntions.dart';
 import 'package:project/core/extensions/handle_time.dart';
+import 'package:project/core/extensions/int_extension.dart';
 import 'package:project/core/widgets/button_custom.dart';
 import 'package:project/domain/enitites/contact/contact.dart';
 import 'package:project/feature/add_pay/notifier/add_pay_notifier.dart';
@@ -121,11 +122,11 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
                           ),
                           Expanded(
                             child: Text(
-                              modal.contact?.price.toString() ?? '0',
+                              modal.contact?.price.price ?? '0',
                               textAlign: TextAlign.end,
                               style: context.titleLarge.copyWith(
                                 fontWeight: FontWeight.bold,
-                                color: Colors.green,
+                                color: Theme.of(context).primaryColor,
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
@@ -325,7 +326,7 @@ class ItemPayView extends StatelessWidget {
               color: Colors.red.withOpacity(0.1),
               child: Center(
                 child: Text(
-                  isLoan ? '- $price' : '',
+                  isLoan ? '- ${price.price}' : '',
                   style: context.titleMedium.copyWith(
                     color: Colors.red,
                     fontWeight: FontWeight.bold,
@@ -343,7 +344,7 @@ class ItemPayView extends StatelessWidget {
               color: Colors.green.withOpacity(0.1),
               child: Center(
                 child: Text(
-                  !isLoan ? '+ $price' : '',
+                  !isLoan ? '+ ${price.price}' : '',
                   style: context.titleMedium.copyWith(
                     color: Colors.green,
                     fontWeight: FontWeight.bold,

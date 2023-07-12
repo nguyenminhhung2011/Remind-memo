@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:project/app_coordinator.dart';
 import 'package:project/core/constant/constant.dart';
 import 'package:project/core/extensions/context_exntions.dart';
+import 'package:project/core/extensions/int_extension.dart';
 import 'package:project/feature/auth/notifier/auth_notifier.dart';
 import 'package:project/feature/paid/notifier/paid_notifier.dart';
 import 'package:project/routes/routes.dart';
@@ -186,9 +187,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               Text(
                                 switch (index) {
                                   0 =>
-                                    (paidModal.pay?.lendAmount ?? 0).toString(),
+                                    (paidModal.pay?.lendAmount ?? 0).price,
                                   1 =>
-                                    (paidModal.pay?.loanAmount ?? 0).toString(),
+                                    (paidModal.pay?.loanAmount ?? 0).price,
                                   _ => '',
                                 }
                                     .toString(),

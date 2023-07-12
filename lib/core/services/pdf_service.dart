@@ -3,6 +3,7 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:project/core/constant/image_const.dart';
 import 'package:project/core/extensions/handle_time.dart';
+import 'package:project/core/extensions/int_extension.dart';
 
 import '../../domain/enitites/contact/contact.dart';
 import '../../domain/enitites/transaction/transaction.dart';
@@ -82,12 +83,12 @@ class PdfService {
                   pw.TableRow(
                     children: [
                       pw.Padding(
-                        padding:const  pw.EdgeInsets.all(20.0),
+                        padding: const pw.EdgeInsets.all(20.0),
                         child: pw.Text(
                           S.current.lendAmount,
                           style: pw.Theme.of(context).header4.copyWith(
                                 font: font,
-                                color:PdfColors.green,
+                                color: PdfColors.green,
                               ),
                           textAlign: pw.TextAlign.center,
                         ),
@@ -106,7 +107,7 @@ class PdfService {
                             ),
                             pw.Expanded(
                               flex: 1,
-                              child: PaddedText(e.price.toString(), font),
+                              child: PaddedText(e.price.price, font),
                             )
                           ],
                         ),
@@ -127,7 +128,7 @@ class PdfService {
                           S.current.loanAmount,
                           style: pw.Theme.of(context).header4.copyWith(
                                 font: font,
-                                color: PdfColors.red, 
+                                color: PdfColors.red,
                               ),
                           textAlign: pw.TextAlign.center,
                         ),
@@ -148,10 +149,7 @@ class PdfService {
                             ),
                             pw.Expanded(
                               flex: 1,
-                              child: PaddedText(
-                                e.price.toString(),
-                                font,
-                              ),
+                              child: PaddedText(e.price.price, font),
                             )
                           ],
                         ),
@@ -169,13 +167,13 @@ class PdfService {
                       pw.Text(
                         getMMMMEEEd(DateTime.now()),
                         style: pw.TextStyle(
-                          font: font, 
+                          font: font,
                         ),
                       ),
                       pw.Text(
                         userName,
                         style: pw.TextStyle(
-                          font: font, 
+                          font: font,
                           fontSize: 22.0,
                         ),
                       ),

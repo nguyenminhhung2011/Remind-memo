@@ -6,6 +6,7 @@ import 'package:project/core/constant/image_const.dart';
 import 'package:project/core/dependency_injection/di.dart';
 import 'package:project/core/extensions/context_exntions.dart';
 import 'package:project/core/extensions/handle_time.dart';
+import 'package:project/core/extensions/int_extension.dart';
 import 'package:project/core/widgets/header_text_custom.dart';
 import 'package:project/core/widgets/range_date_picker_custom.dart';
 import 'package:project/core/widgets/sort_button.dart';
@@ -291,12 +292,12 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           ...<Map<String, dynamic>>[
             {
-              'price': _paid.pay?.lendAmount ?? 0,
+              'price': (_paid.pay?.lendAmount ?? 0).price,
               'header': S.of(context).lendAmount,
               'color': Colors.green,
             },
             {
-              'price': _paid.pay?.loanAmount ?? 0,
+              'price':( _paid.pay?.loanAmount ?? 0).price,
               'header': S.of(context).loanAmount,
               'color': Colors.red,
             },

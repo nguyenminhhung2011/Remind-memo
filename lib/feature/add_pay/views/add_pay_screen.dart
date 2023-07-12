@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 import 'package:project/app_coordinator.dart';
 import 'package:project/core/extensions/context_exntions.dart';
+import 'package:project/core/extensions/int_extension.dart';
 import 'package:project/core/extensions/string_extension.dart';
 import 'package:project/core/widgets/button_custom.dart';
 import 'package:project/domain/enitites/contact/contact.dart';
@@ -241,7 +242,7 @@ class _AddPayScreenState extends State<AddPayScreen> {
                           valueListenable: _price,
                           builder: (context, price, child) {
                             return Text(
-                              price.toString(),
+                              price.price,
                               style: context.headlineMedium.copyWith(
                                 fontWeight: FontWeight.w400,
                                 color: Theme.of(context).primaryColor,

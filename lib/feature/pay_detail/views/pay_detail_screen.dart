@@ -5,6 +5,7 @@ import 'package:project/app_coordinator.dart';
 import 'package:project/core/enum/type.dart';
 import 'package:project/core/extensions/context_exntions.dart';
 import 'package:project/core/extensions/handle_time.dart';
+import 'package:project/core/extensions/int_extension.dart';
 import 'package:project/core/widgets/button_custom.dart';
 import 'package:project/feature/list_contact/notifier/contact_notifier.dart';
 import 'package:project/feature/paid/notifier/paid_notifier.dart';
@@ -252,7 +253,7 @@ class _PayDetailScreenState extends State<PayDetailScreen> {
                           valueListenable: _price,
                           builder: (context, price, child) {
                             return Text(
-                              price.toString(),
+                              price.price,
                               style: context.headlineMedium.copyWith(
                                 fontWeight: FontWeight.w400,
                                 color: Theme.of(context).primaryColor,
