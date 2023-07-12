@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'core/widgets/confirm_dialog.dart';
 import 'core/widgets/range_date_picker_custom.dart';
 import 'core/widgets/yes_no_dialog.dart';
 
@@ -108,5 +109,24 @@ extension AppCoordinator<T> on BuildContext {
 
   Future<T?> openPageWithRouteAndParams(String route, dynamic param) {
     return Navigator.of(this).pushNamed(route, arguments: param);
+  }
+
+  Future<void> showSuccessDialog({
+    required double width,
+    required String header,
+    required String title,
+  }) async {
+    await showDialog(
+        context: this,
+        builder: (_) {
+          return Dialog(
+            backgroundColor: Colors.transparent,
+            child: SuccessDialog(
+              header: header,
+              title: title,
+              width: width,
+            ),
+          );
+        });
   }
 }

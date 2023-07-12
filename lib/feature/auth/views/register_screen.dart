@@ -23,14 +23,11 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  final TextEditingController _emailController =
-      TextEditingController(text: 'hungnguyen.201102ak@gmail.com');
-  final TextEditingController _passwordController =
-      TextEditingController(text: '12345678');
-  final TextEditingController _rePasswordController =
-      TextEditingController(text: '12345678');
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _rePasswordController = TextEditingController();
   @override
-  void initState() { 
+  void initState() {
     super.initState();
   }
 
@@ -43,20 +40,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   void _submitSignUp(RegisterNotifier modal) async {
     if (_emailController.text.isEmpty) {
-      log("email is null");
+      await context.showSuccessDialog(
+          width: 350, header: S.current.error, title: "email is null");
       return;
     }
     if (_passwordController.text.isEmpty) {
-      log("password is null");
+      await context.showSuccessDialog(
+          width: 350, header: S.current.error, title: "password is null");
       return;
     }
     if (_rePasswordController.text.isEmpty) {
-      log("re pass is null");
+      await context.showSuccessDialog(
+          width: 350, header: S.current.error, title: "re pass is null");
       return;
     }
     if (_rePasswordController.text == _passwordController.text) {
     } else {
-      log("re pass is invalid");
+      await context.showSuccessDialog(
+          width: 350, header: S.current.error, title: "re pass is invalid");
       return;
     }
     final user = UserEntity(
@@ -65,12 +66,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
     final register = await modal.onSignUp(user);
     if (!register) {
-      log('Error');
+      // ignore: use_build_context_synchronously
+      await context.showSuccessDialog(
+        width: 350,
+        header: S.current.error,
+        title: 'Error sign up',
+      );
       return;
     }
     final createUser = await modal.getCurrentUserAfterCreate(user);
-    if(!createUser){
-      log("Error create user");
+    if (!createUser) {
+      // ignore: use_build_context_synchronously
+      await context.showSuccessDialog(
+          width: 350, header: S.current.error, title: "Error create user");
       return;
     }
     // ignore: use_build_context_synchronously
@@ -229,13 +237,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         )
                       ],
                     ),
-                    onPress: ()async{
+                    onPress: () async {
                       final signIn = await modal.onGoogleAuth();
-                      if(signIn){
+                      if (signIn) {
                         // ignore: use_build_context_synchronously
                         context.pushAndRemoveAll(Routes.paid);
+                      } else {
+                        // ignore: use_build_context_synchronously
+                        await context.showSuccessDialog(
+                            width: 350,
+                            header: S.current.error,
+                            title: 'Error sign in');
                       }
-                    } ,
+                    },
                   ),
                 ),
               ),

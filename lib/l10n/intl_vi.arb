@@ -68,6 +68,7 @@
     "loan": "Vay",
     "language": "Ngôn ngữ",
     "time": "Thời gian",
+    "error": "Lỗi",
     "deleteTransaction": "Bạn có muốn xóa giao dịch này không?",
     "delete": "Xóa",
     "signOutDescription": "Bạn có muốn đăng xuất này không?",

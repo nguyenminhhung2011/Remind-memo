@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:project/app_coordinator.dart';
 import 'package:project/core/extensions/context_exntions.dart';
@@ -25,10 +23,8 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
-  final TextEditingController _emailController =
-      TextEditingController(text: 'hungnguyen.201102ak@gmail.com');
-  final TextEditingController _passwordController =
-      TextEditingController(text: '1234567');
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -43,11 +39,14 @@ class _SignInScreenState extends State<SignInScreen> {
 
   void _submitSignIn(LoginNotifier modal) async {
     if (_emailController.text.isEmpty) {
-      log("email is null");
+      await context.showSuccessDialog(
+          width: 350, header: S.current.error, title: "email is null");
       return;
     }
     if (_passwordController.text.isEmpty) {
-      log("password is null");
+      await context.showSuccessDialog(
+          width: 350, header: S.current.error, title: "password is null");
+
       return;
     }
 
@@ -57,12 +56,16 @@ class _SignInScreenState extends State<SignInScreen> {
     );
     final signIn = await modal.onSignIn(user);
     if (!signIn) {
-      log('Error sign in');
+      // ignore: use_build_context_synchronously
+      await context.showSuccessDialog(
+          width: 350, header: S.current.error, title: 'Error sign in');
       return;
     }
     final userGet = await modal.getCurrentUser();
     if (userGet == null) {
-      log('Error get user');
+      // ignore: use_build_context_synchronously
+      await context.showSuccessDialog(
+          width: 350, header: S.current.error, title: 'Error get user');
       return;
     }
     // ignore: use_build_context_synchronously
@@ -217,6 +220,13 @@ class _SignInScreenState extends State<SignInScreen> {
                       if (signIn) {
                         // ignore: use_build_context_synchronously
                         context.pushAndRemoveAll(Routes.paid);
+                      } else {
+                        // ignore: use_build_context_synchronously
+                        await context.showSuccessDialog(
+                          width: 350,
+                          header: S.current.error,
+                          title: 'Error sign in',
+                        );
                       }
                     },
                   ),

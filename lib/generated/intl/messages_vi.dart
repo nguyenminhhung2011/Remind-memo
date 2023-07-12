@@ -70,6 +70,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Nhập mật khẩu của bạn"),
         "enterYourPhoneNumber":
             MessageLookupByLibrary.simpleMessage("Nhập số điện thoại của bạn"),
+        "error": MessageLookupByLibrary.simpleMessage("Lỗi"),
         "facebook": MessageLookupByLibrary.simpleMessage("Facebook"),
         "google": MessageLookupByLibrary.simpleMessage("Google"),
         "language": MessageLookupByLibrary.simpleMessage("Ngôn ngữ"),
