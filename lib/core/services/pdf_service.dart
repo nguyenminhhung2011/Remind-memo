@@ -86,10 +86,11 @@ class PdfService {
                         padding: const pw.EdgeInsets.all(20.0),
                         child: pw.Text(
                           S.current.lendAmount,
-                          style: pw.Theme.of(context).header4.copyWith(
-                                font: font,
-                                color: PdfColors.green,
-                              ),
+                          style: pw.TextStyle(
+                            fontWeight: pw.FontWeight.bold,
+                            font: font,
+                            color: PdfColors.green,
+                          ),
                           textAlign: pw.TextAlign.center,
                         ),
                       )
@@ -126,10 +127,11 @@ class PdfService {
                         padding: const pw.EdgeInsets.all(20.0),
                         child: pw.Text(
                           S.current.loanAmount,
-                          style: pw.Theme.of(context).header4.copyWith(
-                                font: font,
-                                color: PdfColors.red,
-                              ),
+                          style: pw.TextStyle(
+                            fontWeight: pw.FontWeight.bold,
+                            font: font,
+                            color: PdfColors.red,
+                          ),
                           textAlign: pw.TextAlign.center,
                         ),
                       )

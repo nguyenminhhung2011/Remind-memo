@@ -292,12 +292,12 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           ...<Map<String, dynamic>>[
             {
-              'price': (_paid.pay?.lendAmount ?? 0).price,
+              'price': (_contact.lendAmount).price,
               'header': S.of(context).lendAmount,
               'color': Colors.green,
             },
             {
-              'price':( _paid.pay?.loanAmount ?? 0).price,
+              'price': (_contact.loanAmount).price,
               'header': S.of(context).loanAmount,
               'color': Colors.red,
             },
@@ -350,10 +350,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   blurRadius: 5.0,
                 ),
               ],
-              image: const DecorationImage(
+              image: DecorationImage(
                   fit: BoxFit.cover,
                   image: NetworkImage(
-                    ImageConst.avatarDefaults,
+                    _auth.user.profileUrl.isEmpty
+                        ? ImageConst.avatarDefaults
+                        : _auth.user.profileUrl,
                   ))),
         ),
         const SizedBox(width: 10.0),

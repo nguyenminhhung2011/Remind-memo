@@ -106,18 +106,6 @@ class _AddPayScreenState extends State<AddPayScreen> {
       _paidNotifier.pay?.id ?? '',
     );
     if (add) {
-      await _paidNotifier.updatePaid(Pay(
-        id: _paidNotifier.pay?.id ?? '',
-        // ignore: use_build_context_synchronously
-        uuid: context.read<AuthNotifier>().user.uid,
-        name: _paidNotifier.pay?.name ?? '',
-        lendAmount: _notifier.loan
-            ? _paidNotifier.pay?.lendAmount ?? 0
-            : (_paidNotifier.pay!.lendAmount + _price.value),
-        loanAmount: _notifier.loan
-            ? (_paidNotifier.pay!.loanAmount + _price.value)
-            : _paidNotifier.pay?.loanAmount ?? 0,
-      ));
       final newContact = Contact(
         id: _notifier.contactId,
         name: _notifier.contact?.name ?? '',
@@ -132,6 +120,19 @@ class _AddPayScreenState extends State<AddPayScreen> {
         newContact,
         _paidNotifier.pay?.id ?? '',
       );
+      await _paidNotifier.updatePaid(Pay(
+        id: _paidNotifier.pay?.id ?? '',
+        // ignore: use_build_context_synchronously
+        uuid: context.read<AuthNotifier>().user.uid,
+        name: _paidNotifier.pay?.name ?? '',
+        lendAmount: _notifier.loan
+            ? _paidNotifier.pay?.lendAmount ?? 0
+            : (_paidNotifier.pay!.lendAmount + _price.value),
+        loanAmount: _notifier.loan
+            ? (_paidNotifier.pay!.loanAmount + _price.value)
+            : _paidNotifier.pay?.loanAmount ?? 0,
+      ));
+
       // ignore: use_build_context_synchronously
       context.popArgs(newContact);
     }
