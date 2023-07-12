@@ -102,6 +102,10 @@ checked_yaml
 2.19
 file:///C:/Users/ASUS/AppData/Local/Pub/Cache/hosted/pub.dev/checked_yaml-2.0.3/
 file:///C:/Users/ASUS/AppData/Local/Pub/Cache/hosted/pub.dev/checked_yaml-2.0.3/lib/
+cli_util
+2.19
+file:///C:/Users/ASUS/AppData/Local/Pub/Cache/hosted/pub.dev/cli_util-0.4.0/
+file:///C:/Users/ASUS/AppData/Local/Pub/Cache/hosted/pub.dev/cli_util-0.4.0/lib/
 clock
 2.12
 file:///C:/Users/ASUS/AppData/Local/Pub/Cache/hosted/pub.dev/clock-1.1.1/
@@ -286,6 +290,10 @@ flutter_downloader
 2.17
 file:///C:/Users/ASUS/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_downloader-1.10.5/
 file:///C:/Users/ASUS/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_downloader-1.10.5/lib/
+flutter_launcher_icons
+2.18
+file:///C:/Users/ASUS/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_launcher_icons-0.13.1/
+file:///C:/Users/ASUS/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_launcher_icons-0.13.1/lib/
 flutter_lints
 2.17
 file:///C:/Users/ASUS/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_lints-2.0.1/
@@ -638,6 +646,14 @@ scrollable_positioned_list
 2.15
 file:///C:/Users/ASUS/AppData/Local/Pub/Cache/hosted/pub.dev/scrollable_positioned_list-0.3.8/
 file:///C:/Users/ASUS/AppData/Local/Pub/Cache/hosted/pub.dev/scrollable_positioned_list-0.3.8/lib/
+share_plus
+2.18
+file:///C:/Users/ASUS/AppData/Local/Pub/Cache/hosted/pub.dev/share_plus-7.0.2/
+file:///C:/Users/ASUS/AppData/Local/Pub/Cache/hosted/pub.dev/share_plus-7.0.2/lib/
+share_plus_platform_interface
+2.12
+file:///C:/Users/ASUS/AppData/Local/Pub/Cache/hosted/pub.dev/share_plus_platform_interface-3.2.1/
+file:///C:/Users/ASUS/AppData/Local/Pub/Cache/hosted/pub.dev/share_plus_platform_interface-3.2.1/lib/
 shared_preferences
 2.18
 file:///C:/Users/ASUS/AppData/Local/Pub/Cache/hosted/pub.dev/shared_preferences-2.2.0/

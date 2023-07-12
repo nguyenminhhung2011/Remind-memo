@@ -7,6 +7,7 @@ import 'package:project/domain/enitites/contact/contact.dart';
 import 'package:project/domain/enitites/transaction/transaction.dart';
 import 'package:project/feature/auth/notifier/auth_notifier.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:path_provider/path_provider.dart';
 // import 'package:flutter_inappwebview/flutter_inappwebview.dart';
@@ -28,6 +29,7 @@ class PdfPreviewPage extends StatefulWidget {
 class _PdfPreviewPageState extends State<PdfPreviewPage> {
   final PdfService pdfService = PdfService();
   bool loading = false;
+  bool loadingShare = false;
   File? file;
   Uint8List? memory;
 
@@ -35,6 +37,21 @@ class _PdfPreviewPageState extends State<PdfPreviewPage> {
   void initState() {
     super.initState();
     convertToFile();
+  }
+
+  Future<void> sharePdf() async {
+    if(memory == null){
+      return; 
+    }
+    loading = true;
+    setState(() {});
+    List<int> bytes = Uint8List.fromList(memory!).toList();
+    final tempDir = await getTemporaryDirectory();
+    final file = await File('${tempDir.path}/report.pdf').create();
+    file.writeAsBytesSync(bytes);
+    Share.shareFiles([file.path], text: 'Share image');
+    loading = false;
+    setState(() {});
   }
 
   Future<void> downloadPdf() async {
@@ -47,7 +64,7 @@ class _PdfPreviewPageState extends State<PdfPreviewPage> {
 
     final file = File(path);
     await file.writeAsBytes(memory!);
-    
+
     // if (status[Permission.storage]!.isGranted) {
     //   var dir = await getExternalStorageDirectory();
     //   if (dir != null) {
@@ -146,12 +163,18 @@ class _PdfPreviewPageState extends State<PdfPreviewPage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).primaryColor,
         title: const Text('PDF Preview'),
-        // actions: [
-        //   IconButton(
-        //     onPressed: downloadPdf,
-        //     icon: const Icon(Icons.save),
-        //   )
-        // ],
+        actions: [
+          IconButton(
+            onPressed: sharePdf,
+            icon: loadingShare
+                ? const Center(
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                    ),
+                  )
+                : const Icon(Icons.save),
+          )
+        ],
       ),
       body: SfPdfViewer.memory(memory!),
     );

@@ -219,7 +219,21 @@ class _SignInScreenState extends State<SignInScreen> {
                       final signIn = await modal.onGoogleAuth();
                       if (signIn) {
                         // ignore: use_build_context_synchronously
-                        context.pushAndRemoveAll(Routes.paid);
+                        await context
+                            .read<AuthNotifier>()
+                            .getAndSetUser()
+                            .then((value) async {
+                          if (value) {
+                            context.pushAndRemoveAll(Routes.paid);
+                          } else {
+                            await context.showSuccessDialog(
+                              width: 350,
+                              header: S.current.error,
+                              title: 'Error sign in',
+                            );
+                          }
+                        });
+                        // ignore: use_build_context_synchronously
                       } else {
                         // ignore: use_build_context_synchronously
                         await context.showSuccessDialog(
