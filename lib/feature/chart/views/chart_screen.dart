@@ -93,6 +93,34 @@ class _ChartScreenState extends State<ChartScreen> {
                   S.of(context).chartView,
                   style:
                       context.titleLarge.copyWith(fontWeight: FontWeight.bold),
+                ), 
+                const Spacer(),
+                ButtonCustom(
+                  onPress: () async {
+                    _screenshotController.capture().then((res) {
+                      if (res != null) {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return Capture(res: res);
+                          },
+                        );
+                      }
+                    });
+                  },
+                  enableWidth: false,
+                  child: Row(
+                    children: [
+                      const Icon(Icons.camera, color: Colors.white),
+                      Text(
+                        'Screen shot',
+                        style: context.titleSmall.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      )
+                    ],
+                  ),
                 )
               ],
             ),
@@ -142,38 +170,6 @@ class _ChartScreenState extends State<ChartScreen> {
                       ],
                     ),
                   ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ButtonCustom(
-                      onPress: () async {
-                        _screenshotController.capture().then((res) {
-                          if (res != null) {
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return Capture(res: res);
-                              },
-                            );
-                          }
-                        });
-                      },
-                      enableWidth: false,
-                      child: Row(
-                        children: [
-                          const Icon(Icons.camera, color: Colors.white),
-                          Text(
-                            'Screen shot',
-                            style: context.titleSmall.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          )
-                        ],
-                      ),
-                    )
-                  ],
                 ),
                 const Divider(),
                 const SizedBox(height: 10.0),
