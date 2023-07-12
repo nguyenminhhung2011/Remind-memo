@@ -770,6 +770,16 @@ class S {
     );
   }
 
+  /// `Long press to delete transaction`
+  String get longPressDescription {
+    return Intl.message(
+      'Long press to delete transaction',
+      name: 'longPressDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Do you want to sign out?`
   String get signOutDescription {
     return Intl.message(

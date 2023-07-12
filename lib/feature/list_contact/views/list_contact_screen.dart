@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:project/app_coordinator.dart';
 import 'package:project/core/extensions/context_exntions.dart';
 import 'package:project/core/extensions/handle_time.dart';
+import 'package:project/core/extensions/int_extension.dart';
 import 'package:project/feature/list_contact/notifier/contact_notifier.dart';
 import 'package:project/feature/paid/notifier/paid_notifier.dart';
 import 'package:project/routes/routes.dart';
@@ -169,7 +170,7 @@ class _ContactScreenState extends State<ContactScreen> {
                         ),
                       ),
                       Text(
-                        e.price.toString(),
+                        e.price.abs().price,
                         style: context.titleMedium.copyWith(
                           color: e.isPay ? Colors.green : Colors.red,
                           fontWeight: FontWeight.w600,
@@ -233,7 +234,7 @@ class _ContactScreenState extends State<ContactScreen> {
                                 ),
                               ),
                               Text(
-                                element.price.toString(),
+                                element.price.abs().price,
                                 style: context.titleSmall.copyWith(
                                   color: element.type.isLend
                                       ? Colors.green

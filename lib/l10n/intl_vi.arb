@@ -71,6 +71,7 @@
     "error": "Lỗi",
     "deleteTransaction": "Bạn có muốn xóa giao dịch này không?",
     "delete": "Xóa",
+    "longPressDescription": "Nhấn và giữ để xóa giao dịch",
     "signOutDescription": "Bạn có muốn đăng xuất này không?",
     "selectedPay": "Chọn thanh toán"
 }

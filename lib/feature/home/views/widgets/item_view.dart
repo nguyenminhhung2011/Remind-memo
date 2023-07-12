@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project/core/extensions/context_exntions.dart';
+import 'package:project/core/extensions/int_extension.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class ItemView extends StatelessWidget {
@@ -62,7 +63,7 @@ class ItemView extends StatelessWidget {
             ),
           ),
           Text(
-            price.toString(),
+            price.toInt().price,
             style: context.titleMedium.copyWith(
               color: isPay ? Colors.green : Colors.red,
               fontWeight: FontWeight.w600,

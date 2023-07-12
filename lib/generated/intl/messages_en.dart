@@ -80,6 +80,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "loanAdd": MessageLookupByLibrary.simpleMessage("Add loan"),
         "loanAmount": MessageLookupByLibrary.simpleMessage("Loan Amount"),
         "logIn": MessageLookupByLibrary.simpleMessage("Log In"),
+        "longPressDescription": MessageLookupByLibrary.simpleMessage(
+            "Long press to delete transaction"),
         "name": MessageLookupByLibrary.simpleMessage("Name"),
         "no": MessageLookupByLibrary.simpleMessage("No"),
         "note": MessageLookupByLibrary.simpleMessage("Note"),

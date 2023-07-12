@@ -6,9 +6,9 @@ import 'package:project/core/constant/image_const.dart';
 import 'package:project/core/dependency_injection/di.dart';
 import 'package:project/core/extensions/context_exntions.dart';
 import 'package:project/core/extensions/handle_time.dart';
+import 'package:project/core/extensions/int_extension.dart';
 import 'package:project/core/widgets/header_text_custom.dart';
 import 'package:project/core/widgets/range_date_picker_custom.dart';
-import 'package:project/core/widgets/sort_button.dart';
 import 'package:project/feature/auth/notifier/auth_notifier.dart';
 import 'package:project/feature/chart/notifier/chart_notifier.dart';
 import 'package:project/feature/home/notifier/home_notifier.dart';
@@ -240,12 +240,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               Icons.bar_chart_sharp,
                               color: Theme.of(context).primaryColor,
                             ),
-                            Text(
-                              ' ${123.013}',
-                              style: context.titleSmall.copyWith(
-                                color: Theme.of(context).primaryColor,
-                              ),
-                            )
                           ],
                         ),
                         const SizedBox(height: 5.0),
@@ -297,12 +291,12 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           ...<Map<String, dynamic>>[
             {
-              'price': _paid.pay?.lendAmount ?? 0,
+              'price': (_contact.lendAmount).price,
               'header': S.of(context).lendAmount,
               'color': Colors.green,
             },
             {
-              'price': _paid.pay?.loanAmount ?? 0,
+              'price': (_contact.loanAmount).price,
               'header': S.of(context).loanAmount,
               'color': Colors.red,
             },
@@ -355,10 +349,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   blurRadius: 5.0,
                 ),
               ],
-              image: const DecorationImage(
+              image: DecorationImage(
                   fit: BoxFit.cover,
                   image: NetworkImage(
-                    ImageConst.avatarDefaults,
+                    _auth.user.profileUrl.isEmpty
+                        ? ImageConst.avatarDefaults
+                        : _auth.user.profileUrl,
                   ))),
         ),
         const SizedBox(width: 10.0),

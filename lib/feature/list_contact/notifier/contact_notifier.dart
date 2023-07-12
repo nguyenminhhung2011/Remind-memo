@@ -45,6 +45,12 @@ class ContactNotifier extends ChangeNotifier {
   List<Step> _listStep = [];
   List<Step> get listStep => _listStep;
 
+  int _lendAmount = 0;
+  int get lendAmount => _lendAmount;
+
+  int _loanAmount = 0;
+  int get loanAmount => _loanAmount;
+
   void onSelectStep(int index, bool isExpanded) {
     _listStep[index].isExpanded = !isExpanded;
     if (isExpanded) {}
@@ -65,7 +71,8 @@ class ContactNotifier extends ChangeNotifier {
         } else {
           _mapTransactions.addAll({contactId: <TransactionEntity>[]});
         }
-        _mapTransactions[contactId] =  event;
+
+        _mapTransactions[contactId] = event;
         notifyListeners();
       });
       notifyListeners();
@@ -84,9 +91,18 @@ class ContactNotifier extends ChangeNotifier {
       final streamContacts = _firebaseRepository.getContacts(paidId);
       streamContacts.listen((event) {
         _listContact = event;
+        _lendAmount = 0;
+        _loanAmount = 0;
         _listStep = event
             .map((e) => Step(e.name, e.id, e.price, e.price >= 0, e.count))
             .toList();
+        for (var element in event) {
+          if (element.price < 0) {
+            _loanAmount += element.price.abs();
+          } else {
+            _lendAmount += element.price;
+          }
+        }
         notifyListeners();
       });
       notifyListeners();

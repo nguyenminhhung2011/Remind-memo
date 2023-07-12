@@ -225,8 +225,12 @@ class FirebaseDataSourceImpl implements FirebaseDataSource {
 
   @override
   Stream<List<Pay>> getPays() {
+    String uid = auth.currentUser?.uid ?? "";
     final payCollection = fireStore.collection("pays");
     return payCollection.snapshots().map((querySnapshot) => querySnapshot.docs
+        .where(
+          (element) => element.data()['uuid'] == uid,
+        )
         .map((e) => PayModel.fromJson(e.data()).toEntity)
         .toList());
   }
@@ -267,7 +271,10 @@ class FirebaseDataSourceImpl implements FirebaseDataSource {
       {bool isFormatDate = false}) {
     final transactionCollection =
         fireStore.collection("pays").doc(paidId).collection("transactions");
-    return transactionCollection.snapshots().map(
+    return transactionCollection
+        .orderBy("createTime", descending: false)
+        .snapshots()
+        .map(
           (querySnapshot) => querySnapshot.docs
               .where((element) => element.data()['contactId'] == contactId)
               .where(
