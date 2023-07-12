@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:project/domain/enitites/user_entity.dart';
+import 'package:project/feature/auth/notifier/auth_notifier.dart';
 import 'package:project/feature/auth/notifier/register_notifier.dart';
 import '../../../generated/l10n.dart';
 import 'package:project/app_coordinator.dart';
@@ -21,11 +22,14 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  final TextEditingController _emailController = TextEditingController(text: 'hungnguyen.201102ak@gmail.com');
-  final TextEditingController _passwordController = TextEditingController(text: '12345678');
-  final TextEditingController _rePasswordController = TextEditingController(text: '12345678');
+  final TextEditingController _emailController =
+      TextEditingController(text: 'hungnguyen.201102ak@gmail.com');
+  final TextEditingController _passwordController =
+      TextEditingController(text: '12345678');
+  final TextEditingController _rePasswordController =
+      TextEditingController(text: '12345678');
   @override
-  void initState() {
+  void initState() { 
     super.initState();
   }
 
@@ -36,7 +40,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     super.dispose();
   }
 
-  void _submitSignUp(RegisterNotifier modal) async{
+  void _submitSignUp(RegisterNotifier modal) async {
     if (_emailController.text.isEmpty) {
       log("email is null");
       return;
@@ -46,7 +50,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       return;
     }
     if (_rePasswordController.text.isEmpty) {
-      log("re_pass is null");
+      log("re pass is null");
       return;
     }
     if (_rePasswordController.text == _passwordController.text) {
@@ -57,17 +61,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final user = UserEntity(
       email: _emailController.text,
       password: _rePasswordController.text,
-
     );
-    final register =await modal.onSignUp(user);
-    if(!register ){
+    final register = await modal.onSignUp(user);
+    if (!register) {
       log('Error');
       return;
-
+    }
+    final createUser = await modal.getCurrentUserAfterCreate(user);
+    if(!createUser){
+      log("Error create user");
+      return;
     }
     // ignore: use_build_context_synchronously
+    context.read<AuthNotifier>().onSignOut();
+    // ignore: use_build_context_synchronously
     context.pop();
-    
   }
 
   @override
@@ -159,7 +167,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 child: SizedBox(
                   height: 50.0,
                   child: ButtonCustom(
-                    loading:modal.loadingSignUp,
+                    loading: modal.loadingSignUp,
                     child: Text(
                       S.of(context).signUp,
                       style: context.titleMedium.copyWith(

@@ -10,6 +10,7 @@ import 'package:project/domain/enitites/contact/contact.dart';
 import 'package:project/feature/add_pay/notifier/add_pay_notifier.dart';
 import 'package:project/feature/contact_detail/notifier/contact_detail_notifier.dart';
 import 'package:project/feature/paid/notifier/paid_notifier.dart';
+import 'package:project/feature/pdf/pad_preview.dart';
 import 'package:project/generated/l10n.dart';
 import 'package:project/routes/routes.dart';
 import 'package:provider/provider.dart';
@@ -228,17 +229,32 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
               ],
             ),
           ),
+          ButtonCustom(
+            onPress: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => PdfPreviewPage(
+                          listTransaction: _notifier.listTransaction,
+                          contact: _notifier.contact!,
+                        ))),
+            enableWidth: false,
+            height: 40.0,
+            radius: 5.0,
+            child: Row(
+              children: [
+                const Icon(Icons.picture_as_pdf, color: Colors.white),
+                Text(
+                  'PDF',
+                  style: context.titleSmall.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                )
+              ],
+            ),
+          )
         ],
       ),
-      actions: <Widget>[
-        IconButton(
-          onPressed: () {},
-          icon: Icon(
-            Icons.edit,
-            color: Theme.of(context).primaryColor,
-          ),
-        )
-      ],
     );
   }
 }

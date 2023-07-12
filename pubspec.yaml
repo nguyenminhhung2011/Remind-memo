@@ -127,6 +127,8 @@ dependencies:
   fluttertoast: ^8.2.2
   pdf: ^3.10.4
   open_file: ^3.3.2
+  syncfusion_flutter_pdfviewer: ^21.2.10
+  flutter_downloader: ^1.10.5
   # table_calendar: ^3.0.8
   # readmore: ^2.2.0
 

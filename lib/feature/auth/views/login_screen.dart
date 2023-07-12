@@ -58,12 +58,12 @@ class _SignInScreenState extends State<SignInScreen> {
     );
     final signIn = await modal.onSignIn(user);
     if (!signIn) {
-      log('Error');
+      log('Error sign in');
       return;
     }
     final userGet = await modal.getCurrentUser();
     if (userGet == null) {
-      log('Error');
+      log('Error get user'); 
       return;
     }
     // ignore: use_build_context_synchronously

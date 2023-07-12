@@ -24,6 +24,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await Preferences.ensureInitedPreferences();
+  // await FlutterDownloader.initialize();
   configureDependencies();
   runApp(const MyApp());
 }

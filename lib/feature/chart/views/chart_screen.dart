@@ -160,9 +160,9 @@ class _ChartScreenState extends State<ChartScreen> {
                     enableWidth: false,
                     child: Row(
                       children: [
-                        const Icon(Icons.picture_as_pdf, color: Colors.white),
+                        const Icon(Icons.camera, color: Colors.white),
                         Text(
-                          'PDF',
+                          'Screen shot',
                           style: context.titleSmall.copyWith(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
