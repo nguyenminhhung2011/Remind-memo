@@ -271,7 +271,10 @@ class FirebaseDataSourceImpl implements FirebaseDataSource {
       {bool isFormatDate = false}) {
     final transactionCollection =
         fireStore.collection("pays").doc(paidId).collection("transactions");
-    return transactionCollection.snapshots().map(
+    return transactionCollection
+        .orderBy("createTime", descending: false)
+        .snapshots()
+        .map(
           (querySnapshot) => querySnapshot.docs
               .where((element) => element.data()['contactId'] == contactId)
               .where(
