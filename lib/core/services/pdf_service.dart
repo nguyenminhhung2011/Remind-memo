@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:collection/collection.dart';
 import 'package:flutter/services.dart';
 import 'package:pdf/pdf.dart';

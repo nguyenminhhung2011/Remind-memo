@@ -77,18 +77,20 @@ class PaidNotifier extends ChangeNotifier {
     }
   }
 
-  FutureOr<void> updatePaid(Pay newPaid) async{
-    try{
+  FutureOr<void> updatePaid(Pay newPaid) async {
+    try {
       final result = await _firebaseRepository.updatePaid(newPaid);
-      if(result == null){
+      if (result == null) {
         log("Error");
         return;
       }
       _pay = result;
       notifyListeners();
-    } catch(e){
+    } catch (e) {
       log(e.toString());
     }
   }
-  
+
+  Future<bool> deleteTransaction(String transactionId, String paidId) async =>
+      await _firebaseRepository.deleteTransaction(paidId, transactionId);
 }

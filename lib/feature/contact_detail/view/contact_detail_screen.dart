@@ -8,6 +8,7 @@ import 'package:project/core/extensions/handle_time.dart';
 import 'package:project/core/extensions/int_extension.dart';
 import 'package:project/core/widgets/button_custom.dart';
 import 'package:project/domain/enitites/contact/contact.dart';
+import 'package:project/domain/enitites/pay/pay.dart';
 import 'package:project/feature/add_pay/notifier/add_pay_notifier.dart';
 import 'package:project/feature/contact_detail/notifier/contact_detail_notifier.dart';
 import 'package:project/feature/paid/notifier/paid_notifier.dart';
@@ -15,6 +16,9 @@ import 'package:project/feature/pdf/pad_preview.dart';
 import 'package:project/generated/l10n.dart';
 import 'package:project/routes/routes.dart';
 import 'package:provider/provider.dart';
+
+import '../../auth/notifier/auth_notifier.dart';
+import '../../list_contact/notifier/contact_notifier.dart';
 
 class ContactDetailScreen extends StatefulWidget {
   const ContactDetailScreen({super.key});
@@ -25,6 +29,8 @@ class ContactDetailScreen extends StatefulWidget {
 
 class _ContactDetailScreenState extends State<ContactDetailScreen> {
   ContactDetailNotifier get _notifier => context.read<ContactDetailNotifier>();
+  ContactNotifier get _contactNotifier => context.read<ContactNotifier>();
+  PaidNotifier get _paid => context.read<PaidNotifier>();
   List<String> headers = [
     S.current.time,
     S.current.loanAmount,
@@ -43,6 +49,35 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
     });
   }
 
+  Future<void> updateAll(bool isUpdate, bool lend, int oldPrice) async {
+    await _paid.updatePaid(Pay(
+      id: _paid.pay?.id ?? '',
+      // ignore: use_build_context_synchronously
+      uuid: context.read<AuthNotifier>().user.uid,
+      name: _paid.pay?.name ?? '',
+      lendAmount: lend
+          ? (_paid.pay!.lendAmount - oldPrice)
+          : _paid.pay?.lendAmount ?? 0,
+      loanAmount: lend
+          ? _paid.pay?.loanAmount ?? 0
+          : (_paid.pay!.loanAmount - oldPrice),
+    ));
+    final contactGet = _notifier.contact;
+    final newContact = Contact(
+      id: _notifier.contactId,
+      name: contactGet?.name ?? '',
+      phoneNumber: contactGet?.phoneNumber ?? '',
+      note: contactGet?.note ?? '',
+      type: contactGet?.type ?? 0,
+      count: contactGet!.count - (!isUpdate ? 1 : 0),
+      price: contactGet.price + oldPrice * (lend ? -1 : 1),
+    );
+    await _contactNotifier.updateContact(
+      newContact,
+      _paid.pay?.id ?? '',
+    );
+  }
+
   void _openAddTransaction(bool loan) async {
     final open = await context.openPageWithRouteAndParams(
       Routes.addPay,
@@ -50,6 +85,20 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
     );
     if (open != null && open is Contact) {
       _notifier.setContact(open);
+    }
+  }
+
+  void _onDelete(String transactionId, bool lend, int oldPrice) async {
+    final delete = await context.showYesNoDialog(
+        350, S.current.delete, S.current.deleteTransaction);
+    if (delete) {
+      final deleteSuccess = await _paid.deleteTransaction(
+        transactionId,
+        _paid.pay?.id ?? '',
+      );
+      if (deleteSuccess) {
+        await updateAll(false, lend, oldPrice);
+      }
     }
   }
 
@@ -95,6 +144,7 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
             ),
             appBar: _appBar(context),
             body: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
                   width: double.infinity,
@@ -139,6 +189,17 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
                 const SizedBox(height: 5.0),
                 const Divider(),
                 const SizedBox(height: 5.0),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: Constant.kHMarginCard,
+                  ),
+                  child: Text(
+                    '💰 ${S.of(context).longPressDescription}',
+                    overflow: TextOverflow.ellipsis,
+                    style: context.titleSmall,
+                  ),
+                ),
+                const SizedBox(height: 10.0),
                 _header(context),
                 _body(context)
               ],
@@ -156,6 +217,7 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
                 dueTime: e.notificationTIme,
                 isLoan: !e.type.isLend,
                 price: e.price,
+                longPress: () => _onDelete(e.id, e.type.isLend, e.price),
               ))
         ]
             .expand((element) => [
@@ -265,96 +327,101 @@ class ItemPayView extends StatelessWidget {
   final DateTime dueTime;
   final bool isLoan;
   final int price;
+  final Function() longPress;
   const ItemPayView({
     super.key,
     required this.createTime,
     required this.dueTime,
     required this.isLoan,
     required this.price,
+    required this.longPress,
   });
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Expanded(
-            flex: 4,
-            child: Padding(
-              padding: const EdgeInsets.only(left: Constant.kHMarginCard),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    ' ${getYmdHmFormat(createTime)}',
+    return InkWell(
+      onLongPress: longPress,
+      child: SizedBox(
+        width: double.infinity,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              flex: 4,
+              child: Padding(
+                padding: const EdgeInsets.only(left: Constant.kHMarginCard),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      ' ${getYmdHmFormat(createTime)}',
+                      style: context.titleMedium.copyWith(
+                        fontWeight: FontWeight.bold,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Icon(
+                          Icons.notifications,
+                          color: Theme.of(context).primaryColor,
+                          size: 12,
+                        ),
+                        Text(
+                          ' ${getYmdHmFormat(dueTime)}',
+                          style: context.titleSmall.copyWith(
+                            fontWeight: FontWeight.w400,
+                            overflow: TextOverflow.ellipsis,
+                            fontSize: 12,
+                            color: Theme.of(context).hintColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 3,
+              child: Container(
+                width: double.infinity,
+                height: 50.0,
+                color: Colors.red.withOpacity(0.1),
+                child: Center(
+                  child: Text(
+                    isLoan ? '- ${price.price}' : '',
                     style: context.titleMedium.copyWith(
+                      color: Colors.red,
                       fontWeight: FontWeight.bold,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Icon(
-                        Icons.notifications,
-                        color: Theme.of(context).primaryColor,
-                        size: 12,
-                      ),
-                      Text(
-                        ' ${getYmdHmFormat(dueTime)}',
-                        style: context.titleSmall.copyWith(
-                          fontWeight: FontWeight.w400,
-                          overflow: TextOverflow.ellipsis,
-                          fontSize: 12,
-                          color: Theme.of(context).hintColor,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Expanded(
-            flex: 3,
-            child: Container(
-              width: double.infinity,
-              height: 50.0,
-              color: Colors.red.withOpacity(0.1),
-              child: Center(
-                child: Text(
-                  isLoan ? '- ${price.price}' : '',
-                  style: context.titleMedium.copyWith(
-                    color: Colors.red,
-                    fontWeight: FontWeight.bold,
-                    overflow: TextOverflow.ellipsis,
-                  ),
                 ),
               ),
             ),
-          ),
-          Expanded(
-            flex: 3,
-            child: Container(
-              width: double.infinity,
-              height: 50.0,
-              color: Colors.green.withOpacity(0.1),
-              child: Center(
-                child: Text(
-                  !isLoan ? '+ ${price.price}' : '',
-                  style: context.titleMedium.copyWith(
-                    color: Colors.green,
-                    fontWeight: FontWeight.bold,
-                    overflow: TextOverflow.ellipsis,
+            Expanded(
+              flex: 3,
+              child: Container(
+                width: double.infinity,
+                height: 50.0,
+                color: Colors.green.withOpacity(0.1),
+                child: Center(
+                  child: Text(
+                    !isLoan ? '+ ${price.price}' : '',
+                    style: context.titleMedium.copyWith(
+                      color: Colors.green,
+                      fontWeight: FontWeight.bold,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                 ),
               ),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }

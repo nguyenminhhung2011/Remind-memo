@@ -81,6 +81,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "loanAdd": MessageLookupByLibrary.simpleMessage("Thêm khoản vay"),
         "loanAmount": MessageLookupByLibrary.simpleMessage("Số tiền vay"),
         "logIn": MessageLookupByLibrary.simpleMessage("Đăng nhập"),
+        "longPressDescription": MessageLookupByLibrary.simpleMessage(
+            "Nhấn và giữ để xóa giao dịch"),
         "name": MessageLookupByLibrary.simpleMessage("Tên"),
         "no": MessageLookupByLibrary.simpleMessage("Không"),
         "note": MessageLookupByLibrary.simpleMessage("Ghi chú"),

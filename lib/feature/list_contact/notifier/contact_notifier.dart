@@ -91,6 +91,8 @@ class ContactNotifier extends ChangeNotifier {
       final streamContacts = _firebaseRepository.getContacts(paidId);
       streamContacts.listen((event) {
         _listContact = event;
+        _lendAmount = 0;
+        _loanAmount = 0;
         _listStep = event
             .map((e) => Step(e.name, e.id, e.price, e.price >= 0, e.count))
             .toList();
