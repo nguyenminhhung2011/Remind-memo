@@ -233,7 +233,7 @@ class _ContactScreenState extends State<ContactScreen> {
                                 ),
                               ),
                               Text(
-                                element.price.toString(),
+                                element.price.abs().toString(),
                                 style: context.titleSmall.copyWith(
                                   color: element.type.isLend
                                       ? Colors.green
