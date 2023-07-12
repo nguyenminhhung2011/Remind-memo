@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:project/domain/enitites/user_entity.dart';
 import 'package:project/feature/auth/notifier/auth_notifier.dart';
 import 'package:project/feature/auth/notifier/register_notifier.dart';
+import 'package:project/routes/routes.dart';
 import '../../../generated/l10n.dart';
 import 'package:project/app_coordinator.dart';
 import 'package:project/core/extensions/context_exntions.dart';
@@ -213,6 +214,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 child: SizedBox(
                   height: 45.0,
                   child: ButtonCustom(
+                    loading: modal.loadingGoogle,
                     color: Theme.of(context).cardColor,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -227,7 +229,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         )
                       ],
                     ),
-                    onPress: () => modal.onGoogleAuth(),
+                    onPress: ()async{
+                      final signIn = await modal.onGoogleAuth();
+                      if(signIn){
+                        // ignore: use_build_context_synchronously
+                        context.pushAndRemoveAll(Routes.paid);
+                      }
+                    } ,
                   ),
                 ),
               ),

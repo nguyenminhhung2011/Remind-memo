@@ -74,7 +74,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       shape: BoxShape.circle,
                       color: Theme.of(context).primaryColor,
                     ),
-                    child: Center(child: Text('H', style: context.titleLarge)),
+                    child: Center(
+                        child: Text(
+                      authModal.user.name[0].toUpperCase(),
+                      style: context.titleLarge,
+                    )),
                   ),
                   Text(
                     authModal.user.name,

@@ -15,6 +15,10 @@
     <attr format="string" name="title"/>
     <bool name="abc_action_bar_embed_tabs">true</bool>
     <bool name="abc_config_actionMenuItemAllCaps">true</bool>
+    <bool name="enable_system_alarm_service_default">true</bool>
+    <bool name="enable_system_foreground_service_default">true</bool>
+    <bool name="enable_system_job_service_default">false</bool>
+    <bool name="workmanager_test_configuration">false</bool>
     <color name="abc_decor_view_status_guard">#ff000000</color>
     <color name="abc_decor_view_status_guard_light">#ffffffff</color>
     <color name="abc_search_url_text_normal">#7fa87f</color>
@@ -350,6 +354,14 @@
     <string name="fallback_menu_item_copy_link">Copy link</string>
     <string name="fallback_menu_item_open_in_browser">Open in browser</string>
     <string name="fallback_menu_item_share_link">Share link</string>
+    <string name="flutter_downloader_notification_canceled">canceled</string>
+    <string name="flutter_downloader_notification_channel_description">Display download progress</string>
+    <string name="flutter_downloader_notification_channel_name">Downloader</string>
+    <string name="flutter_downloader_notification_complete">complete</string>
+    <string name="flutter_downloader_notification_failed">failed</string>
+    <string name="flutter_downloader_notification_in_progress">in progress</string>
+    <string name="flutter_downloader_notification_paused">paused</string>
+    <string name="flutter_downloader_notification_started">started</string>
     <string name="search_menu_title">Search</string>
     <string name="status_bar_notification_info_overflow">999+</string>
     <style name="AlertDialog.AppCompat" parent="Base.AlertDialog.AppCompat"/>

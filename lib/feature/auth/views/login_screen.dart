@@ -29,7 +29,6 @@ class _SignInScreenState extends State<SignInScreen> {
       TextEditingController(text: 'hungnguyen.201102ak@gmail.com');
   final TextEditingController _passwordController =
       TextEditingController(text: '1234567');
-  final ValueNotifier<bool> _loading = ValueNotifier<bool>(false);
   @override
   void initState() {
     super.initState();
@@ -63,7 +62,7 @@ class _SignInScreenState extends State<SignInScreen> {
     }
     final userGet = await modal.getCurrentUser();
     if (userGet == null) {
-      log('Error get user'); 
+      log('Error get user');
       return;
     }
     // ignore: use_build_context_synchronously
@@ -76,7 +75,6 @@ class _SignInScreenState extends State<SignInScreen> {
       // ignore: use_build_context_synchronously
       context.pushAndRemoveAll(Routes.dashboard);
     }
-
   }
 
   @override
@@ -199,6 +197,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 child: SizedBox(
                   height: 45.0,
                   child: ButtonCustom(
+                    loading: modal.loadingGoogle,
                     color: Theme.of(context).cardColor,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -213,7 +212,13 @@ class _SignInScreenState extends State<SignInScreen> {
                         )
                       ],
                     ),
-                    onPress: () => modal.onGoogleAuth(),
+                    onPress: () async {
+                      final signIn = await modal.onGoogleAuth();
+                      if (signIn) {
+                        // ignore: use_build_context_synchronously
+                        context.pushAndRemoveAll(Routes.paid);
+                      }
+                    },
                   ),
                 ),
               ),

@@ -340,6 +340,10 @@ int attr windowMinWidthMinor 0x7f030133
 int attr windowNoTitle 0x7f030134
 int bool abc_action_bar_embed_tabs 0x7f040000
 int bool abc_config_actionMenuItemAllCaps 0x7f040001
+int bool enable_system_alarm_service_default 0x7f040002
+int bool enable_system_foreground_service_default 0x7f040003
+int bool enable_system_job_service_default 0x7f040004
+int bool workmanager_test_configuration 0x7f040005
 int color abc_background_cache_hint_selector_material_dark 0x7f050000
 int color abc_background_cache_hint_selector_material_light 0x7f050001
 int color abc_btn_colored_borderless_text_material 0x7f050002
@@ -1007,8 +1011,16 @@ int string copy_toast_msg 0x7f0e0035
 int string fallback_menu_item_copy_link 0x7f0e0036
 int string fallback_menu_item_open_in_browser 0x7f0e0037
 int string fallback_menu_item_share_link 0x7f0e0038
-int string search_menu_title 0x7f0e0039
-int string status_bar_notification_info_overflow 0x7f0e003a
+int string flutter_downloader_notification_canceled 0x7f0e0039
+int string flutter_downloader_notification_channel_description 0x7f0e003a
+int string flutter_downloader_notification_channel_name 0x7f0e003b
+int string flutter_downloader_notification_complete 0x7f0e003c
+int string flutter_downloader_notification_failed 0x7f0e003d
+int string flutter_downloader_notification_in_progress 0x7f0e003e
+int string flutter_downloader_notification_paused 0x7f0e003f
+int string flutter_downloader_notification_started 0x7f0e0040
+int string search_menu_title 0x7f0e0041
+int string status_bar_notification_info_overflow 0x7f0e0042
 int style AlertDialog_AppCompat 0x7f0f0000
 int style AlertDialog_AppCompat_Light 0x7f0f0001
 int style Animation_AppCompat_Dialog 0x7f0f0002
@@ -1883,4 +1895,6 @@ int styleable ViewStubCompat_android_layout 1
 int styleable ViewStubCompat_android_inflatedId 2
 int xml filepaths 0x7f110000
 int xml flutter_image_picker_file_paths 0x7f110001
-int xml image_share_filepaths 0x7f110002
+int xml flutter_printing_file_paths 0x7f110002
+int xml image_share_filepaths 0x7f110003
+int xml provider_paths 0x7f110004
