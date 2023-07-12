@@ -1,7 +1,9 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:project/domain/enitites/user_entity.dart';
+import 'package:project/feature/auth/notifier/auth_notifier.dart';
 import 'package:project/feature/auth/notifier/register_notifier.dart';
+import 'package:project/routes/routes.dart';
 import '../../../generated/l10n.dart';
 import 'package:project/app_coordinator.dart';
 import 'package:project/core/extensions/context_exntions.dart';
@@ -21,9 +23,9 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  final TextEditingController _emailController = TextEditingController(text: 'hungnguyen.201102ak@gmail.com');
-  final TextEditingController _passwordController = TextEditingController(text: '12345678');
-  final TextEditingController _rePasswordController = TextEditingController(text: '12345678');
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _rePasswordController = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -36,38 +38,53 @@ class _RegisterScreenState extends State<RegisterScreen> {
     super.dispose();
   }
 
-  void _submitSignUp(RegisterNotifier modal) async{
+  void _submitSignUp(RegisterNotifier modal) async {
     if (_emailController.text.isEmpty) {
-      log("email is null");
+      await context.showSuccessDialog(
+          width: 350, header: S.current.error, title: "email is null");
       return;
     }
     if (_passwordController.text.isEmpty) {
-      log("password is null");
+      await context.showSuccessDialog(
+          width: 350, header: S.current.error, title: "password is null");
       return;
     }
     if (_rePasswordController.text.isEmpty) {
-      log("re_pass is null");
+      await context.showSuccessDialog(
+          width: 350, header: S.current.error, title: "re pass is null");
       return;
     }
     if (_rePasswordController.text == _passwordController.text) {
     } else {
-      log("re pass is invalid");
+      await context.showSuccessDialog(
+          width: 350, header: S.current.error, title: "re pass is invalid");
       return;
     }
     final user = UserEntity(
       email: _emailController.text,
       password: _rePasswordController.text,
-
     );
-    final register =await modal.onSignUp(user);
-    if(!register ){
-      log('Error');
+    final register = await modal.onSignUp(user);
+    if (!register) {
+      // ignore: use_build_context_synchronously
+      await context.showSuccessDialog(
+        width: 350,
+        header: S.current.error,
+        title: 'Error sign up',
+      );
       return;
-
+    }
+    final createUser = await modal.getCurrentUserAfterCreate(user);
+    if (!createUser) {
+      // ignore: use_build_context_synchronously
+      await context.showSuccessDialog(
+          width: 350, header: S.current.error, title: "Error create user");
+      return;
     }
     // ignore: use_build_context_synchronously
+    context.read<AuthNotifier>().onSignOut();
+    // ignore: use_build_context_synchronously
     context.pop();
-    
   }
 
   @override
@@ -159,7 +176,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 child: SizedBox(
                   height: 50.0,
                   child: ButtonCustom(
-                    loading:modal.loadingSignUp,
+                    loading: modal.loadingSignUp,
                     child: Text(
                       S.of(context).signUp,
                       style: context.titleMedium.copyWith(
@@ -205,6 +222,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 child: SizedBox(
                   height: 45.0,
                   child: ButtonCustom(
+                    loading: modal.loadingGoogle,
                     color: Theme.of(context).cardColor,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -219,7 +237,34 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         )
                       ],
                     ),
-                    onPress: () => modal.onGoogleAuth(),
+                    onPress: () async {
+                      final signIn = await modal.onGoogleAuth();
+                      if (signIn) {
+                        // ignore: use_build_context_synchronously
+                        await context
+                            .read<AuthNotifier>()
+                            .getAndSetUser()
+                            .then((value) async {
+                          if (value) {
+                            context.pushAndRemoveAll(Routes.paid);
+                          } else {
+                            await context.showSuccessDialog(
+                              width: 350,
+                              header: S.current.error,
+                              title: 'Error sign in',
+                            );
+                          }
+                        });
+                        // ignore: use_build_context_synchronously
+                      } else {
+                        // ignore: use_build_context_synchronously
+                        await context.showSuccessDialog(
+                          width: 350,
+                          header: S.current.error,
+                          title: 'Error sign up',
+                        );
+                      }
+                    },
                   ),
                 ),
               ),

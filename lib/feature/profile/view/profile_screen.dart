@@ -67,15 +67,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Container(
-                    width: 100,
-                    height: 100,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Theme.of(context).primaryColor,
-                    ),
-                    child: Center(child: Text('H', style: context.titleLarge)),
-                  ),
+                  authModal.user.profileUrl.isEmpty
+                      ? Container(
+                          width: 100,
+                          height: 100,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                          child: Center(
+                              child: Text(
+                            authModal.user.name[0].toUpperCase(),
+                            style: context.titleLarge,
+                          )),
+                        )
+                      : Container(
+                          width: 100,
+                          height: 100,
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: NetworkImage(authModal.user.profileUrl),
+                              )),
+                        ),
                   Text(
                     authModal.user.name,
                     style: context.headlineSmall.copyWith(

@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'dart:typed_data';
 import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +14,9 @@ import 'package:project/feature/list_contact/notifier/contact_notifier.dart';
 import 'package:project/feature/paid/notifier/paid_notifier.dart';
 import 'package:project/generated/l10n.dart';
 import 'package:provider/provider.dart';
+import 'package:screenshot/screenshot.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../../../core/constant/constant.dart';
 import '../../../core/widgets/header_text_custom.dart';
@@ -38,6 +43,7 @@ class ChartScreen extends StatefulWidget {
 
 class _ChartScreenState extends State<ChartScreen> {
   final _rangeDateController = RangeDateController();
+  final ScreenshotController _screenshotController = ScreenshotController();
 
   ChartNotifier get _chart => context.read<ChartNotifier>();
   PaidNotifier get _paid => context.read<PaidNotifier>();
@@ -91,125 +97,122 @@ class _ChartScreenState extends State<ChartScreen> {
               ],
             ),
           ),
-          body: ListView(
-            physics: const BouncingScrollPhysics(
-              parent: AlwaysScrollableScrollPhysics(),
+          body: Screenshot(
+            controller: _screenshotController,
+            child: ListView(
+              physics: const BouncingScrollPhysics(
+                parent: AlwaysScrollableScrollPhysics(),
+              ),
+              children: <Widget>[
+                HeaderTextCustom(
+                  padding: const EdgeInsets.only(left: Constant.kHMarginCard),
+                  headerText: S.of(context).overview,
+                  textStyle: context.titleMedium.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                  onPress: _onSelectRangeDate,
+                  isShowSeeMore: true,
+                  afterText:
+                      '${getYmdFormat(chartModal.timeStart)} - ${getYmdFormat(chartModal.timeEnd)}',
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: Constant.kHMarginCard),
+                  child: SizedBox(
+                    height: 250,
+                    width: double.infinity,
+                    child: ChartView(
+                      header: 'View',
+                      waterConsume: chartModal.maxColumnData.toDouble(),
+                      columnData: chartModal.maxColumnData.toDouble(),
+                      barGroups: [
+                        ...chartModal.columnData.entries
+                            .mapIndexed((index, element) {
+                          final maxColumn = chartModal.maxColumnData;
+                          return makeGroupData(
+                            index,
+                            maxColumn == 0
+                                ? 0
+                                : (element.value.lend / maxColumn) * 19,
+                            maxColumn == 0
+                                ? 0
+                                : (element.value.loan / maxColumn) * 19,
+                          );
+                        })
+                      ],
+                    ),
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ButtonCustom(
+                      onPress: () async {
+                        _screenshotController.capture().then((res) {
+                          if (res != null) {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return Capture(res: res);
+                              },
+                            );
+                          }
+                        });
+                      },
+                      enableWidth: false,
+                      child: Row(
+                        children: [
+                          const Icon(Icons.camera, color: Colors.white),
+                          Text(
+                            'Screen shot',
+                            style: context.titleSmall.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+                const Divider(),
+                const SizedBox(height: 10.0),
+                PieChartVIew(
+                  header: S.of(context).lendAmount,
+                  isPay: true,
+                  sum: chartModal.lendSummary,
+                  data: [
+                    ...chartModal.lendCircleData.entries.map((e) {
+                      Contact? contact = contactModal.mapContacts[e.key];
+                      return {
+                        'data': e.value,
+                        'icon': contact?.type ?? 0,
+                        'title': contact?.name ?? 'Empty',
+                      };
+                    })
+                  ],
+                ),
+                const SizedBox(height: 10.0),
+                PieChartVIew(
+                  header: S.of(context).loanAmount,
+                  isPay: false,
+                  sum: chartModal.loanSummary,
+                  data: [
+                    ...chartModal.loanCircleData.entries.map((e) {
+                      Contact? contact = contactModal.mapContacts[e.key];
+                      return {
+                        'data': e.value,
+                        'icon': contact?.type ?? 0,
+                        'title': contact?.name ?? 'Empty',
+                      };
+                    })
+                  ],
+                ),
+                const SizedBox(height: 40.0),
+              ]
+                  .expand((element) => [element, const SizedBox(height: 5.0)])
+                  .toList(),
             ),
-            children: <Widget>[
-              HeaderTextCustom(
-                padding: const EdgeInsets.only(left: Constant.kHMarginCard),
-                headerText: S.of(context).overview,
-                textStyle: context.titleMedium.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-                onPress: _onSelectRangeDate,
-                isShowSeeMore: true,
-                afterText:
-                    '${getYmdFormat(chartModal.timeStart)} - ${getYmdFormat(chartModal.timeEnd)}',
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: Constant.kHMarginCard),
-                child: SizedBox(
-                  height: 250,
-                  width: double.infinity,
-                  child: ChartView(
-                    header: 'View',
-                    waterConsume: chartModal.maxColumnData.toDouble(),
-                    columnData: chartModal.maxColumnData.toDouble(),
-                    barGroups: [
-                      ...chartModal.columnData.entries
-                          .mapIndexed((index, element) {
-                        final maxColumn = chartModal.maxColumnData;
-                        return makeGroupData(
-                          index,
-                          maxColumn == 0
-                              ? 0
-                              : (element.value.lend / maxColumn) * 19,
-                          maxColumn == 0
-                              ? 0
-                              : (element.value.loan / maxColumn) * 19,
-                        );
-                      })
-                    ],
-                  ),
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ButtonCustom(
-                    onPress: () {},
-                    enableWidth: false,
-                    child: Row(
-                      children: [
-                        const Icon(Icons.share, color: Colors.white),
-                        Text(
-                          S.of(context).share,
-                          style: context.titleSmall.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 10.0),
-                  ButtonCustom(
-                    onPress: () {},
-                    enableWidth: false,
-                    child: Row(
-                      children: [
-                        const Icon(Icons.picture_as_pdf, color: Colors.white),
-                        Text(
-                          'PDF',
-                          style: context.titleSmall.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        )
-                      ],
-                    ),
-                  )
-                ],
-              ),
-              const Divider(),
-              const SizedBox(height: 10.0),
-              PieChartVIew(
-                header: S.of(context).lendAmount,
-                isPay: true,
-                sum: chartModal.lendSummary,
-                data: [
-                  ...chartModal.lendCircleData.entries.map((e) {
-                    Contact? contact = contactModal.mapContacts[e.key];
-                    return {
-                      'data': e.value,
-                      'icon': contact?.type ?? 0,
-                      'title': contact?.name ?? 'Empty',
-                    };
-                  })
-                ],
-              ),
-              const SizedBox(height: 10.0),
-              PieChartVIew(
-                header: S.of(context).loanAmount,
-                isPay: false,
-                sum: chartModal.loanSummary,
-                data: [
-                  ...chartModal.loanCircleData.entries.map((e) {
-                    Contact? contact = contactModal.mapContacts[e.key];
-                    return {
-                      'data': e.value,
-                      'icon': contact?.type ?? 0,
-                      'title': contact?.name ?? 'Empty',
-                    };
-                  })
-                ],
-              ),
-              const SizedBox(height: 40.0),
-            ]
-                .expand((element) => [element, const SizedBox(height: 5.0)])
-                .toList(),
           ),
         );
       },
@@ -229,6 +232,61 @@ class _ChartScreenState extends State<ChartScreen> {
         width: 7,
       ),
     ]);
+  }
+}
+
+class Capture extends StatefulWidget {
+  const Capture({
+    super.key,
+    required this.res,
+  });
+
+  final Uint8List res;
+
+  @override
+  State<Capture> createState() => _CaptureState();
+}
+
+class _CaptureState extends State<Capture> {
+  bool loading = false;
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+        child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Image.memory(widget.res),
+        ButtonCustom(
+          radius: 5.0,
+          loading: loading,
+          height: 45.0,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.share, color: Colors.white),
+              Text(
+                S.of(context).share,
+                style: context.titleSmall.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              )
+            ],
+          ),
+          onPress: () async {
+            loading = true;
+            setState(() {});
+            List<int> bytes = Uint8List.fromList(widget.res).toList();
+            final tempDir = await getTemporaryDirectory();
+            final file = await File('${tempDir.path}/image.png').create();
+            file.writeAsBytesSync(bytes);
+            Share.shareFiles([file.path], text: 'Share image');
+            loading = false;
+            setState(() {});
+          },
+        ),
+      ],
+    ));
   }
 }
 

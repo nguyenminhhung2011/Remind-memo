@@ -11,7 +11,21 @@ class RegisterNotifier extends ChangeNotifier {
 
   RegisterNotifier(this._firebaseRepository);
 
-  Future<void> onGoogleAuth() async => await _firebaseRepository.googleAuth();
+  bool _loadingGoogle = false;
+  bool get loadingGoogle => _loadingGoogle;
+
+  Future<bool> onGoogleAuth() async {
+    _loadingGoogle = true;
+    notifyListeners();
+    try {
+      await _firebaseRepository.googleAuth();
+      return true;
+    } catch (e) {
+      _loadingGoogle = false;
+      notifyListeners();
+      return false;
+    }
+  }
 
   bool _loadingSignUp = false;
   bool get loadingSignUp => _loadingSignUp;

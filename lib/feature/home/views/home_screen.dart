@@ -103,7 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
           return const SelectPaid();
         });
     if (show is bool && show) {
-      String paidId =  _paid.pay?.id ?? '';
+      String paidId = _paid.pay?.id ?? '';
       // ignore: use_build_context_synchronously
       _contact.getContacts(paidId);
       _home.getTransactions(paidId, -1);
@@ -113,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   @override
-  void dispose(){
+  void dispose() {
     _rangeDateController.dispose();
     super.dispose();
   }
@@ -159,18 +159,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    SortButton(
-                      title: S.of(context).sortByPrice,
-                      // height: 50,
-                      icon: Icons.sort,
-                      onPress: () {},
-                    ),
                     const Spacer(),
                     ValueListenableBuilder<TypeView>(
                       valueListenable: _typeView,
                       builder: (context, typeView, child) {
                         return DropdownButtonCustom<TypeView?>(
-                          borderColor: Colors.transparent,
                           width: 120.0,
                           radius: 10.0,
                           value: typeView,
@@ -191,6 +184,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         );
                       },
                     ),
+                    const SizedBox(width: Constant.kHMarginCard)
                   ],
                 ),
               ),
@@ -219,7 +213,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               style: context.headlineLarge.copyWith(
                                 color: context.titleMedium.color,
                                 fontWeight: FontWeight.w300,
-                              ),  
+                              ),
                             ),
                             const SizedBox(width: 10.0),
                             Expanded(
@@ -265,7 +259,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   time: e.createTime,
                                   price: e.price.toDouble(),
                                   isPay: e.type.isLend,
-                                  onPress: () => _onShowPayDetail(e.id, e.contactId),
+                                  onPress: () =>
+                                      _onShowPayDetail(e.id, e.contactId),
                                 ))
                             .expand((element) =>
                                 [element, const SizedBox(height: 8.0)])

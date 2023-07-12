@@ -127,8 +127,14 @@ dependencies:
   fluttertoast: ^8.2.2
   pdf: ^3.10.4
   open_file: ^3.3.2
+  syncfusion_flutter_pdfviewer: ^21.2.10
+  flutter_downloader: ^1.10.5
+  printing: ^5.11.0
+  share_plus: ^7.0.2
   # table_calendar: ^3.0.8
   # readmore: ^2.2.0
+  flutter_launcher_icons: ^0.13.1
+
 
 dev_dependencies:
   flutter_test:
@@ -149,10 +155,18 @@ dev_dependencies:
   retrofit_generator: ^6.0.0+1
   isar_generator: ^3.0.5
 
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter packages.
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/splash.png"
+  min_sdk_android: 21
+  remove_alpha_ios: true
 
 flutter_intl:
     enabled: true

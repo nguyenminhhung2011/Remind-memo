@@ -13,8 +13,23 @@ class LoginNotifier extends ChangeNotifier {
 
   bool _loadingSignUp = false;
   bool get loadingSignUp => _loadingSignUp;
+  bool _loadingGoogle = false;
+  bool get loadingGoogle => _loadingGoogle;
 
-  Future<void> onGoogleAuth() async => await _firebaseRepository.googleAuth();
+  Future<bool> onGoogleAuth() async {
+    _loadingGoogle = true;
+    notifyListeners();
+    try {
+      await _firebaseRepository.googleAuth();
+      return true;
+
+    } catch (e) {
+      _loadingGoogle = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
   Future<bool> onSignIn(UserEntity userEntity) async {
     _loadingSignUp = true;
     notifyListeners();
@@ -31,5 +46,4 @@ class LoginNotifier extends ChangeNotifier {
 
   Future<UserEntity?> getCurrentUser() async =>
       await _firebaseRepository.getUserByUuid();
-      
 }
