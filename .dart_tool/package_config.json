@@ -902,6 +902,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "printing",
+      "rootUri": "file:///C:/Users/ASUS/AppData/Local/Pub/Cache/hosted/pub.dev/printing-5.11.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
       "name": "process",
       "rootUri": "file:///C:/Users/ASUS/AppData/Local/Pub/Cache/hosted/pub.dev/process-4.2.4",
       "packageUri": "lib/",
@@ -1334,7 +1340,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2023-07-12T06:17:20.849545Z",
+  "generated": "2023-07-12T06:18:40.039873Z",
   "generator": "pub",
   "generatorVersion": "3.0.3"
 }
