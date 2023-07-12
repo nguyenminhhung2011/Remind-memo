@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:collection/collection.dart';
 import 'package:flutter/services.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -19,18 +22,32 @@ class PdfService {
     font = await PdfGoogleFonts.nunitoExtraLight();
   }
 
+  List<String> headers = [
+    S.current.time,
+    S.current.loanAmount,
+    S.current.lendAmount,
+  ];
+
   pw.Font font = pw.Font();
   pw.Widget PaddedText(
     final String text,
     final pw.Font fontF, {
     final pw.TextAlign align = pw.TextAlign.left,
+    final bool? lend,
   }) =>
       pw.Padding(
         padding: const pw.EdgeInsets.all(10),
         child: pw.Text(
           text,
           textAlign: align,
-          style: pw.TextStyle(font: fontF),
+          style: pw.TextStyle(
+            font: fontF,
+            color: (lend != null)
+                ? lend
+                    ? PdfColors.green
+                    : PdfColors.red
+                : null,
+          ),
         ),
       );
   Future<Uint8List> convertPdf(
@@ -41,6 +58,15 @@ class PdfService {
     final ByteData getImage = await rootBundle.load(ImageConst.gif);
     final pdf = pw.Document();
     font = await PdfGoogleFonts.nunitoExtraLight();
+    int lendSummary = 0;
+    int loanSummary = 0;
+    for (var element in listTransaction) {
+      if (element.type.isLend) {
+        lendSummary += element.price;
+      } else {
+        loanSummary += element.price;
+      }
+    }
     pdf.addPage(
       pw.Page(
         build: (pw.Context context) {
@@ -82,82 +108,74 @@ class PdfService {
                 children: [
                   pw.TableRow(
                     children: [
-                      pw.Padding(
-                        padding: const pw.EdgeInsets.all(20.0),
-                        child: pw.Text(
-                          S.current.lendAmount,
-                          style: pw.TextStyle(
-                            fontWeight: pw.FontWeight.bold,
-                            font: font,
-                            color: PdfColors.green,
+                      ...[4, 3, 3].mapIndexed(
+                        (index, e) => pw.Expanded(
+                          flex: e,
+                          child: pw.Container(
+                            padding: const pw.EdgeInsets.all(10.0),
+                            color: PdfColors.blue100,
+                            child: pw.Text(
+                              headers[index],
+                              textAlign: pw.TextAlign.left,
+                              style: pw.TextStyle(font: font),
+                            ),
                           ),
-                          textAlign: pw.TextAlign.center,
+                        ),
+                      ),
+                    ],
+                  ),
+                  ...listTransaction.map(
+                    (e) => pw.TableRow(
+                      children: [
+                        pw.Expanded(
+                          flex: 4,
+                          child: PaddedText(getYmdHmFormat(e.createTime), font),
+                        ),
+                        pw.Expanded(
+                          flex: 3,
+                          child: PaddedText(
+                            !e.type.isLend ? e.price.price : '',
+                            font,
+                            lend: false,
+                          ),
+                        ),
+                        pw.Expanded(
+                          flex: 3,
+                          child: PaddedText(
+                            e.type.isLend ? e.price.price : '',
+                            font,
+                            lend: true,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  pw.TableRow(
+                    children: [
+                      pw.Expanded(flex: 4, child: pw.SizedBox()),
+                      pw.Expanded(
+                        flex: 3,
+                        child: PaddedText(
+                          loanSummary.price,
+                          font,
+                          lend: false,
+                        ),
+                      ),
+                      pw.Expanded(
+                        flex: 3,
+                        child: PaddedText(
+                          lendSummary.price,
+                          font,
+                          lend: true,
                         ),
                       )
                     ],
                   ),
-                  ...listTransaction
-                      .where((element) => element.type.isLend)
-                      .map(
-                        (e) => pw.TableRow(
-                          children: [
-                            pw.Expanded(
-                              flex: 2,
-                              child: PaddedText(
-                                  getYmdHmFormat(e.createTime), font),
-                            ),
-                            pw.Expanded(
-                              flex: 1,
-                              child: PaddedText(e.price.price, font),
-                            )
-                          ],
-                        ),
-                      ),
                 ],
               ),
               pw.SizedBox(height: 15.0),
               pw.Divider(),
               pw.SizedBox(height: 15.0),
-              pw.Table(
-                border: pw.TableBorder.all(color: PdfColors.black),
-                children: [
-                  pw.TableRow(
-                    children: [
-                      pw.Padding(
-                        padding: const pw.EdgeInsets.all(20.0),
-                        child: pw.Text(
-                          S.current.loanAmount,
-                          style: pw.TextStyle(
-                            fontWeight: pw.FontWeight.bold,
-                            font: font,
-                            color: PdfColors.red,
-                          ),
-                          textAlign: pw.TextAlign.center,
-                        ),
-                      )
-                    ],
-                  ),
-                  ...listTransaction
-                      .where((element) => !element.type.isLend)
-                      .map(
-                        (e) => pw.TableRow(
-                          children: [
-                            pw.Expanded(
-                              flex: 2,
-                              child: PaddedText(
-                                getYmdHmFormat(e.createTime),
-                                font,
-                              ),
-                            ),
-                            pw.Expanded(
-                              flex: 1,
-                              child: PaddedText(e.price.price, font),
-                            )
-                          ],
-                        ),
-                      ),
-                ],
-              ),
               pw.SizedBox(height: 20.0),
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.end,
