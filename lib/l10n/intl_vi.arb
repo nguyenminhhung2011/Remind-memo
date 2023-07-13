@@ -68,6 +68,8 @@
     "loan": "Vay",
     "language": "Ngôn ngữ",
     "time": "Thời gian",
+    "loanTotal": "Tổng số tiền bạn phải trả",
+    "lendTotal": "Tổng số tiền bạn phải đòi",
     "error": "Lỗi",
     "deleteTransaction": "Bạn có muốn xóa giao dịch này không?",
     "addTransaction": "Thêm giao dịch mới",

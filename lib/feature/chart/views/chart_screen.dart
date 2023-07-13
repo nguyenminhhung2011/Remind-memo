@@ -337,7 +337,7 @@ class _PieChartVIewState extends State<PieChartVIew> {
                 ),
               ),
               Text(
-                widget.sum.toString(),
+                widget.sum.price,
                 style: context.titleMedium.copyWith(
                   fontWeight: FontWeight.bold,
                   color: widget.isPay ? Colors.green : Colors.red,
