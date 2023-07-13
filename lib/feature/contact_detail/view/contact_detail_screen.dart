@@ -204,7 +204,19 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 5.0),
+                Container(
+                  width: double.infinity,
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: Constant.kHMarginCard,
+                  ),
+                  child: Text(
+                    '💻 ${modal.contact?.note ?? ''}',
+                    style: context.titleMedium.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 15.0),
                 const Divider(),
                 const SizedBox(height: 5.0),
                 Padding(
