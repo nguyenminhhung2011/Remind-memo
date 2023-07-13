@@ -750,6 +750,16 @@ class S {
     );
   }
 
+  /// `Add new transaction`
+  String get addTransaction {
+    return Intl.message(
+      'Add new transaction',
+      name: 'addTransaction',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Do you want to delete this transaction?`
   String get deleteTransaction {
     return Intl.message(

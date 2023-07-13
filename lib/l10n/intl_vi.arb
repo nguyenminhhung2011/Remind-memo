@@ -70,6 +70,7 @@
     "time": "Thời gian",
     "error": "Lỗi",
     "deleteTransaction": "Bạn có muốn xóa giao dịch này không?",
+    "addTransaction": "Thêm giao dịch mới",
     "delete": "Xóa",
     "longPressDescription": "Nhấn và giữ để xóa giao dịch",
     "signOutDescription": "Bạn có muốn đăng xuất này không?",

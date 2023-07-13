@@ -31,6 +31,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "addNewContact":
             MessageLookupByLibrary.simpleMessage("Add new contact"),
         "addNewPay": MessageLookupByLibrary.simpleMessage("Add new pay"),
+        "addTransaction":
+            MessageLookupByLibrary.simpleMessage("Add new transaction"),
         "all": MessageLookupByLibrary.simpleMessage("all"),
         "alreadyHaveAccount":
             MessageLookupByLibrary.simpleMessage("Already have account?"),

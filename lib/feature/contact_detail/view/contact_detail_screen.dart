@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:project/app_coordinator.dart';
 import 'package:project/core/constant/constant.dart';
 import 'package:project/core/constant/image_const.dart';
+import 'package:project/core/dependency_injection/di.dart';
 import 'package:project/core/extensions/context_exntions.dart';
 import 'package:project/core/extensions/handle_time.dart';
 import 'package:project/core/extensions/int_extension.dart';
@@ -19,6 +20,8 @@ import 'package:provider/provider.dart';
 
 import '../../auth/notifier/auth_notifier.dart';
 import '../../list_contact/notifier/contact_notifier.dart';
+import '../../pay_detail/notifier/pay_detail_notifier.dart';
+import '../../pay_detail/views/pay_detail_screen.dart';
 
 class ContactDetailScreen extends StatefulWidget {
   const ContactDetailScreen({super.key});
@@ -47,6 +50,21 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
         _notifier.getTransactions(paidId);
       }
     });
+  }
+
+  void _onShowPayDetail(String transactionId, String contactId) async {
+    final show = await showModalBottomSheet(
+        isDismissible: false,
+        enableDrag: false,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        context: context,
+        builder: (context) {
+          return ChangeNotifierProvider<PayDetailNotifier>.value(
+            value: injector.get(param1: transactionId, param2: contactId),
+            child: const PayDetailScreen(),
+          );
+        });
   }
 
   Future<void> updateAll(bool isUpdate, bool lend, int oldPrice) async {
@@ -218,6 +236,7 @@ class _ContactDetailScreenState extends State<ContactDetailScreen> {
                 isLoan: !e.type.isLend,
                 price: e.price,
                 longPress: () => _onDelete(e.id, e.type.isLend, e.price),
+                onPress: () => _onShowPayDetail(e.id, e.contactId),
               ))
         ]
             .expand((element) => [
@@ -328,6 +347,7 @@ class ItemPayView extends StatelessWidget {
   final bool isLoan;
   final int price;
   final Function() longPress;
+  final Function() onPress;
   const ItemPayView({
     super.key,
     required this.createTime,
@@ -335,12 +355,14 @@ class ItemPayView extends StatelessWidget {
     required this.isLoan,
     required this.price,
     required this.longPress,
+    required this.onPress,
   });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onLongPress: longPress,
+      onTap: onPress,
       child: SizedBox(
         width: double.infinity,
         child: Row(

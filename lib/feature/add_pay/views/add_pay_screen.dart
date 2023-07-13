@@ -177,7 +177,7 @@ class _AddPayScreenState extends State<AddPayScreen> {
               icon: Icon(Icons.arrow_back, color: context.titleLarge.color),
             ),
             title: Text(
-              S.of(context).addNewPay,
+              S.of(context).addTransaction,
               style: context.titleMedium.copyWith(
                 fontWeight: FontWeight.bold,
                 overflow: TextOverflow.ellipsis,
@@ -193,7 +193,7 @@ class _AddPayScreenState extends State<AddPayScreen> {
                   loading: modal.load,
                   onPress: _onAddTransaction,
                   height: 45.0,
-                  child: Text(S.of(context).addNewPay),
+                  child: Text(S.of(context).addTransaction),
                 ),
               )
             ],

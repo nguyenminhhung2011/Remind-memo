@@ -32,6 +32,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Thêm liên hệ mới"),
         "addNewPay":
             MessageLookupByLibrary.simpleMessage("Thêm khoản thanh toán mới"),
+        "addTransaction":
+            MessageLookupByLibrary.simpleMessage("Thêm giao dịch mới"),
         "all": MessageLookupByLibrary.simpleMessage("Tất cả"),
         "alreadyHaveAccount":
             MessageLookupByLibrary.simpleMessage("Đã có tài khoản?"),
