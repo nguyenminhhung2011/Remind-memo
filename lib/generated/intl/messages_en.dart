@@ -31,6 +31,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "addNewContact":
             MessageLookupByLibrary.simpleMessage("Add new contact"),
         "addNewPay": MessageLookupByLibrary.simpleMessage("Add new pay"),
+        "addTransaction":
+            MessageLookupByLibrary.simpleMessage("Add new transaction"),
         "all": MessageLookupByLibrary.simpleMessage("all"),
         "alreadyHaveAccount":
             MessageLookupByLibrary.simpleMessage("Already have account?"),
@@ -76,9 +78,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "lend": MessageLookupByLibrary.simpleMessage("Lend"),
         "lendAdd": MessageLookupByLibrary.simpleMessage("Add lend"),
         "lendAmount": MessageLookupByLibrary.simpleMessage("Lend Amount"),
+        "lendTotal":
+            MessageLookupByLibrary.simpleMessage("Total amount you claim"),
         "loan": MessageLookupByLibrary.simpleMessage("Loan"),
         "loanAdd": MessageLookupByLibrary.simpleMessage("Add loan"),
         "loanAmount": MessageLookupByLibrary.simpleMessage("Loan Amount"),
+        "loanTotal":
+            MessageLookupByLibrary.simpleMessage("Total money you have to pay"),
         "logIn": MessageLookupByLibrary.simpleMessage("Log In"),
         "longPressDescription": MessageLookupByLibrary.simpleMessage(
             "Long press to delete transaction"),

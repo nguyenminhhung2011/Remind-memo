@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:project/app_coordinator.dart';
 import 'package:project/core/extensions/context_exntions.dart';
 import 'package:project/core/extensions/handle_time.dart';
+import 'package:project/core/extensions/int_extension.dart';
 import 'package:project/core/widgets/button_custom.dart';
 import 'package:project/core/widgets/chart_view.dart';
 import 'package:project/core/widgets/range_date_picker_custom.dart';
@@ -336,7 +337,7 @@ class _PieChartVIewState extends State<PieChartVIew> {
                 ),
               ),
               Text(
-                widget.sum.toString(),
+                widget.sum.price,
                 style: context.titleMedium.copyWith(
                   fontWeight: FontWeight.bold,
                   color: widget.isPay ? Colors.green : Colors.red,
@@ -425,7 +426,7 @@ class _PieChartVIewState extends State<PieChartVIew> {
                               '${Constant.icons[e['icon']]['icon'].toString()} ${e['title']} -',
                         ),
                         TextSpan(
-                            text: ' ${e['data'].toString()}  ',
+                            text: ' ${(e['data'] as int ).price}  ',
                             style: TextStyle(
                               color: Theme.of(context).primaryColor,
                             )),

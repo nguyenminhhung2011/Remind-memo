@@ -65,10 +65,12 @@ class PdfService {
         loanSummary += element.price;
       }
     }
+    int summary = lendSummary - loanSummary;
     pdf.addPage(
       pw.Page(
         build: (pw.Context context) {
           return pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
@@ -170,6 +172,25 @@ class PdfService {
                     ],
                   ),
                 ],
+              ),
+              pw.SizedBox(height: 30),
+              pw.RichText(
+                text: pw.TextSpan(
+                  style: pw.TextStyle(font: font),
+                  children: [
+                    pw.TextSpan(
+                      text: summary < 0
+                          ? S.current.loanTotal
+                          : S.current.lendTotal,
+                    ),
+                    pw.TextSpan(
+                      text: ' ${summary.abs().price}',
+                      style: pw.TextStyle(
+                        color: summary < 0 ? PdfColors.red : PdfColors.green,
+                      ),
+                    ),
+                  ],
+                ),
               ),
               pw.SizedBox(height: 15.0),
               pw.Divider(),

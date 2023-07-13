@@ -22,6 +22,7 @@ import 'package:provider/provider.dart';
 import '../../../core/widgets/button_custom.dart';
 import '../../../core/widgets/drop_down_button_custom.dart';
 import '../../../data/data_source/preferences.dart';
+import '../../paid/views/paid_screen.dart';
 
 enum TypeView {
   all,
@@ -417,12 +418,31 @@ class _SelectPaidState extends State<SelectPaid> {
     });
   }
 
+  void _addNewPaid() async {
+    final add = await showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+        top: Radius.circular(20.0),
+      )),
+      builder: (context) => const BottomAddPaid(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<PaidNotifier>(builder: (context, modal, child) {
       return Scaffold(
         backgroundColor: Colors.transparent,
         resizeToAvoidBottomInset: true,
+         bottomNavigationBar: Padding(
+          padding: const EdgeInsets.all(Constant.kHMarginCard),
+          child: ButtonCustom(
+            onPress: _addNewPaid,
+            height: 45.0,
+            child: Text(S.of(context).addNewPay),
+          ),
+        ),
         extendBody: true,
         // bottomSheet: Padding(
         //   padding: const EdgeInsets.all(Constant.kHMarginCard),

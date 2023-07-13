@@ -32,6 +32,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Thêm liên hệ mới"),
         "addNewPay":
             MessageLookupByLibrary.simpleMessage("Thêm khoản thanh toán mới"),
+        "addTransaction":
+            MessageLookupByLibrary.simpleMessage("Thêm giao dịch mới"),
         "all": MessageLookupByLibrary.simpleMessage("Tất cả"),
         "alreadyHaveAccount":
             MessageLookupByLibrary.simpleMessage("Đã có tài khoản?"),
@@ -77,9 +79,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "lend": MessageLookupByLibrary.simpleMessage("Cho vay"),
         "lendAdd": MessageLookupByLibrary.simpleMessage("Thêm khoản cho vay"),
         "lendAmount": MessageLookupByLibrary.simpleMessage("Số tiền cho vay"),
+        "lendTotal":
+            MessageLookupByLibrary.simpleMessage("Tổng số tiền bạn phải đòi"),
         "loan": MessageLookupByLibrary.simpleMessage("Vay"),
         "loanAdd": MessageLookupByLibrary.simpleMessage("Thêm khoản vay"),
         "loanAmount": MessageLookupByLibrary.simpleMessage("Số tiền vay"),
+        "loanTotal":
+            MessageLookupByLibrary.simpleMessage("Tổng số tiền bạn phải trả"),
         "logIn": MessageLookupByLibrary.simpleMessage("Đăng nhập"),
         "longPressDescription": MessageLookupByLibrary.simpleMessage(
             "Nhấn và giữ để xóa giao dịch"),

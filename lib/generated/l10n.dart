@@ -750,6 +750,36 @@ class S {
     );
   }
 
+  /// `Total amount you claim`
+  String get lendTotal {
+    return Intl.message(
+      'Total amount you claim',
+      name: 'lendTotal',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Total money you have to pay`
+  String get loanTotal {
+    return Intl.message(
+      'Total money you have to pay',
+      name: 'loanTotal',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add new transaction`
+  String get addTransaction {
+    return Intl.message(
+      'Add new transaction',
+      name: 'addTransaction',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Do you want to delete this transaction?`
   String get deleteTransaction {
     return Intl.message(

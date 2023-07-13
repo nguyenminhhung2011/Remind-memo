@@ -29,7 +29,7 @@ class PaidNotifier extends ChangeNotifier {
     try {
       final streamPays = _firebaseRepository.getPays();
       streamPays.listen((event) {
-        if (event.isNotEmpty) {
+        if (event.isNotEmpty && _pay == null) {
           _pay = event.first;
         }
         _listPay = event;

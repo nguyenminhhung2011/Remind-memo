@@ -5,6 +5,7 @@ import 'package:project/core/constant/constant.dart';
 import 'package:project/core/extensions/context_exntions.dart';
 import 'package:project/core/extensions/int_extension.dart';
 import 'package:project/feature/auth/notifier/auth_notifier.dart';
+import 'package:project/feature/list_contact/notifier/contact_notifier.dart';
 import 'package:project/feature/paid/notifier/paid_notifier.dart';
 import 'package:project/routes/routes.dart';
 import 'package:provider/provider.dart';
@@ -41,8 +42,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer3<AuthNotifier, PaidNotifier, LanguageChangeProvider>(
-        builder: (context, authModal, paidModal, langModal, child) {
+    return Consumer4<AuthNotifier, PaidNotifier, LanguageChangeProvider,
+            ContactNotifier>(
+        builder:
+            (context, authModal, paidModal, langModal, contactModal, child) {
       return Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
@@ -186,10 +189,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             else
                               Text(
                                 switch (index) {
-                                  0 =>
-                                    (paidModal.pay?.lendAmount ?? 0).price,
-                                  1 =>
-                                    (paidModal.pay?.loanAmount ?? 0).price,
+                                  0 => (contactModal.lendAmount).price,
+                                  1 => (contactModal.loanAmount).price,
                                   _ => '',
                                 }
                                     .toString(),

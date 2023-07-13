@@ -272,7 +272,7 @@ class FirebaseDataSourceImpl implements FirebaseDataSource {
     final transactionCollection =
         fireStore.collection("pays").doc(paidId).collection("transactions");
     return transactionCollection
-        .orderBy("createTime", descending: false)
+        .orderBy("createTime", descending: true)
         .snapshots()
         .map(
           (querySnapshot) => querySnapshot.docs
